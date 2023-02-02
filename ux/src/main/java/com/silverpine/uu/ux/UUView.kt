@@ -1,14 +1,29 @@
 package com.silverpine.uu.ux
 
 import android.view.View
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import androidx.databinding.BindingAdapter
+import com.silverpine.uu.core.UUResources
 
 @BindingAdapter("uuBackgroundColor")
-fun uuBindBackgroundColor(view: View, backgroundColor: Int?)
+fun uuBindBackgroundColor(view: View, @ColorRes resourceId: Int?)
 {
-    backgroundColor?.let()
+    resourceId?.let()
     {
-        view.setBackgroundColor(it)
+        UUResources.getColor(it)?.let()
+        { resource ->
+            view.setBackgroundColor(resource)
+        }
+    }
+}
+
+@BindingAdapter("uuBackgroundDrawable")
+fun uuBindBackgroundDrawable(view: View, @DrawableRes resourceId: Int?)
+{
+    resourceId?.let()
+    {
+        view.background = UUResources.getDrawable(it)
     }
 }
 
