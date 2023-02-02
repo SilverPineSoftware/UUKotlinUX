@@ -6,11 +6,13 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.util.AttributeSet
-import androidx.appcompat.widget.AppCompatImageButton
+import androidx.annotation.ColorRes
+import androidx.annotation.DimenRes
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.BindingAdapter
 import com.silverpine.uu.core.UUResources
 
-class UUBorderedImageView(context: Context, attrs: AttributeSet?, defStyle: Int): AppCompatImageButton(context, attrs, defStyle)
+class UUBorderedImageView(context: Context, attrs: AttributeSet?, defStyle: Int): AppCompatImageView(context, attrs, defStyle)
 {
     private var borderRect: Rect = Rect(0,0,0,0)
     private val borderPaint: Paint = Paint()
