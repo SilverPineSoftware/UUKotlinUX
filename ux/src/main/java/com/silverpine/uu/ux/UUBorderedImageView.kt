@@ -8,6 +8,7 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.databinding.BindingAdapter
+import com.silverpine.uu.core.UUResources
 
 class UUBorderedImageView(context: Context, attrs: AttributeSet?, defStyle: Int): AppCompatImageButton(context, attrs, defStyle)
 {
@@ -72,16 +73,23 @@ class UUBorderedImageView(context: Context, attrs: AttributeSet?, defStyle: Int)
     }
 }
 
-@BindingAdapter(value = ["bind:uuBorderColor", "bind:uuBorderWidth"], requireAll = true)
-fun uuConfigureBindings(view: UUBorderedImageView, color: Int?, width: Float?)
+/*
+@BindingAdapter(value = ["bind:uuBoundBorderColor", "bind:uuBoundBorderWidth"], requireAll = true)
+fun uuConfigureBindings(view: UUBorderedImageView, uuBoundBorderColor: Int?, uuBoundBorderWidth: Int?)
 {
-    color?.let()
+    uuBoundBorderColor?.let()
     {
-        view.setBorderColor(it)
+        UUResources.getColor(it)?.let()
+        { resource ->
+            view.setBackgroundColor(resource)
+        }
     }
 
-    width?.let()
+    uuBoundBorderWidth?.let()
     {
-        view.setBorderWidth(width)
+        UUResources.getDimension(it)?.let()
+        { resource ->
+            view.setBorderWidth(resource)
+        }
     }
-}
+}*/

@@ -44,7 +44,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
 
-    implementation 'com.silverpine.uu:uu-core-ktx:0.0.5-DEV010'
+    implementation "com.silverpine.uu:uu-core-ktx:${uu_core_version}"
 
     implementation project(':ux')
 

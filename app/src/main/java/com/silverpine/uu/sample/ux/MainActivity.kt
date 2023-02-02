@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.silverpine.uu.core.UUResources
 import com.silverpine.uu.logging.UULog
 import com.silverpine.uu.sample.ux.databinding.ActivityMainBinding
+import com.silverpine.uu.sample.ux.dragdrop.DropModel
+import com.silverpine.uu.sample.ux.dragdrop.DropViewModel
 import com.silverpine.uu.ux.UUBorderedImageView
 import com.silverpine.uu.ux.UUImageViewDragShadowBuilder
 import com.silverpine.uu.ux.uuClearDragDrop
@@ -21,8 +23,6 @@ class MainActivity : AppCompatActivity()
     {
         super.onCreate(savedInstanceState)
 
-        UUResources.init(applicationContext)
-
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         val binding = ActivityMainBinding.inflate(layoutInflater)
         binding.vm = viewModel
@@ -30,22 +30,22 @@ class MainActivity : AppCompatActivity()
         setContentView(binding.root)
 
         viewModel.update()
+
         val buttonOne = findViewById<UUBorderedImageView>(R.id.one)
         val buttonTwo = findViewById<UUBorderedImageView>(R.id.two)
         val buttonThree = findViewById<UUBorderedImageView>(R.id.three)
         val buttonFour = findViewById<UUBorderedImageView>(R.id.four)
 
-        buttonOne.configureDragDrop(DropViewModel(true, DropModel("One")), viewModel)
-        buttonTwo.configureDragDrop(DropViewModel(true, DropModel("Two")), viewModel)
-        buttonThree.configureDragDrop(DropViewModel(false, DropModel("Three")), viewModel)
-        buttonFour.configureDragDrop(DropViewModel(true, DropModel("Four")), viewModel)
+        buttonOne.configurePlainDragDrop(DropViewModel(true, DropModel("One")), viewModel)
+        buttonTwo.configurePlainDragDrop(DropViewModel(true, DropModel("Two")), viewModel)
+        buttonThree.configurePlainDragDrop(DropViewModel(false, DropModel("Three")), viewModel)
+        buttonFour.configurePlainDragDrop(DropViewModel(true, DropModel("Four")), viewModel)
     }
 }
 
 private const val CUSTOM_DROP_MIME_TYPE = "UU/CustomDropItem"
 
-
-fun UUBorderedImageView.configureDragDrop(viewModel: DropViewModel?, dropManagerViewModel: MainViewModel?)
+private fun UUBorderedImageView.configurePlainDragDrop(viewModel: DropViewModel?, dropManagerViewModel: MainViewModel?)
 {
     if (viewModel == null)
     {
@@ -75,172 +75,11 @@ fun UUBorderedImageView.configureDragDrop(viewModel: DropViewModel?, dropManager
 
     if (viewModel.allowDrop && dropManagerViewModel != null)
     {
-        configureDropTarget2(viewModel, dropManagerViewModel)
+        configurePlainDropTarget(viewModel, dropManagerViewModel)
     }
 }
 
-private fun UUBorderedImageView.configureDropTarget(destViewModel: DropViewModel, dropManagerViewModel: MainViewModel)
-{
-    setOnDragListener()
-    { v, e ->
-
-        val viewModel = e.localState as? DropViewModel
-        val viewTag = (v.tag as? String) ?: ""
-        val vmTag = viewModel?.id
-        val isTagSame = (viewTag == vmTag)
-
-        // Handles each of the expected events.
-        when (e.action)
-        {
-            DragEvent.ACTION_DRAG_STARTED ->
-            {
-                // Determines if this View can accept the dragged data.
-                if (e.clipDescription.hasMimeType(CUSTOM_DROP_MIME_TYPE))
-                {
-                    dropManagerViewModel.dispatchDragStart(viewTag)
-
-                    /*
-                    if (isTagSame)
-                    {
-                        uuFadeAlpha(0.2f, 200L)
-                    }
-                    else
-                    {
-                        dropManagerViewModel.dispatchDragStart(viewTag)*/
-                        //viewModel?.handleDragAccept()
-
-                        /*v.apply()
-                        {
-                            setBorderColor(resources.getColor(R.color.drop_accept_border, null))
-                            setBorderWidth(20.0f)
-                            invalidate()
-                        }*/
-                    //}
-
-                    //v.invalidate()
-                    true
-                }
-                else
-                {
-                    // Returns false to indicate that, during the current drag and drop operation,
-                    // this View will not receive events again until ACTION_DRAG_ENDED is sent.
-                    false
-                }
-            }
-
-            DragEvent.ACTION_DRAG_ENTERED ->
-            {
-                // Applies a green tint to the View.
-                //(v as? ImageView)?.setColorFilter(Color.GREEN)
-                //if (!isTagSame)
-                //{
-//                    v.apply()
-//                    {
-//                        setBorderColor(resources.getColor(R.color.drop_hover_border, null))
-//                        setBorderWidth(40.0f)
-//                        invalidate()
-//                    }
-
-                    //viewModel?.handleDragEnter()
-                    dropManagerViewModel.dispatchDragEnter(viewTag)
-                //}
-
-                // Returns true; the value is ignored.
-                true
-            }
-
-            DragEvent.ACTION_DRAG_LOCATION ->
-            {    // Ignore the event.
-                true
-            }
-
-            DragEvent.ACTION_DRAG_EXITED ->
-            {
-                //if (!isTagSame)
-               // {
-//                    v.apply()
-//                    {
-//                        setBorderColor(resources.getColor(R.color.drop_accept_border, null))
-//                        setBorderWidth(20.0f)
-//                        invalidate()
-//                    }
-
-                    dropManagerViewModel.dispatchDragExit(viewTag)
-                    //viewModel?.handleDragExit()
-                //}
-
-                // Returns true; the value is ignored.
-                true
-            }
-
-            DragEvent.ACTION_DROP ->
-            {
-                UULog.d(javaClass, "configureDropTarget", "DROP")
-
-                //if (!isTagSame)
-                //{
-//                    v.apply()
-//                    {
-//                        setBorderColor(resources.getColor(R.color.transparent, null))
-//                        setBorderWidth(0.0f)
-//                        invalidate()
-//                    }
-
-                    //viewModel?.handleDragReset()
-                dropManagerViewModel.dispatchDragEnd()
-
-//                    viewModel?.let()
-//                    {
-//                        dropManagerViewModel.handleDrop(viewModel, destViewModel)
-//                    }
-
-                    dropManagerViewModel.dispatchDrop(viewModel, destViewModel)
-                //}
-
-                true
-            }
-
-            DragEvent.ACTION_DRAG_ENDED ->
-            {
-                UULog.d(javaClass, "configureDropTarget", "DRAG_ENDED, isTagSame: $isTagSame")
-                dropManagerViewModel.dispatchDragEnd()
-
-                /*
-                if (!isTagSame)
-                {
-//                    v.apply()
-//                    {
-//                        setBorderColor(resources.getColor(R.color.transparent, null))
-//                        setBorderWidth(0.0f)
-//                        invalidate()
-//                    }
-
-                    //viewModel?.handleDragEnd()
-
-                    dropManagerViewModel.dispatchDragEnd()
-                }
-                else
-                {
-                    v.uuFadeAlpha(1.0f, 200L)
-                }*/
-
-                // Returns true; the value is ignored.
-                true
-            }
-
-            else ->
-            {
-                // An unknown action type was received.
-                UULog.d(javaClass, "configureDropTarget", "Unknown action type received by View.OnDragListener.")
-                false
-            }
-        }
-    }
-}
-
-
-
-private fun UUBorderedImageView.configureDropTarget2(destViewModel: DropViewModel, dropManagerViewModel: MainViewModel)
+private fun UUBorderedImageView.configurePlainDropTarget(destViewModel: DropViewModel, dropManagerViewModel: MainViewModel)
 {
     setOnDragListener()
     { v, e ->
@@ -266,9 +105,8 @@ private fun UUBorderedImageView.configureDropTarget2(destViewModel: DropViewMode
                     {
                         v.apply()
                         {
-                            setBorderColor(resources.getColor(R.color.drop_accept_border, null))
-                            setBorderWidth(20.0f)
-                            invalidate()
+                            setBorderColor(UUResources.getColor(R.color.drop_accept_border))
+                            setBorderWidth(UUResources.getDimension(R.dimen.drop_accept_border_width))
                         }
                     }
 
@@ -285,15 +123,12 @@ private fun UUBorderedImageView.configureDropTarget2(destViewModel: DropViewMode
 
             DragEvent.ACTION_DRAG_ENTERED ->
             {
-                // Applies a green tint to the View.
-                //(v as? ImageView)?.setColorFilter(Color.GREEN)
                 if (!isTagSame)
                 {
                     v.apply()
                     {
-                        setBorderColor(resources.getColor(R.color.drop_hover_border, null))
-                        setBorderWidth(40.0f)
-                        invalidate()
+                        setBorderColor(UUResources.getColor(R.color.drop_hover_border))
+                        setBorderWidth(UUResources.getDimension(R.dimen.drop_hover_border_width))
                     }
                 }
 
@@ -312,9 +147,8 @@ private fun UUBorderedImageView.configureDropTarget2(destViewModel: DropViewMode
                 {
                     v.apply()
                     {
-                        setBorderColor(resources.getColor(R.color.drop_accept_border, null))
-                        setBorderWidth(20.0f)
-                        invalidate()
+                        setBorderColor(UUResources.getColor(R.color.drop_accept_border))
+                        setBorderWidth(UUResources.getDimension(R.dimen.drop_accept_border_width))
                     }
                 }
 
@@ -330,9 +164,8 @@ private fun UUBorderedImageView.configureDropTarget2(destViewModel: DropViewMode
                 {
                     v.apply()
                     {
-                        setBorderColor(resources.getColor(R.color.transparent, null))
+                        setBorderColor(0)
                         setBorderWidth(0.0f)
-                        invalidate()
                     }
 
                     //dropManagerViewModel.dispatchDrop(viewModel, destViewModel)
@@ -349,7 +182,7 @@ private fun UUBorderedImageView.configureDropTarget2(destViewModel: DropViewMode
                 {
                     v.apply()
                     {
-                        setBorderColor(resources.getColor(R.color.transparent, null))
+                        setBorderColor(0)
                         setBorderWidth(0.0f)
                         invalidate()
                     }
