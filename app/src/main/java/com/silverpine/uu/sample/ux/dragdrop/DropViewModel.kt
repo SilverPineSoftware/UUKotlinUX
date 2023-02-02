@@ -80,8 +80,19 @@ class DropViewModel(var allowDrop: Boolean = true, var model: DropModel?): ViewM
         }
         else
         {
+            UULog.d(javaClass, "handleDrop", "Dropped View Model ${other.id} onto $id")
             _borderColor.value = R.color.green
             _borderWidth.value = R.dimen.medium_border
+            clearDrag()
+
+            val srcDrawable = _sourceDrawable.value
+            val srcText = _text.value
+
+            _sourceDrawable.value = other.sourceDrawable.value
+            _text.value = other.text.value
+
+            other._sourceDrawable.value = srcDrawable
+            other._text.value = srcText
         }
     }
 

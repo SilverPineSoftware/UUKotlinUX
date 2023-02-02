@@ -91,12 +91,6 @@ private fun UUBorderedImageView.configureDropTarget(dropTargetViewModel: DropVie
         }
         else
         {
-//            val viewModel = e.localState as? DropViewModel
-//            val viewTag = (v.tag as? String) ?: ""
-//            val vmTag = viewModel?.id
-//            val isTagSame = (viewTag == vmTag)
-
-            // Handles each of the expected events.
             when (e.action)
             {
                 DragEvent.ACTION_DRAG_STARTED ->
