@@ -138,8 +138,10 @@ private fun UUBorderedImageView.configurePlainDropTarget(destViewModel: DropView
                     {
                         v.apply()
                         {
-                            setBorderColor(UUResources.getColor(R.color.drop_accept_border))
-                            setBorderWidth(UUResources.getDimension(R.dimen.drop_accept_border_width))
+                            borderColor = UUResources.getColor(R.color.drop_accept_border)
+                            borderWidth = UUResources.getDimension(R.dimen.drop_accept_border_width)
+                            //setBorderColor(UUResources.getColor(R.color.drop_accept_border))
+                            //setBorderWidth(UUResources.getDimension(R.dimen.drop_accept_border_width))
                         }
                     }
 
@@ -160,8 +162,10 @@ private fun UUBorderedImageView.configurePlainDropTarget(destViewModel: DropView
                 {
                     v.apply()
                     {
-                        setBorderColor(UUResources.getColor(R.color.drop_hover_border))
-                        setBorderWidth(UUResources.getDimension(R.dimen.drop_hover_border_width))
+                        borderColor = UUResources.getColor(R.color.drop_hover_border)
+                        borderWidth = UUResources.getDimension(R.dimen.drop_hover_border_width)
+                        //setBorderColor(UUResources.getColor(R.color.drop_hover_border))
+                        //setBorderWidth(UUResources.getDimension(R.dimen.drop_hover_border_width))
                     }
                 }
 
@@ -180,8 +184,11 @@ private fun UUBorderedImageView.configurePlainDropTarget(destViewModel: DropView
                 {
                     v.apply()
                     {
-                        setBorderColor(UUResources.getColor(R.color.drop_accept_border))
-                        setBorderWidth(UUResources.getDimension(R.dimen.drop_accept_border_width))
+                        borderColor = UUResources.getColor(R.color.drop_accept_border)
+                        borderWidth = UUResources.getDimension(R.dimen.drop_accept_border_width)
+
+//                        setBorderColor(UUResources.getColor(R.color.drop_accept_border))
+//                        setBorderWidth(UUResources.getDimension(R.dimen.drop_accept_border_width))
                     }
                 }
 
@@ -197,8 +204,11 @@ private fun UUBorderedImageView.configurePlainDropTarget(destViewModel: DropView
                 {
                     v.apply()
                     {
-                        setBorderColor(0)
-                        setBorderWidth(0.0f)
+
+                        borderColor = 0
+                        borderWidth = 0.0f
+//                        setBorderColor(0)
+//                        setBorderWidth(0.0f)
                     }
 
                     //dropManagerViewModel.dispatchDrop(viewModel, destViewModel)
@@ -215,9 +225,11 @@ private fun UUBorderedImageView.configurePlainDropTarget(destViewModel: DropView
                 {
                     v.apply()
                     {
-                        setBorderColor(0)
-                        setBorderWidth(0.0f)
-                        invalidate()
+                        borderColor = 0
+                        borderWidth = 0.0f
+                        //setBorderColor(0)
+                        //setBorderWidth(0.0f)
+                        //invalidate()
                     }
                 }
                 else

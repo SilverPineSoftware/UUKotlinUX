@@ -36,45 +36,41 @@
             android:id="@+id/one"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@mipmap/ic_launcher"
+            android:src="@drawable/one"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/two"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/three"
-            tools:src="#000"/>
+            app:layout_constraintBottom_toTopOf="@+id/three" />
 
         <com.silverpine.uu.ux.UUBorderedImageView
             android:id="@+id/two"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@mipmap/ic_launcher"
+            android:src="@drawable/two"
             app:layout_constraintStart_toEndOf="@+id/one"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/four"
-            tools:src="#000" />
+            app:layout_constraintBottom_toTopOf="@+id/four" />
 
         <com.silverpine.uu.ux.UUBorderedImageView
             android:id="@+id/three"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@mipmap/ic_launcher"
+            android:src="@drawable/three"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/four"
             app:layout_constraintTop_toBottomOf="@+id/one"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:src="#000" />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <com.silverpine.uu.ux.UUBorderedImageView
             android:id="@+id/four"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@mipmap/ic_launcher"
+            android:src="@drawable/four"
             app:layout_constraintStart_toEndOf="@+id/three"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/two"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:src="#000" />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
