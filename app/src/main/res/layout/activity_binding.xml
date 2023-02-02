@@ -30,6 +30,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
+                android:onClick="@{ ()-> vm.onTapColorView(0) }"
                 app:uuVisibleOrInvisible="@{ vm.visibility[0] }"
                 app:uuBackgroundColor="@{ vm.colors[0] }" />
 
@@ -37,6 +39,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
+                android:onClick="@{ ()-> vm.onTapColorView(1) }"
                 app:uuVisibleOrInvisible="@{ vm.visibility[1] }"
                 app:uuBackgroundColor="@{ vm.colors[1] }" />
 
@@ -44,6 +48,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
+                android:onClick="@{ ()-> vm.onTapColorView(2) }"
                 app:uuVisibleOrInvisible="@{ vm.visibility[2] }"
                 app:uuBackgroundColor="@{ vm.colors[2] }" />
 
@@ -51,6 +57,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
+                android:onClick="@{ ()-> vm.onTapColorView(3) }"
                 app:uuVisibleOrInvisible="@{ vm.visibility[3] }"
                 app:uuBackgroundColor="@{ vm.colors[3] }" />
 
@@ -58,6 +66,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
+                android:onClick="@{ ()-> vm.onTapColorView(4) }"
                 app:uuVisibleOrInvisible="@{ vm.visibility[4] }"
                 app:uuBackgroundColor="@{ vm.colors[4] }" />
 
@@ -65,6 +75,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
+                android:onClick="@{ ()-> vm.onTapColorView(5) }"
                 app:uuVisibleOrInvisible="@{ vm.visibility[5] }"
                 app:uuBackgroundColor="@{ vm.colors[5] }" />
 
@@ -82,44 +94,62 @@
             app:layout_constraintBottom_toTopOf="@+id/bordered_drawable_row">
 
             <View
+                android:id="@+id/drawable_0"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
+                android:onClick="@{ ()-> vm.onTapImageView(0) }"
                 app:uuVisibleOrGone="@{ vm.visibility[0] }"
                 app:uuBackgroundDrawable="@{ vm.images[0] }" />
 
             <View
+                android:id="@+id/drawable_1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
+                android:onClick="@{ ()-> vm.onTapImageView(1) }"
                 app:uuVisibleOrGone="@{ vm.visibility[1] }"
                 app:uuBackgroundDrawable="@{ vm.images[1] }" />
 
             <View
+                android:id="@+id/drawable_2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
+                android:onClick="@{ ()-> vm.onTapImageView(2) }"
                 app:uuVisibleOrGone="@{ vm.visibility[2] }"
                 app:uuBackgroundDrawable="@{ vm.images[2] }" />
 
             <View
+                android:id="@+id/drawable_3"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
+                android:onClick="@{ ()-> vm.onTapImageView(3) }"
                 app:uuVisibleOrGone="@{ vm.visibility[3] }"
                 app:uuBackgroundDrawable="@{ vm.images[3] }" />
 
             <View
+                android:id="@+id/drawable_4"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
+                android:onClick="@{ ()-> vm.onTapImageView(4) }"
                 app:uuVisibleOrGone="@{ vm.visibility[4] }"
                 app:uuBackgroundDrawable="@{ vm.images[4] }" />
 
             <View
+                android:id="@+id/drawable_5"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
+                android:onClick="@{ ()-> vm.onTapImageView(5) }"
                 app:uuVisibleOrGone="@{ vm.visibility[5] }"
                 app:uuBackgroundDrawable="@{ vm.images[5] }" />
 
@@ -137,56 +167,74 @@
             app:layout_constraintBottom_toTopOf="@+id/bound_bordered_drawable_row">
 
             <com.silverpine.uu.ux.UUBorderedImageView
+                android:id="@+id/bordered_0"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
                 app:uuBorderColor="@color/red"
                 app:uuBorderWidth="@dimen/no_border"
+                android:onClick="@{ ()-> vm.onTapBorderView(0) }"
                 android:scaleType="centerCrop"
                 android:src="@drawable/one" />
 
             <com.silverpine.uu.ux.UUBorderedImageView
+                android:id="@+id/bordered_1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
                 app:uuBorderColor="@color/purple"
                 app:uuBorderWidth="@dimen/small_border"
+                android:onClick="@{ ()-> vm.onTapBorderView(1) }"
                 android:scaleType="centerCrop"
                 android:src="@drawable/two" />
 
             <com.silverpine.uu.ux.UUBorderedImageView
+                android:id="@+id/bordered_2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
                 app:uuBorderColor="@color/black"
                 app:uuBorderWidth="@dimen/medium_border"
+                android:onClick="@{ ()-> vm.onTapBorderView(2) }"
                 android:scaleType="centerCrop"
                 android:src="@drawable/three" />
 
             <com.silverpine.uu.ux.UUBorderedImageView
+                android:id="@+id/bordered_3"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
                 app:uuBorderColor="@color/cyan"
                 app:uuBorderWidth="@dimen/large_border"
+                android:onClick="@{ ()-> vm.onTapBorderView(3) }"
                 android:scaleType="centerCrop"
                 android:src="@drawable/four" />
 
             <com.silverpine.uu.ux.UUBorderedImageView
+                android:id="@+id/bordered_4"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
                 app:uuBorderColor="@color/yellow"
                 app:uuBorderWidth="@dimen/medium_border"
+                android:onClick="@{ ()-> vm.onTapBorderView(4) }"
                 android:scaleType="centerCrop"
                 android:src="@drawable/five" />
 
             <com.silverpine.uu.ux.UUBorderedImageView
+                android:id="@+id/bordered_5"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
                 app:uuBorderColor="@color/orange"
                 app:uuBorderWidth="@dimen/small_border"
+                android:onClick="@{ ()-> vm.onTapBorderView(5) }"
                 android:scaleType="centerCrop"
                 android:src="@drawable/six" />
 
@@ -206,8 +254,10 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
                 app:uuBoundBorderColor="@{ vm.borderColors[0] }"
                 app:uuBoundBorderWidth="@{ vm.borderWidths[0] }"
+                android:onClick="@{ ()-> vm.onTapBoundBorderView(0) }"
                 android:scaleType="centerCrop"
                 android:src="@drawable/six" />
 
@@ -215,8 +265,10 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
                 app:uuBoundBorderColor="@{ vm.borderColors[1] }"
-                app:uuBoundBorderWidth="@{ vm.borderWidths[2] }"
+                app:uuBoundBorderWidth="@{ vm.borderWidths[1] }"
+                android:onClick="@{ ()-> vm.onTapBoundBorderView(1) }"
                 android:scaleType="centerCrop"
                 android:src="@drawable/five" />
 
@@ -224,8 +276,10 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
                 app:uuBoundBorderColor="@{ vm.borderColors[2] }"
                 app:uuBoundBorderWidth="@{ vm.borderWidths[2] }"
+                android:onClick="@{ ()-> vm.onTapBoundBorderView(2) }"
                 android:scaleType="centerCrop"
                 android:src="@drawable/four" />
 
@@ -233,8 +287,10 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
                 app:uuBoundBorderColor="@{ vm.borderColors[3] }"
                 app:uuBoundBorderWidth="@{ vm.borderWidths[3] }"
+                android:onClick="@{ ()-> vm.onTapBoundBorderView(3) }"
                 android:scaleType="centerCrop"
                 android:src="@drawable/three" />
 
@@ -242,8 +298,10 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
                 app:uuBoundBorderColor="@{ vm.borderColors[4] }"
                 app:uuBoundBorderWidth="@{ vm.borderWidths[4] }"
+                android:onClick="@{ ()-> vm.onTapBoundBorderView(4) }"
                 android:scaleType="centerCrop"
                 android:src="@drawable/two" />
 
@@ -251,8 +309,10 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
                 app:uuBoundBorderColor="@{ vm.borderColors[5] }"
                 app:uuBoundBorderWidth="@{ vm.borderWidths[5] }"
+                android:onClick="@{ ()-> vm.onTapBoundBorderView(5) }"
                 android:scaleType="centerCrop"
                 android:src="@drawable/one" />
 
