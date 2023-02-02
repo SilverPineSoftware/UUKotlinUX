@@ -85,41 +85,53 @@
             android:id="@+id/one"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="#00FF00"
+            app:uuSourceDrawable="@{ vm.data[0].sourceDrawable }"
+            app:uuBorderColor="@{ vm.data[0].borderColor }"
+            app:uuBorderWidth="@{ vm.data[0].borderWidth }"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/two"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/three" />
+            app:layout_constraintBottom_toTopOf="@+id/three"
+            tools:src="#000"/>
 
         <com.silverpine.uu.ux.UUBorderedImageView
             android:id="@+id/two"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="#44FFF9"
+            app:uuSourceDrawable="@{ vm.data[1].sourceDrawable }"
+            app:uuBorderColor="@{ vm.data[1].borderColor }"
+            app:uuBorderWidth="@{ vm.data[1].borderWidth }"
             app:layout_constraintStart_toEndOf="@+id/one"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/four" />
+            app:layout_constraintBottom_toTopOf="@+id/four"
+            tools:src="#000" />
 
         <com.silverpine.uu.ux.UUBorderedImageView
             android:id="@+id/three"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="#E80909"
+            app:uuSourceDrawable="@{ vm.data[2].sourceDrawable }"
+            app:uuBorderColor="@{ vm.data[2].borderColor }"
+            app:uuBorderWidth="@{ vm.data[2].borderWidth }"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/four"
             app:layout_constraintTop_toBottomOf="@+id/one"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:src="#000" />
 
         <com.silverpine.uu.ux.UUBorderedImageView
             android:id="@+id/four"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="#4D60C1"
+            app:uuSourceDrawable="@{ vm.data[3].sourceDrawable }"
+            app:uuBorderColor="@{ vm.data[3].borderColor }"
+            app:uuBorderWidth="@{ vm.data[3].borderWidth }"
             app:layout_constraintStart_toEndOf="@+id/three"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/two"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:src="#000" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
