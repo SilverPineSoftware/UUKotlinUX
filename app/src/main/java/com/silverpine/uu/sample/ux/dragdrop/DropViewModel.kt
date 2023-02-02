@@ -23,6 +23,8 @@ class DropViewModel(var allowDrop: Boolean = true, var model: DropModel?): ViewM
 
     val id = UURandom.uuid()
 
+    var onFade: (DropViewModel, Float, Long)->Unit = { _,_,_ -> }
+
     fun update(resourceId: Int?)
     {
         _sourceDrawable.value = resourceId
@@ -33,10 +35,7 @@ class DropViewModel(var allowDrop: Boolean = true, var model: DropModel?): ViewM
     {
         if (id == other.id)
         {
-            UULog.d(javaClass, "handleDragStart", "Handle Drag Start, other is same")
-
-            _borderColor.value = R.color.red
-            _borderWidth.value = R.dimen.large_border
+            fadeOut()
         }
         else
         {
@@ -51,9 +50,7 @@ class DropViewModel(var allowDrop: Boolean = true, var model: DropModel?): ViewM
     {
         if (id == other.id)
         {
-            clearDrag()
-
-            // FADE
+            // nothing
         }
         else
         {
@@ -66,9 +63,7 @@ class DropViewModel(var allowDrop: Boolean = true, var model: DropModel?): ViewM
     {
         if (id == other.id)
         {
-            clearDrag()
-
-            // FADE
+            // nothing
         }
         else
         {
@@ -81,9 +76,7 @@ class DropViewModel(var allowDrop: Boolean = true, var model: DropModel?): ViewM
     {
         if (id == other.id)
         {
-            clearDrag()
-
-            // FADE
+            // nothing
         }
         else
         {
@@ -94,7 +87,14 @@ class DropViewModel(var allowDrop: Boolean = true, var model: DropModel?): ViewM
 
     fun handleDragEnd(other: DropViewModel)
     {
-        clearDrag()
+        if (id == other.id)
+        {
+            fadeIn()
+        }
+        else
+        {
+            clearDrag()
+        }
     }
 
     private fun clearDrag()
@@ -103,19 +103,18 @@ class DropViewModel(var allowDrop: Boolean = true, var model: DropModel?): ViewM
         _borderWidth.value = R.dimen.no_border
     }
 
-    /*
-    fun changeSourceDrawable(resourceId: Int?)
+    private fun fadeIn()
     {
-        _sourceDrawable.value = resourceId
+        fade(1.0f)
     }
 
-    fun changeBorderColor(resourceId: Int?)
+    private fun fadeOut()
     {
-        _borderColor.value = resourceId
+        fade(0.5f)
     }
 
-    fun changeBorderWidth(width: Int?)
+    private fun fade(alpha: Float, duration: Long = 200L)
     {
-        _borderWidth.value = width
-    }*/
+        onFade.invoke(this, alpha, duration)
+    }
 }
