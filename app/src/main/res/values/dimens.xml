@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="no_border">0dp</dimen>
+    <dimen name="small_border">10dp</dimen>
+    <dimen name="medium_border">20dp</dimen>
+    <dimen name="large_border">30dp</dimen>
     <dimen name="drop_accept_border_width">10dp</dimen>
     <dimen name="drop_hover_border_width">30dp</dimen>
 </resources>

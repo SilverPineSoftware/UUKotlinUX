@@ -78,7 +78,8 @@
             android:weightSum="6"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/color_row">
+            app:layout_constraintTop_toBottomOf="@+id/color_row"
+            app:layout_constraintBottom_toTopOf="@+id/bordered_drawable_row">
 
             <View
                 android:layout_width="0dp"
@@ -121,6 +122,72 @@
                 android:layout_weight="1"
                 app:uuVisibleOrGone="@{ vm.visibility[5] }"
                 app:uuBackgroundDrawable="@{ vm.images[5] }" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bordered_drawable_row"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal"
+            android:weightSum="6"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/drawable_row">
+
+            <com.silverpine.uu.ux.UUBorderedImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:uuBorderColor="@color/red"
+                app:uuBorderWidth="@dimen/no_border"
+                android:scaleType="centerCrop"
+                android:src="@drawable/one" />
+
+            <com.silverpine.uu.ux.UUBorderedImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:uuBorderColor="@color/purple"
+                app:uuBorderWidth="@dimen/small_border"
+                android:scaleType="centerCrop"
+                android:src="@drawable/two" />
+
+            <com.silverpine.uu.ux.UUBorderedImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:uuBorderColor="@color/black"
+                app:uuBorderWidth="@dimen/medium_border"
+                android:scaleType="centerCrop"
+                android:src="@drawable/three" />
+
+            <com.silverpine.uu.ux.UUBorderedImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:uuBorderColor="@color/cyan"
+                app:uuBorderWidth="@dimen/large_border"
+                android:scaleType="centerCrop"
+                android:src="@drawable/four" />
+
+            <com.silverpine.uu.ux.UUBorderedImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:uuBorderColor="@color/yellow"
+                app:uuBorderWidth="@dimen/medium_border"
+                android:scaleType="centerCrop"
+                android:src="@drawable/five" />
+
+            <com.silverpine.uu.ux.UUBorderedImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:uuBorderColor="@color/orange"
+                app:uuBorderWidth="@dimen/small_border"
+                android:scaleType="centerCrop"
+                android:src="@drawable/six" />
 
         </LinearLayout>
 
