@@ -45,13 +45,21 @@ class UUBorderedImageView(context: Context, attrs: AttributeSet?, defStyle: Int)
         }
     }
 
-    fun setBorderColor(color: Int)
+    var borderColor: Int
+        get() = borderPaint.color
+        set(value) = internalSetBorderColor(value)
+
+    var borderWidth: Float
+        get() = borderPaint.strokeWidth
+        set(value) = internalSetBorderWidth(value)
+
+    private fun internalSetBorderColor(color: Int)
     {
         borderPaint.color = color
         invalidate()
     }
 
-    fun setBorderWidth(width: Float)
+    private fun internalSetBorderWidth(width: Float)
     {
         borderPaint.strokeWidth = width
         invalidate()
@@ -75,22 +83,14 @@ class UUBorderedImageView(context: Context, attrs: AttributeSet?, defStyle: Int)
     }
 }
 
-/*
-@BindingAdapter(value = ["bind:uuBoundBorderColor", "bind:uuBoundBorderWidth"], requireAll = true)
-fun uuConfigureBindings(view: UUBorderedImageView, uuBoundBorderColor: Int, uuBoundBorderWidth: Int)
-{
-    view.setBorderColor(UUResources.getColor(uuBoundBorderColor))
-    view.setBorderWidth(UUResources.getDimension(uuBoundBorderWidth))
-}*/
-
 @BindingAdapter("uuBoundBorderColor")
 fun uuBindBorderColor(view: UUBorderedImageView, @ColorRes resourceId: Int)
 {
-    view.setBorderColor(UUResources.getColor(resourceId))
+    view.borderColor = UUResources.getColor(resourceId)
 }
 
 @BindingAdapter("uuBoundBorderWidth")
 fun uuBindBorderWidth(view: UUBorderedImageView, @DimenRes resourceId: Int)
 {
-    view.setBorderWidth(UUResources.getDimension(resourceId))
+    view.borderWidth = UUResources.getDimension(resourceId)
 }
