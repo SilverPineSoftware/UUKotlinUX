@@ -23,8 +23,8 @@ class UUCircularImageButton(context: Context, attrs: AttributeSet?, defStyle: In
         attrs?.let()
         {
             val a = context.obtainStyledAttributes(attrs, R.styleable.UUCircularImageButton)
-            val borderWidth = a.getDimensionPixelSize(R.styleable.UUCircularImageButton_borderWidth, -1)
-            val borderColor = a.getColor(R.styleable.UUCircularImageButton_borderColor, -1)
+            val borderWidth = a.getDimensionPixelSize(R.styleable.UUCircularImageButton_uuBorderWidth, -1)
+            val borderColor = a.getColor(R.styleable.UUCircularImageButton_uuBorderColor, -1)
 
             if (borderColor != -1 && borderWidth != -1)
             {

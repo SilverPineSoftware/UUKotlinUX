@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <attr name="borderWidth" format="dimension" />
-    <attr name="borderColor" format="color" />
+    <attr name="uuBorderWidth" format="dimension" />
+    <attr name="uuBorderColor" format="color" />
 
     <declare-styleable name="UUCircularImageButton">
-        <attr name="borderWidth"/>
-        <attr name="borderColor"/>
+        <attr name="uuBorderWidth"/>
+        <attr name="uuBorderColor"/>
+    </declare-styleable>
+
+    <declare-styleable name="UUBorderedImageView">
+        <attr name="uuBorderWidth"/>
+        <attr name="uuBorderColor"/>
     </declare-styleable>
 
 </resources>
