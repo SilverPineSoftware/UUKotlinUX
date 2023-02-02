@@ -77,21 +77,20 @@ class UUBorderedImageView(context: Context, attrs: AttributeSet?, defStyle: Int)
 
 /*
 @BindingAdapter(value = ["bind:uuBoundBorderColor", "bind:uuBoundBorderWidth"], requireAll = true)
-fun uuConfigureBindings(view: UUBorderedImageView, uuBoundBorderColor: Int?, uuBoundBorderWidth: Int?)
+fun uuConfigureBindings(view: UUBorderedImageView, uuBoundBorderColor: Int, uuBoundBorderWidth: Int)
 {
-    uuBoundBorderColor?.let()
-    {
-        UUResources.getColor(it)?.let()
-        { resource ->
-            view.setBackgroundColor(resource)
-        }
-    }
-
-    uuBoundBorderWidth?.let()
-    {
-        UUResources.getDimension(it)?.let()
-        { resource ->
-            view.setBorderWidth(resource)
-        }
-    }
+    view.setBorderColor(UUResources.getColor(uuBoundBorderColor))
+    view.setBorderWidth(UUResources.getDimension(uuBoundBorderWidth))
 }*/
+
+@BindingAdapter("uuBoundBorderColor")
+fun uuBindBorderColor(view: UUBorderedImageView, @ColorRes resourceId: Int)
+{
+    view.setBorderColor(UUResources.getColor(resourceId))
+}
+
+@BindingAdapter("uuBoundBorderWidth")
+fun uuBindBorderWidth(view: UUBorderedImageView, @DimenRes resourceId: Int)
+{
+    view.setBorderWidth(UUResources.getDimension(resourceId))
+}

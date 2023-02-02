@@ -33,6 +33,24 @@ class BindingViewModel: ViewModel()
             false,
             true))
 
+    var borderColors: MutableLiveData<Array<Int>> = MutableLiveData(
+        arrayOf(
+            R.color.red,
+            R.color.orange,
+            R.color.yellow,
+            R.color.green,
+            R.color.blue,
+            R.color.purple))
+
+    var borderWidths: MutableLiveData<Array<Int>> = MutableLiveData(
+        arrayOf(
+            R.dimen.large_border,
+            R.dimen.medium_border,
+            R.dimen.small_border,
+            R.dimen.no_border,
+            R.dimen.small_border,
+            R.dimen.medium_border,))
+
     fun update()
     {
 
