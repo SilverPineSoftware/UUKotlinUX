@@ -9,7 +9,7 @@ import android.widget.ImageView
 class UUImageViewDragShadowBuilder(
     v: ImageView,
     private val scaleFactor: Float = 1.0f,
-    private val shadowDrawable: Drawable? = v.drawable.constantState?.newDrawable()) : View.DragShadowBuilder(v)
+    private val shadowDrawable: Drawable? = v.drawable?.constantState?.newDrawable()) : View.DragShadowBuilder(v)
 {
     override fun onProvideShadowMetrics(size: Point, touch: Point)
     {
