@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">UUKotlinUX</string>
+    <string name="activity_main_title">Home</string>
+    <string name="activity_drag_drop_title">Drag &amp; Drop</string>
+    <string name="activity_binding_title">Binding</string>
 </resources>

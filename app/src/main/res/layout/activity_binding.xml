@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="vm"
+            type="com.silverpine.uu.sample.ux.binding.BindingViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.silverpine.uu.sample.ux.binding.BindingActivity">
+
+        <LinearLayout
+            android:id="@+id/color_row"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal"
+            android:weightSum="6"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/drawable_row">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:uuVisibleOrInvisible="@{ vm.visibility[0] }"
+                app:uuBackgroundColor="@{ vm.colors[0] }" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:uuVisibleOrInvisible="@{ vm.visibility[1] }"
+                app:uuBackgroundColor="@{ vm.colors[1] }" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:uuVisibleOrInvisible="@{ vm.visibility[2] }"
+                app:uuBackgroundColor="@{ vm.colors[2] }" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:uuVisibleOrInvisible="@{ vm.visibility[3] }"
+                app:uuBackgroundColor="@{ vm.colors[3] }" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:uuVisibleOrInvisible="@{ vm.visibility[4] }"
+                app:uuBackgroundColor="@{ vm.colors[4] }" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:uuVisibleOrInvisible="@{ vm.visibility[5] }"
+                app:uuBackgroundColor="@{ vm.colors[5] }" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/drawable_row"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal"
+            android:weightSum="6"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/color_row">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:uuVisibleOrGone="@{ vm.visibility[0] }"
+                app:uuBackgroundDrawable="@{ vm.images[0] }" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:uuVisibleOrGone="@{ vm.visibility[1] }"
+                app:uuBackgroundDrawable="@{ vm.images[1] }" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:uuVisibleOrGone="@{ vm.visibility[2] }"
+                app:uuBackgroundDrawable="@{ vm.images[2] }" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:uuVisibleOrGone="@{ vm.visibility[3] }"
+                app:uuBackgroundDrawable="@{ vm.images[3] }" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:uuVisibleOrGone="@{ vm.visibility[4] }"
+                app:uuBackgroundDrawable="@{ vm.images[4] }" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:uuVisibleOrGone="@{ vm.visibility[5] }"
+                app:uuBackgroundDrawable="@{ vm.images[5] }" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

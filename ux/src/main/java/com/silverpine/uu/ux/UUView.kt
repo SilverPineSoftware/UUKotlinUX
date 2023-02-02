@@ -11,10 +11,7 @@ fun uuBindBackgroundColor(view: View, @ColorRes resourceId: Int?)
 {
     resourceId?.let()
     {
-        UUResources.getColor(it)?.let()
-        { resource ->
-            view.setBackgroundColor(resource)
-        }
+        view.setBackgroundColor(UUResources.getColor(it))
     }
 }
 

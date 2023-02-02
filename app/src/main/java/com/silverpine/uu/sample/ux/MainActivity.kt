@@ -1,23 +1,26 @@
 package com.silverpine.uu.sample.ux
 
 import android.content.ClipData
+import android.content.Intent
 import android.os.Bundle
 import android.view.DragEvent
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.silverpine.uu.core.UUResources
 import com.silverpine.uu.logging.UULog
+import com.silverpine.uu.sample.ux.binding.BindingActivity
 import com.silverpine.uu.sample.ux.databinding.ActivityMainBinding
+import com.silverpine.uu.sample.ux.dragdrop.DragDropActivity
 import com.silverpine.uu.sample.ux.dragdrop.DropModel
 import com.silverpine.uu.sample.ux.dragdrop.DropViewModel
-import com.silverpine.uu.ux.UUBorderedImageView
-import com.silverpine.uu.ux.UUImageViewDragShadowBuilder
-import com.silverpine.uu.ux.uuClearDragDrop
-import com.silverpine.uu.ux.uuFadeAlpha
+import com.silverpine.uu.ux.*
 
 class MainActivity : AppCompatActivity()
 {
     private lateinit var viewModel: MainViewModel
+    private lateinit var menuHandler: UUMenuHandler
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -41,6 +44,36 @@ class MainActivity : AppCompatActivity()
         buttonThree.configurePlainDragDrop(DropViewModel(false, DropModel("Three")), viewModel)
         buttonFour.configurePlainDragDrop(DropViewModel(true, DropModel("Four")), viewModel)
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean
+    {
+        val m = menu ?: return false
+        menuHandler = UUMenuHandler(m)
+        return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean
+    {
+        menu?.removeGroup(0)
+
+        menuHandler.add(R.string.activity_drag_drop_title)
+        {
+            startActivity(Intent(this, DragDropActivity::class.java))
+        }
+
+        menuHandler.add(R.string.activity_binding_title)
+        {
+            startActivity(Intent(this, BindingActivity::class.java))
+        }
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean
+    {
+        return menuHandler.handleMenuClick(item)
+    }
+
 }
 
 private const val CUSTOM_DROP_MIME_TYPE = "UU/CustomDropItem"
