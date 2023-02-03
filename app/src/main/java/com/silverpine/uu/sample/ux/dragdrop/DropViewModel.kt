@@ -8,8 +8,9 @@ import com.silverpine.uu.core.UUThread
 import com.silverpine.uu.core.UUTimer
 import com.silverpine.uu.logging.UULog
 import com.silverpine.uu.sample.ux.R
+import com.silverpine.uu.ux.dragdrop.UUDragDropViewModel
 
-class DropViewModel(var allowDrop: Boolean = true, var model: DropModel?): ViewModel()
+class DropViewModel(override val allowDrop: Boolean = true, model: DropModel?): ViewModel(), UUDragDropViewModel
 {
     private var _text = MutableLiveData<String?>(model?.name)
     val text: LiveData<String?> = _text
@@ -23,7 +24,10 @@ class DropViewModel(var allowDrop: Boolean = true, var model: DropModel?): ViewM
     private var _borderWidth = MutableLiveData(R.dimen.no_border)
     val borderWidth: LiveData<Int> = _borderWidth
 
-    val id = UURandom.uuid()
+    override val id: String = UURandom.uuid()
+    override val name: String = ""
+    override val mimeType: String = "UU/CustomMimeType"
+
 
     var onFade: (DropViewModel, Float, Long)->Unit = { _,_,_ -> }
     var onDrop: ()->Unit = { }
@@ -34,7 +38,8 @@ class DropViewModel(var allowDrop: Boolean = true, var model: DropModel?): ViewM
         clearDrag()
     }
 
-    fun handleDragStart(other: DropViewModel)
+
+    override fun handleDragStart(other: UUDragDropViewModel)
     {
         if (id == other.id)
         {
@@ -49,7 +54,7 @@ class DropViewModel(var allowDrop: Boolean = true, var model: DropModel?): ViewM
         }
     }
 
-    fun handleDragEnter(other: DropViewModel)
+    override fun handleDragEnter(other: UUDragDropViewModel)
     {
         if (id == other.id)
         {
@@ -62,7 +67,7 @@ class DropViewModel(var allowDrop: Boolean = true, var model: DropModel?): ViewM
         }
     }
 
-    fun handleDragExit(other: DropViewModel)
+    override fun handleDragExit(other: UUDragDropViewModel)
     {
         if (id == other.id)
         {
@@ -75,7 +80,7 @@ class DropViewModel(var allowDrop: Boolean = true, var model: DropModel?): ViewM
         }
     }
 
-    fun handleDrop(other: DropViewModel)
+    override fun handleDrop(other: UUDragDropViewModel)
     {
         if (id == other.id)
         {
@@ -88,20 +93,24 @@ class DropViewModel(var allowDrop: Boolean = true, var model: DropModel?): ViewM
             _borderWidth.value = R.dimen.medium_border
             clearDrag()
 
-            val srcDrawable = _sourceDrawable.value
-            val srcText = _text.value
+            (other as? DropViewModel)?.let()
+            { otherVm ->
 
-            _sourceDrawable.value = other.sourceDrawable.value
-            _text.value = other.text.value
+                val srcDrawable = _sourceDrawable.value
+                val srcText = _text.value
 
-            other._sourceDrawable.value = srcDrawable
-            other._text.value = srcText
+                _sourceDrawable.value = otherVm.sourceDrawable.value
+                _text.value = otherVm.text.value
+
+                otherVm._sourceDrawable.value = srcDrawable
+                otherVm._text.value = srcText
+            }
 
             onDrop.invoke()
         }
     }
 
-    fun handleDragEnd(other: DropViewModel)
+    override fun handleDragEnd(other: UUDragDropViewModel)
     {
         if (id == other.id)
         {

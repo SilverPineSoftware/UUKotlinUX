@@ -1,15 +1,16 @@
-package com.silverpine.uu.ux
+package com.silverpine.uu.ux.dragdrop
 
 import android.graphics.Canvas
 import android.graphics.Point
 import android.graphics.drawable.Drawable
 import android.view.View
-import android.widget.ImageView
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.view.drawToBitmap
 
-class UUImageViewDragShadowBuilder(
-    v: ImageView,
+open class UUDragShadowBuilder(
+    v: View,
     private val scaleFactor: Float = 1.0f,
-    private val shadowDrawable: Drawable? = v.drawable?.constantState?.newDrawable()) : View.DragShadowBuilder(v)
+    private val shadowDrawable: Drawable? = v.drawToBitmap().toDrawable(v.resources)) : View.DragShadowBuilder(v)
 {
     override fun onProvideShadowMetrics(size: Point, touch: Point)
     {
