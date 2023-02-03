@@ -8,7 +8,7 @@ on:
 jobs:
   publish:
     name: Release build and publish
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -17,17 +17,13 @@ jobs:
         with:
           distribution: adopt
           java-version: 11
-
-        # Builds the release artifacts of the library
-      - name: Release build
+      - name: Update Version
+        run: ./scripts/update_version.sh
+        env:
+          BUILD_NUMBER: ${{github.run_number}}
+      - name: Assemble Release
         run: ./gradlew clean :ux:assembleRelease
-
-#        # Generates other artifacts (javadocJar is optional)
-#      - name: Source jar and dokka
-#        run: ./gradlew androidSourcesJar javadocJar
-
-        # Runs upload, and then closes & releases the repository
-      - name: Publish to MavenCentral
+      - name: Publish to Maven Staging
         run: ./gradlew publishToSonatype --max-workers 1
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
