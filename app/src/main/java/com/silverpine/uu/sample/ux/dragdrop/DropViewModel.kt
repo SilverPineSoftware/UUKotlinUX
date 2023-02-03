@@ -10,7 +10,7 @@ import com.silverpine.uu.logging.UULog
 import com.silverpine.uu.sample.ux.R
 import com.silverpine.uu.ux.dragdrop.UUDragDropViewModel
 
-class DropViewModel(override val allowDrop: Boolean = true, model: DropModel?): ViewModel(), UUDragDropViewModel
+class DropViewModel(override val allowDrop: Boolean = true, override val allowDrag: Boolean = true, model: DropModel?): ViewModel(), UUDragDropViewModel
 {
     private var _text = MutableLiveData<String?>(model?.name)
     val text: LiveData<String?> = _text

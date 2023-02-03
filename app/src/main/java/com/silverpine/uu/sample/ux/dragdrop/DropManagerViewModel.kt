@@ -10,10 +10,10 @@ class DropManagerViewModel: ViewModel()
 {
     var data: LiveData<ArrayList<DropViewModel>> = MutableLiveData(
         arrayListOf(
-            DropViewModel(true, DropModel("one")),
-            DropViewModel(true, DropModel("two")),
-            DropViewModel(false, DropModel("three")),
-            DropViewModel(true, DropModel("four"))
+            DropViewModel(allowDrop = true, allowDrag = true, model = DropModel("one")),
+            DropViewModel(allowDrop = true, allowDrag = false, model = DropModel("two")),
+            DropViewModel(allowDrop = false, allowDrag = true, model = DropModel("three")),
+            DropViewModel(allowDrop = true, allowDrag = true, model = DropModel("four"))
         )
     )
 
