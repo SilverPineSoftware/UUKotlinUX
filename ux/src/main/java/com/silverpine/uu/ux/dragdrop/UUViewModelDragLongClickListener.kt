@@ -12,8 +12,15 @@ class UUViewModelDragLongClickListener(private val viewModel: UUDragDropViewMode
 
     override fun onLongClick(v: View?): Boolean
     {
-        val dragData = ClipData(viewModel.name, arrayOf(viewModel.mimeType), ClipData.Item(viewModel.name))
-        v?.startDragAndDrop(dragData, shadowBuilder.invoke(v), viewModel, 0)
-        return true
+        return if (viewModel.allowDrag)
+        {
+            val dragData = ClipData(viewModel.name, arrayOf(viewModel.mimeType), ClipData.Item(viewModel.name))
+            v?.startDragAndDrop(dragData, shadowBuilder.invoke(v), viewModel, 0)
+            true
+        }
+        else
+        {
+            false
+        }
     }
 }

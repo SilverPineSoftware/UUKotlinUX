@@ -8,6 +8,10 @@ open class UUViewModelDragListener(private val dropTargetViewModel: UUDragDropVi
     override fun onDrag(v: View?, event: DragEvent?): Boolean
     {
         val dragViewModel = (event?.localState as? UUDragDropViewModel) ?: return false
+        if (!dropTargetViewModel.allowDrop)
+        {
+            return false
+        }
 
         return when (event.action)
         {

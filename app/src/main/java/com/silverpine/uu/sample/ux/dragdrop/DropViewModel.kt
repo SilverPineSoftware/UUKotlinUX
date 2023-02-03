@@ -10,9 +10,9 @@ import com.silverpine.uu.logging.UULog
 import com.silverpine.uu.sample.ux.R
 import com.silverpine.uu.ux.dragdrop.UUDragDropViewModel
 
-class DropViewModel(override val allowDrop: Boolean = true, override val allowDrag: Boolean = true, model: DropModel?): ViewModel(), UUDragDropViewModel
+class DropViewModel(private val slotAllowsDrop: Boolean): ViewModel(), UUDragDropViewModel
 {
-    private var _text = MutableLiveData<String?>(model?.name)
+    private var _text = MutableLiveData<String?>(null)
     val text: LiveData<String?> = _text
 
     private var _sourceDrawable = MutableLiveData<Int?>(null)
@@ -28,13 +28,23 @@ class DropViewModel(override val allowDrop: Boolean = true, override val allowDr
     override val name: String = ""
     override val mimeType: String = "UU/CustomMimeType"
 
+    override val allowDrag: Boolean
+        get() = (model != null)
+
+    override val allowDrop: Boolean
+        get() = slotAllowsDrop
+
 
     var onFade: (DropViewModel, Float, Long)->Unit = { _,_,_ -> }
     var onDrop: ()->Unit = { }
 
-    fun update(resourceId: Int?)
+    private var model: DropModel? = null
+
+    fun update(model: DropModel?)
     {
-        _sourceDrawable.value = resourceId
+        this.model = model
+        _text.value = model?.name
+        _sourceDrawable.value = model?.image
         clearDrag()
     }
 
@@ -96,14 +106,18 @@ class DropViewModel(override val allowDrop: Boolean = true, override val allowDr
             (other as? DropViewModel)?.let()
             { otherVm ->
 
-                val srcDrawable = _sourceDrawable.value
-                val srcText = _text.value
+                val srcModel = model
+                update(otherVm.model)
+                other.update(srcModel)
 
-                _sourceDrawable.value = otherVm.sourceDrawable.value
-                _text.value = otherVm.text.value
-
-                otherVm._sourceDrawable.value = srcDrawable
-                otherVm._text.value = srcText
+//                val srcDrawable = _sourceDrawable.value
+//                val srcText = _text.value
+//
+//                _sourceDrawable.value = otherVm.sourceDrawable.value
+//                _text.value = otherVm.text.value
+//
+//                otherVm._sourceDrawable.value = srcDrawable
+//                otherVm._text.value = srcText
             }
 
             onDrop.invoke()

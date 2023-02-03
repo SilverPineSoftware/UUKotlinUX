@@ -19,14 +19,6 @@ fun View.uuConfigureDragDrop(viewModel: UUDragDropViewModel?)
     }
 
     tag = viewModel.id
-
-    if (viewModel.allowDrag)
-    {
-        setOnLongClickListener(UUViewModelDragLongClickListener(viewModel))
-    }
-
-    if (viewModel.allowDrop)
-    {
-        setOnDragListener(UUViewModelDragListener(viewModel))
-    }
+    setOnLongClickListener(UUViewModelDragLongClickListener(viewModel))
+    setOnDragListener(UUViewModelDragListener(viewModel))
 }
