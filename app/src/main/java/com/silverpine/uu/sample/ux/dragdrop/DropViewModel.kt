@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.silverpine.uu.core.UURandom
+import com.silverpine.uu.core.UUThread
+import com.silverpine.uu.core.UUTimer
 import com.silverpine.uu.logging.UULog
 import com.silverpine.uu.sample.ux.R
 
@@ -24,6 +26,7 @@ class DropViewModel(var allowDrop: Boolean = true, var model: DropModel?): ViewM
     val id = UURandom.uuid()
 
     var onFade: (DropViewModel, Float, Long)->Unit = { _,_,_ -> }
+    var onDrop: ()->Unit = { }
 
     fun update(resourceId: Int?)
     {
@@ -93,6 +96,8 @@ class DropViewModel(var allowDrop: Boolean = true, var model: DropModel?): ViewM
 
             other._sourceDrawable.value = srcDrawable
             other._text.value = srcText
+
+            onDrop.invoke()
         }
     }
 
@@ -105,6 +110,45 @@ class DropViewModel(var allowDrop: Boolean = true, var model: DropModel?): ViewM
         else
         {
             clearDrag()
+        }
+    }
+
+    fun doWiggle()
+    {
+        changeBorder(R.color.red, R.dimen.small_border)
+        {
+            changeBorder(R.color.orange, R.dimen.medium_border)
+            {
+                changeBorder(R.color.yellow, R.dimen.large_border)
+                {
+                    changeBorder(R.color.green, R.dimen.large_border)
+                    {
+                        changeBorder(R.color.blue, R.dimen.medium_border)
+                        {
+                            changeBorder(R.color.purple, R.dimen.small_border)
+                            {
+                                changeBorder(R.color.transparent, R.dimen.no_border)
+                                {
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun changeBorder(color: Int, width: Int, completion: ()->Unit)
+    {
+        UUTimer.startTimer("changeBorder", 200L, null)
+        { _, _ ->
+            UUThread.runOnMainThread()
+            {
+                _borderColor.value = color
+                _borderWidth.value = width
+                completion.invoke()
+            }
         }
     }
 

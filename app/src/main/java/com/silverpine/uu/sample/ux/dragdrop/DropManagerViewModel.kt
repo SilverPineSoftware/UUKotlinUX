@@ -33,7 +33,19 @@ class DropManagerViewModel: ViewModel()
         data.value?.uuGetOrNull(2)?.update(R.drawable.three)
         data.value?.uuGetOrNull(3)?.update(R.drawable.four)
 
-        data.value?.forEach { it.onFade = onFade }
+        data.value?.forEach()
+        {
+            it.onFade = onFade
+            it.onDrop = this::handleDrop
+        }
+    }
+
+    private fun handleDrop()
+    {
+        data.value?.forEach()
+        {
+            it.doWiggle()
+        }
     }
 }
 private const val CUSTOM_DROP_MIME_TYPE = "UU/CustomDropItem"
