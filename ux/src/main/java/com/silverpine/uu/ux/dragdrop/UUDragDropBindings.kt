@@ -18,12 +18,6 @@ fun View.uuConfigureDragDrop(viewModel: UUDragDropViewModel?)
         return
     }
 
-    if (!viewModel.allowDrop)
-    {
-        uuClearDragDrop()
-        return
-    }
-
     tag = viewModel.id
 
     if (viewModel.allowDrag)
