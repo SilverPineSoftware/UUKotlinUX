@@ -3,4 +3,5 @@
     <string name="activity_main_title">Home</string>
     <string name="activity_drag_drop_title">Drag &amp; Drop</string>
     <string name="activity_binding_title">Binding</string>
+    <string name="welcome_message">Select an option from the menu to explore UUKotlinUX</string>
 </resources>

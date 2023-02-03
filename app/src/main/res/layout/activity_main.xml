@@ -14,63 +14,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.silverpine.uu.sample.ux.MainActivity">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:orientation="horizontal"
+        
+        <TextView
+            android:id="@+id/welcome_message"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="@string/welcome_message"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            android:layout_margin="24dp"
+            android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <View
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                uuBackgroundColor="@color/red" />
-
-        </LinearLayout>
-
-
-
-        <com.silverpine.uu.ux.UUBorderedImageView
-            android:id="@+id/one"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/one"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/two"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/three" />
-
-        <com.silverpine.uu.ux.UUBorderedImageView
-            android:id="@+id/two"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/two"
-            app:layout_constraintStart_toEndOf="@+id/one"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/four" />
-
-        <com.silverpine.uu.ux.UUBorderedImageView
-            android:id="@+id/three"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/three"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/four"
-            app:layout_constraintTop_toBottomOf="@+id/one"
-            app:layout_constraintBottom_toBottomOf="parent" />
-
-        <com.silverpine.uu.ux.UUBorderedImageView
-            android:id="@+id/four"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/four"
-            app:layout_constraintStart_toEndOf="@+id/three"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/two"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
