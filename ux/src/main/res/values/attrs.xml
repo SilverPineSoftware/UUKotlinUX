@@ -9,6 +9,11 @@
         <attr name="uuBorderColor"/>
     </declare-styleable>
 
+    <declare-styleable name="UUBorderedView">
+        <attr name="uuBorderWidth"/>
+        <attr name="uuBorderColor"/>
+    </declare-styleable>
+
     <declare-styleable name="UUBorderedImageView">
         <attr name="uuBorderWidth"/>
         <attr name="uuBorderColor"/>

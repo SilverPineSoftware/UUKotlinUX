@@ -21,7 +21,6 @@ open class UUViewModelDragListener(private val dropTargetViewModel: UUDragDropVi
                 if (event.clipDescription.hasMimeType(dropTargetViewModel.mimeType))
                 {
                     dropTargetViewModel.handleDragStart(dragViewModel)
-                    true
                 }
                 else
                 {

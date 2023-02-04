@@ -5,12 +5,21 @@ import androidx.databinding.BindingAdapter
 import com.silverpine.uu.ux.uuClearDragDrop
 
 @BindingAdapter("uuDragDropViewModel")
-fun uuConfigureDropBindings(view: View?, viewModel: UUDragDropViewModel?)
+fun uuConfigureDragDropBindings(view: View?, viewModel: UUDragDropViewModel?)
 {
     view?.uuConfigureDragDrop(viewModel)
 }
 
-fun View.uuConfigureDragDrop(viewModel: UUDragDropViewModel?)
+@BindingAdapter("uuDropTargetViewModel")
+fun uuConfigureDropTargetBindings(view: View?, viewModel: UUDragDropViewModel?)
+{
+    view?.uuConfigureDragDrop(viewModel, configureDragSupport = false)
+}
+
+fun View.uuConfigureDragDrop(
+    viewModel: UUDragDropViewModel?,
+    configureDragSupport: Boolean = true,
+    configureDropSupport: Boolean = true)
 {
     if (viewModel == null)
     {
@@ -19,6 +28,14 @@ fun View.uuConfigureDragDrop(viewModel: UUDragDropViewModel?)
     }
 
     tag = viewModel.id
-    setOnLongClickListener(UUViewModelDragLongClickListener(viewModel))
-    setOnDragListener(UUViewModelDragListener(viewModel))
+
+    if (configureDragSupport)
+    {
+        setOnLongClickListener(UUViewModelDragLongClickListener(viewModel))
+    }
+
+    if (configureDropSupport)
+    {
+        setOnDragListener(UUViewModelDragListener(viewModel))
+    }
 }

@@ -8,7 +8,7 @@ interface UUDragDropViewModel
     val allowDrop: Boolean
     val mimeType: String
 
-    fun handleDragStart(other: UUDragDropViewModel)
+    fun handleDragStart(other: UUDragDropViewModel): Boolean
     fun handleDragEnter(other: UUDragDropViewModel)
     fun handleDragExit(other: UUDragDropViewModel)
     fun handleDrop(other: UUDragDropViewModel)

@@ -48,8 +48,7 @@ class DropViewModel(private val slotAllowsDrop: Boolean): ViewModel(), UUDragDro
         clearDrag()
     }
 
-
-    override fun handleDragStart(other: UUDragDropViewModel)
+    override fun handleDragStart(other: UUDragDropViewModel): Boolean
     {
         if (id == other.id)
         {
@@ -62,6 +61,8 @@ class DropViewModel(private val slotAllowsDrop: Boolean): ViewModel(), UUDragDro
             _borderColor.value = R.color.drop_accept_border
             _borderWidth.value = R.dimen.drop_accept_border_width
         }
+
+        return true
     }
 
     override fun handleDragEnter(other: UUDragDropViewModel)
