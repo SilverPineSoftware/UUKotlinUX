@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.silverpine.uu.sample.ux.databinding.ActivityDragDropBinding
 import com.silverpine.uu.ux.UUBorderedImageView
-import com.silverpine.uu.ux.uuFadeAlpha
 
 class DragDropActivity : AppCompatActivity()
 {
@@ -27,13 +26,6 @@ class DragDropActivity : AppCompatActivity()
         buttons.add(binding.three)
         buttons.add(binding.four)
 
-        viewModel.onFade = this::handleFade
         viewModel.update()
-    }
-
-    private fun handleFade(viewModel: DropViewModel, alpha: Float, duration: Long)
-    {
-        buttons.firstOrNull { (it.tag as? String) == viewModel.id }?.uuFadeAlpha(alpha, duration)
-
     }
 }

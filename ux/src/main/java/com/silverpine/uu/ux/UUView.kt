@@ -49,3 +49,15 @@ fun uuBindVisibleOrInvisible(view: View, visible: Boolean?)
         view.visibility = View.INVISIBLE
     }
 }
+
+@BindingAdapter(value = ["bind:uuAlpha", "bind:uuAlphaDuration"], requireAll = false)
+fun uuBindAlpha(view: View, alpha: Float?, duration: Long = 200L)
+{
+    alpha?.let()
+    {
+        if (view.alpha != it)
+        {
+            view.uuFadeAlpha(it, duration)
+        }
+    }
+}

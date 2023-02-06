@@ -24,6 +24,12 @@ class DropViewModel(private val slotAllowsDrop: Boolean): ViewModel(), UUDragDro
     private var _borderWidth = MutableLiveData(R.dimen.no_border)
     val borderWidth: LiveData<Int> = _borderWidth
 
+    private var _alpha = MutableLiveData(1.0f)
+    val alpha: LiveData<Float> = _alpha
+
+    private var _alphaDuration = MutableLiveData(2000L)
+    val alphaDuration: LiveData<Long> = _alphaDuration
+
     override val id: String = UURandom.uuid()
     override val name: String = ""
     override val mimeType: String = "UU/CustomMimeType"
@@ -34,8 +40,6 @@ class DropViewModel(private val slotAllowsDrop: Boolean): ViewModel(), UUDragDro
     override val allowDrop: Boolean
         get() = slotAllowsDrop
 
-
-    var onFade: (DropViewModel, Float, Long)->Unit = { _,_,_ -> }
     var onDrop: ()->Unit = { }
 
     private var model: DropModel? = null
@@ -110,15 +114,6 @@ class DropViewModel(private val slotAllowsDrop: Boolean): ViewModel(), UUDragDro
                 val srcModel = model
                 update(otherVm.model)
                 other.update(srcModel)
-
-//                val srcDrawable = _sourceDrawable.value
-//                val srcText = _text.value
-//
-//                _sourceDrawable.value = otherVm.sourceDrawable.value
-//                _text.value = otherVm.text.value
-//
-//                otherVm._sourceDrawable.value = srcDrawable
-//                otherVm._text.value = srcText
             }
 
             onDrop.invoke()
@@ -127,14 +122,8 @@ class DropViewModel(private val slotAllowsDrop: Boolean): ViewModel(), UUDragDro
 
     override fun handleDragEnd(other: UUDragDropViewModel)
     {
-        if (id == other.id)
-        {
-            fadeIn()
-        }
-        else
-        {
-            clearDrag()
-        }
+        fadeIn()
+        clearDrag()
     }
 
     fun doWiggle()
@@ -184,16 +173,11 @@ class DropViewModel(private val slotAllowsDrop: Boolean): ViewModel(), UUDragDro
 
     private fun fadeIn()
     {
-        fade(1.0f)
+        _alpha.value = 1.0f
     }
 
     private fun fadeOut()
     {
-        fade(0.5f)
-    }
-
-    private fun fade(alpha: Float, duration: Long = 200L)
-    {
-        onFade.invoke(this, alpha, duration)
+        _alpha.value = 0.5f
     }
 }

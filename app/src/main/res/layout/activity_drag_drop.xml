@@ -22,6 +22,8 @@
             app:uuSourceDrawable="@{ vm.data[0].sourceDrawable }"
             app:uuBoundBorderColor="@{ vm.data[0].borderColor }"
             app:uuBoundBorderWidth="@{ vm.data[0].borderWidth }"
+            app:uuAlpha="@{ vm.data[0].alpha }"
+            app:uuAlphaDuration="@{ vm.data[0].alphaDuration }"
             app:uuDragDropViewModel="@{ vm.data[0] }"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/two"
@@ -37,6 +39,8 @@
             app:uuSourceDrawable="@{ vm.data[1].sourceDrawable }"
             app:uuBoundBorderColor="@{ vm.data[1].borderColor }"
             app:uuBoundBorderWidth="@{ vm.data[1].borderWidth }"
+            app:uuAlpha="@{ vm.data[1].alpha }"
+            app:uuAlphaDuration="@{ vm.data[1].alphaDuration }"
             app:uuDragDropViewModel="@{ vm.data[1] }"
             app:layout_constraintStart_toEndOf="@+id/one"
             app:layout_constraintEnd_toEndOf="parent"
@@ -52,6 +56,8 @@
             app:uuSourceDrawable="@{ vm.data[2].sourceDrawable }"
             app:uuBoundBorderColor="@{ vm.data[2].borderColor }"
             app:uuBoundBorderWidth="@{ vm.data[2].borderWidth }"
+            app:uuAlpha="@{ vm.data[2].alpha }"
+            app:uuAlphaDuration="@{ vm.data[2].alphaDuration }"
             app:uuDragDropViewModel="@{ vm.data[2] }"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/four"
@@ -67,6 +73,8 @@
             app:uuSourceDrawable="@{ vm.data[3].sourceDrawable }"
             app:uuBoundBorderColor="@{ vm.data[3].borderColor }"
             app:uuBoundBorderWidth="@{ vm.data[3].borderWidth }"
+            app:uuAlpha="@{ vm.data[3].alpha }"
+            app:uuAlphaDuration="@{ vm.data[3].alphaDuration }"
             app:uuDragDropViewModel="@{ vm.data[3] }"
             app:layout_constraintStart_toEndOf="@+id/three"
             app:layout_constraintEnd_toEndOf="parent"
@@ -74,78 +82,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             tools:uuBorderColor="#00FF00"
             tools:uuBorderWidth="8dp" />
-
-
-
-<!--
-        <com.silverpine.uu.ux.UUBorderedImageView
-            android:id="@+id/one"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@mipmap/ic_launcher"
-            app:uuSourceDrawable="@{ vm.data[0].sourceDrawable }"
-            app:uuBorderColor="@{ vm.data[0].borderColor }"
-            app:uuBorderWidth="@{ vm.data[0].borderWidth }"
-            app:uuDropViewModel="@{ vm.data[0] }"
-            app:uuDropManagerViewModel="@{ vm }"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/two"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/three"
-            tools:uuBorderColor="#721EA5"
-            tools:uuBorderWidth="8dp" />
-
-        <com.silverpine.uu.ux.UUBorderedImageView
-            android:id="@+id/two"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@mipmap/ic_launcher"
-            app:uuSourceDrawable="@{ vm.data[1].sourceDrawable }"
-            app:uuBorderColor="@{ vm.data[1].borderColor }"
-            app:uuBorderWidth="@{ vm.data[1].borderWidth }"
-            app:uuDropViewModel="@{ vm.data[1] }"
-            app:uuDropManagerViewModel="@{ vm }"
-            app:layout_constraintStart_toEndOf="@+id/one"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/four"
-            tools:uuBorderColor="#2831D1"
-            tools:uuBorderWidth="8dp" />
-
-        <com.silverpine.uu.ux.UUBorderedImageView
-            android:id="@+id/three"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@mipmap/ic_launcher"
-            app:uuSourceDrawable="@{ vm.data[2].sourceDrawable }"
-            app:uuBorderColor="@{ vm.data[2].borderColor }"
-            app:uuBorderWidth="@{ vm.data[2].borderWidth }"
-            app:uuDropViewModel="@{ vm.data[2] }"
-            app:uuDropManagerViewModel="@{ vm }"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/four"
-            app:layout_constraintTop_toBottomOf="@+id/one"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:uuBorderColor="#0000FF"
-            tools:uuBorderWidth="8dp" />
-
-        <com.silverpine.uu.ux.UUBorderedImageView
-            android:id="@+id/four"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@mipmap/ic_launcher"
-            app:uuSourceDrawable="@{ vm.data[3].sourceDrawable }"
-            app:uuBorderColor="@{ vm.data[3].borderColor }"
-            app:uuBorderWidth="@{ vm.data[3].borderWidth }"
-            app:uuDropViewModel="@{ vm.data[3] }"
-            app:uuDropManagerViewModel="@{ vm }"
-            app:layout_constraintStart_toEndOf="@+id/three"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/two"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:uuBorderColor="#00FF00"
-            tools:uuBorderWidth="8dp" />
-        -->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

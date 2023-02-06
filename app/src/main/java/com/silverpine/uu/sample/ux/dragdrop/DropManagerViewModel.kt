@@ -15,8 +15,6 @@ class DropManagerViewModel: ViewModel()
             MutableLiveData(DropViewModel(true))
         )
 
-    var onFade: (DropViewModel, Float, Long)->Unit = { _,_,_ -> }
-
     fun update()
     {
         data[0].value?.update(DropModel("one", R.drawable.one, true))
