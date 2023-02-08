@@ -1,6 +1,8 @@
 package com.silverpine.uu.ux
 
+import android.animation.LayoutTransition
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.Interpolator
@@ -36,3 +38,37 @@ fun View.uuFadeOut(
 {
     uuFadeAlpha(0.0f, duration, DecelerateInterpolator(), startDelay, completion)
 }
+
+fun ViewGroup.uuAnimateLayout(
+    updatedLayoutParams: ViewGroup.LayoutParams,
+    duration: Long,
+    transitionType: Int = LayoutTransition.CHANGING,
+    interpolator: Interpolator? = null,
+    startDelay: Long = 0,
+    completion: (() -> Unit)? = null)
+{
+    val lt = LayoutTransition()
+    lt.setDuration(duration)
+    lt.setStartDelay(transitionType, startDelay)
+    lt.setInterpolator(transitionType, interpolator)
+    lt.enableTransitionType(transitionType)
+
+    lt.addTransitionListener(object: LayoutTransition.TransitionListener
+    {
+        override fun startTransition(transition: LayoutTransition?, container: ViewGroup?, view: View?, transitionType: Int)
+        {
+        }
+
+        override fun endTransition(transition: LayoutTransition?, container: ViewGroup?, view: View?, transitionType: Int)
+        {
+            transition?.disableTransitionType(transitionType)
+            completion?.invoke()
+        }
+    })
+
+    layoutTransition = lt
+
+    layoutParams = updatedLayoutParams
+}
+
+
