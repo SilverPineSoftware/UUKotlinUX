@@ -12,7 +12,7 @@ import androidx.annotation.DimenRes
 import androidx.databinding.BindingAdapter
 import com.silverpine.uu.core.UUResources
 
-class UUBorderedView(context: Context, attrs: AttributeSet?, defStyle: Int): View(context, attrs, defStyle)
+open class UUBorderedView(context: Context, attrs: AttributeSet?, defStyle: Int): View(context, attrs, defStyle)
 {
     private var borderRect: Rect = Rect(0,0,0,0)
     private val borderPaint: Paint = Paint()

@@ -45,7 +45,7 @@ open class SomeActivity: AppCompatActivity()
 
  */
 
-class UUMenuHandler(private val menu: Menu)
+open class UUMenuHandler(private val menu: Menu)
 {
     private val handlers: HashMap<Int, Runnable> = HashMap()
     private var lastId = 0
