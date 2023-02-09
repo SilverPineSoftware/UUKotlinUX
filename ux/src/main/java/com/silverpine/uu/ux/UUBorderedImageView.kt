@@ -14,7 +14,7 @@ import com.silverpine.uu.core.UUResources
 
 open class UUBorderedImageView(context: Context, attrs: AttributeSet?, defStyle: Int): AppCompatImageView(context, attrs, defStyle)
 {
-    private var _fillColor: Int = android.R.color.transparent
+    private var _fillColor: Int = resources.getColor(android.R.color.transparent, null)
     private var borderRect: Rect = Rect(0,0,0,0)
     private val borderPaint: Paint = Paint()
 
@@ -70,7 +70,7 @@ open class UUBorderedImageView(context: Context, attrs: AttributeSet?, defStyle:
 
     private fun internalSetFillColor(@ColorRes color: Int)
     {
-        _fillColor = color
+        _fillColor = resources.getColor(color, null)
         invalidate()
     }
 
