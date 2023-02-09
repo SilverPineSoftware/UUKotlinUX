@@ -45,8 +45,8 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
 
     implementation "com.silverpine.uu:uu-core-ktx:${uu_core_version}"
+    implementation project(':library')
 
-    implementation project(':ux')
 
     testImplementation 'junit:junit:4.13.2'
 
