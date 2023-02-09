@@ -83,9 +83,9 @@ open class UUCircularImageButton(context: Context, attrs: AttributeSet?, defStyl
         invalidate()
     }
 
-    private fun internalSetFillColor(@ColorRes color: Int)
+    private fun internalSetFillColor(color: Int)
     {
-        _fillColor = resources.getColor(color, null)
+        _fillColor = color
         invalidate()
     }
 

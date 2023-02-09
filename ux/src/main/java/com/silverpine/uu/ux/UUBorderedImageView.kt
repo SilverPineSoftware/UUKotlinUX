@@ -68,9 +68,9 @@ open class UUBorderedImageView(context: Context, attrs: AttributeSet?, defStyle:
         get() = borderPaint.strokeWidth
         set(value) = internalSetBorderWidth(value)
 
-    private fun internalSetFillColor(@ColorRes color: Int)
+    private fun internalSetFillColor(color: Int)
     {
-        _fillColor = resources.getColor(color, null)
+        _fillColor = color
         invalidate()
     }
 
