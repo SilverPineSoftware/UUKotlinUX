@@ -14,7 +14,7 @@ import com.silverpine.uu.core.UUResources
 
 open class UUCircularImageButton(context: Context, attrs: AttributeSet?, defStyle: Int): AppCompatImageButton(context, attrs, defStyle)
 {
-    private var _fillColor: Int = android.R.color.transparent
+    private var _fillColor: Int = resources.getColor(android.R.color.transparent, null)
     private val clippingPath = Path()
     private var clipX: Float = 0.0f
     private var clipY: Float = 0.0f
@@ -85,7 +85,7 @@ open class UUCircularImageButton(context: Context, attrs: AttributeSet?, defStyl
 
     private fun internalSetFillColor(@ColorRes color: Int)
     {
-        _fillColor = color
+        _fillColor = resources.getColor(color, null)
         invalidate()
     }
 
