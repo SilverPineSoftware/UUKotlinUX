@@ -2,10 +2,15 @@ package com.silverpine.uu.ux
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
+import androidx.annotation.ColorRes
+import androidx.annotation.DimenRes
 import androidx.appcompat.widget.AppCompatImageButton
+import androidx.databinding.BindingAdapter
+import com.silverpine.uu.core.UUResources
 
 open class UUCircularImageButton(context: Context, attrs: AttributeSet?, defStyle: Int): AppCompatImageButton(context, attrs, defStyle)
 {
@@ -20,6 +25,13 @@ open class UUCircularImageButton(context: Context, attrs: AttributeSet?, defStyl
 
     init
     {
+        borderPaint.isDither = true
+        borderPaint.isAntiAlias = true
+        borderPaint.color = Color.TRANSPARENT
+        borderPaint.strokeWidth = 0.0f
+        borderPaint.strokeCap = Paint.Cap.ROUND
+        borderPaint.style = Paint.Style.STROKE
+
         attrs?.let()
         {
             val a = context.obtainStyledAttributes(attrs, R.styleable.UUCircularImageButton)
@@ -28,16 +40,32 @@ open class UUCircularImageButton(context: Context, attrs: AttributeSet?, defStyl
 
             if (borderColor != -1 && borderWidth != -1)
             {
-                borderPaint.isDither = true
-                borderPaint.isAntiAlias = true
                 borderPaint.color = borderColor
                 borderPaint.strokeWidth = borderWidth.toFloat()
-                borderPaint.strokeCap = Paint.Cap.ROUND
-                borderPaint.style = Paint.Style.STROKE
             }
 
             a.recycle()
         }
+    }
+
+    var borderColor: Int
+        get() = borderPaint.color
+        set(value) = internalSetBorderColor(value)
+
+    var borderWidth: Float
+        get() = borderPaint.strokeWidth
+        set(value) = internalSetBorderWidth(value)
+
+    private fun internalSetBorderColor(color: Int)
+    {
+        borderPaint.color = color
+        invalidate()
+    }
+
+    private fun internalSetBorderWidth(width: Float)
+    {
+        borderPaint.strokeWidth = width
+        invalidate()
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int)
@@ -56,10 +84,27 @@ open class UUCircularImageButton(context: Context, attrs: AttributeSet?, defStyl
         }
     }
 
-    override fun onDraw(canvas: Canvas)
+    open fun preDraw(canvas: Canvas)
     {
         canvas.clipPath(clippingPath)
+    }
+
+    override fun onDraw(canvas: Canvas)
+    {
+        preDraw(canvas)
         super.onDraw(canvas)
         canvas.drawCircle(clipX, clipY, clipRadius, borderPaint)
     }
+}
+
+@BindingAdapter("uuBoundBorderColor")
+fun uuBindBorderColor(view: UUCircularImageButton, @ColorRes resourceId: Int)
+{
+    view.borderColor = UUResources.getColor(resourceId)
+}
+
+@BindingAdapter("uuBoundBorderWidth")
+fun uuBindBorderWidth(view: UUCircularImageButton, @DimenRes resourceId: Int)
+{
+    view.borderWidth = UUResources.getDimension(resourceId)
 }
