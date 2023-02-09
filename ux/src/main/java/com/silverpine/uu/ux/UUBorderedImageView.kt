@@ -14,6 +14,7 @@ import com.silverpine.uu.core.UUResources
 
 open class UUBorderedImageView(context: Context, attrs: AttributeSet?, defStyle: Int): AppCompatImageView(context, attrs, defStyle)
 {
+    private var _fillColor: Int = android.R.color.transparent
     private var borderRect: Rect = Rect(0,0,0,0)
     private val borderPaint: Paint = Paint()
 
@@ -32,18 +33,32 @@ open class UUBorderedImageView(context: Context, attrs: AttributeSet?, defStyle:
         attrs?.let()
         {
             val a = context.obtainStyledAttributes(attrs, R.styleable.UUBorderedImageView)
-            val borderWidth = a.getDimensionPixelSize(R.styleable.UUBorderedImageView_uuBorderWidth, -1)
-            val borderColor = a.getColor(R.styleable.UUBorderedImageView_uuBorderColor, -1)
 
-            if (borderColor != -1 && borderWidth != -1)
+            val borderWidth = a.getDimensionPixelSize(R.styleable.UUBorderedImageView_uuBorderWidth, -1)
+            if (borderWidth != -1)
+            {
+                borderPaint.strokeWidth = borderWidth.toFloat()
+            }
+
+            val borderColor = a.getColor(R.styleable.UUBorderedImageView_uuBorderColor, -1)
+            if (borderColor != -1)
             {
                 borderPaint.color = borderColor
-                borderPaint.strokeWidth = borderWidth.toFloat()
+            }
+
+            val fillColor = a.getColor(R.styleable.UUCircularImageButton_uuFillColor, -1)
+            if (fillColor != -1)
+            {
+                this.fillColor = fillColor
             }
 
             a.recycle()
         }
     }
+
+    var fillColor: Int
+        get() = _fillColor
+        set(value) = internalSetFillColor(value)
 
     var borderColor: Int
         get() = borderPaint.color
@@ -52,6 +67,12 @@ open class UUBorderedImageView(context: Context, attrs: AttributeSet?, defStyle:
     var borderWidth: Float
         get() = borderPaint.strokeWidth
         set(value) = internalSetBorderWidth(value)
+
+    private fun internalSetFillColor(@ColorRes color: Int)
+    {
+        _fillColor = color
+        invalidate()
+    }
 
     private fun internalSetBorderColor(color: Int)
     {
@@ -76,8 +97,14 @@ open class UUBorderedImageView(context: Context, attrs: AttributeSet?, defStyle:
         }
     }
 
+    open fun preDraw(canvas: Canvas)
+    {
+        canvas.drawColor(fillColor)
+    }
+
     override fun onDraw(canvas: Canvas)
     {
+        preDraw(canvas)
         super.onDraw(canvas)
         canvas.drawRect(borderRect, borderPaint)
     }
@@ -93,4 +120,10 @@ fun uuBindBorderColor(view: UUBorderedImageView, @ColorRes resourceId: Int)
 fun uuBindBorderWidth(view: UUBorderedImageView, @DimenRes resourceId: Int)
 {
     view.borderWidth = UUResources.getDimension(resourceId)
+}
+
+@BindingAdapter("uuBoundFillColor")
+fun uuBindFillColor(view: UUBorderedImageView, @ColorRes resourceId: Int)
+{
+    view.fillColor = UUResources.getColor(resourceId)
 }

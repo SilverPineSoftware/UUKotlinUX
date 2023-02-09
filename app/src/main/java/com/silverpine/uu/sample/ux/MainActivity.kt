@@ -49,6 +49,11 @@ class MainActivity : AppCompatActivity()
             startActivity(Intent(this, BindingActivity::class.java))
         }
 
+        menuHandler.add(R.string.activity_circular_image_button)
+        {
+            startActivity(Intent(this, CircularImageButtonActivity::class.java))
+        }
+
         return true
     }
 

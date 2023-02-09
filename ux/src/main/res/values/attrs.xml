@@ -3,10 +3,12 @@
 
     <attr name="uuBorderWidth" format="dimension" />
     <attr name="uuBorderColor" format="color" />
+    <attr name="uuFillColor" format="color" />
 
     <declare-styleable name="UUCircularImageButton">
         <attr name="uuBorderWidth"/>
         <attr name="uuBorderColor"/>
+        <attr name="uuFillColor"/>
     </declare-styleable>
 
     <declare-styleable name="UUBorderedView">
@@ -17,6 +19,7 @@
     <declare-styleable name="UUBorderedImageView">
         <attr name="uuBorderWidth"/>
         <attr name="uuBorderColor"/>
+        <attr name="uuFillColor"/>
     </declare-styleable>
 
 </resources>

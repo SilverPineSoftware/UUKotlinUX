@@ -14,6 +14,7 @@ import com.silverpine.uu.core.UUResources
 
 open class UUCircularImageButton(context: Context, attrs: AttributeSet?, defStyle: Int): AppCompatImageButton(context, attrs, defStyle)
 {
+    private var _fillColor: Int = android.R.color.transparent
     private val clippingPath = Path()
     private var clipX: Float = 0.0f
     private var clipY: Float = 0.0f
@@ -35,13 +36,23 @@ open class UUCircularImageButton(context: Context, attrs: AttributeSet?, defStyl
         attrs?.let()
         {
             val a = context.obtainStyledAttributes(attrs, R.styleable.UUCircularImageButton)
-            val borderWidth = a.getDimensionPixelSize(R.styleable.UUCircularImageButton_uuBorderWidth, -1)
-            val borderColor = a.getColor(R.styleable.UUCircularImageButton_uuBorderColor, -1)
 
-            if (borderColor != -1 && borderWidth != -1)
+            val borderWidth = a.getDimensionPixelSize(R.styleable.UUCircularImageButton_uuBorderWidth, -1)
+            if (borderWidth != -1)
+            {
+                borderPaint.strokeWidth = borderWidth.toFloat()
+            }
+
+            val borderColor = a.getColor(R.styleable.UUCircularImageButton_uuBorderColor, -1)
+            if (borderColor != -1)
             {
                 borderPaint.color = borderColor
-                borderPaint.strokeWidth = borderWidth.toFloat()
+            }
+
+            val fillColor = a.getColor(R.styleable.UUCircularImageButton_uuFillColor, -1)
+            if (fillColor != -1)
+            {
+                this.fillColor = fillColor
             }
 
             a.recycle()
@@ -56,6 +67,10 @@ open class UUCircularImageButton(context: Context, attrs: AttributeSet?, defStyl
         get() = borderPaint.strokeWidth
         set(value) = internalSetBorderWidth(value)
 
+    var fillColor: Int
+        get() = _fillColor
+        set(value) = internalSetFillColor(value)
+
     private fun internalSetBorderColor(color: Int)
     {
         borderPaint.color = color
@@ -65,6 +80,12 @@ open class UUCircularImageButton(context: Context, attrs: AttributeSet?, defStyl
     private fun internalSetBorderWidth(width: Float)
     {
         borderPaint.strokeWidth = width
+        invalidate()
+    }
+
+    private fun internalSetFillColor(@ColorRes color: Int)
+    {
+        _fillColor = color
         invalidate()
     }
 
@@ -87,6 +108,7 @@ open class UUCircularImageButton(context: Context, attrs: AttributeSet?, defStyl
     open fun preDraw(canvas: Canvas)
     {
         canvas.clipPath(clippingPath)
+        canvas.drawColor(fillColor)
     }
 
     override fun onDraw(canvas: Canvas)
@@ -107,4 +129,10 @@ fun uuBindBorderColor(view: UUCircularImageButton, @ColorRes resourceId: Int)
 fun uuBindBorderWidth(view: UUCircularImageButton, @DimenRes resourceId: Int)
 {
     view.borderWidth = UUResources.getDimension(resourceId)
+}
+
+@BindingAdapter("uuBoundFillColor")
+fun uuBindFillColor(view: UUCircularImageButton, @ColorRes resourceId: Int)
+{
+    view.fillColor = UUResources.getColor(resourceId)
 }
