@@ -65,6 +65,26 @@ fun uuBindAlpha(view: View, alpha: Float?, duration: Long = 200L, startDelay: Lo
 class UUAlpha(var alpha: Float = 1.0f,
               var duration: Long = 200L,
               var startDelay: Long = 0L)
+{
+    fun clone(): UUAlpha
+    {
+        return UUAlpha(alpha, duration, startDelay)
+    }
+
+    fun withDuration(duration: Long): UUAlpha
+    {
+        val clone = clone()
+        clone.duration = duration
+        return clone
+    }
+
+    fun withStartDelay(delay: Long): UUAlpha
+    {
+        val clone = clone()
+        clone.startDelay = delay
+        return clone
+    }
+}
 
 @BindingAdapter("uuAlpha")
 fun uuBindAlpha(view: View, alphaObject: UUAlpha?)
