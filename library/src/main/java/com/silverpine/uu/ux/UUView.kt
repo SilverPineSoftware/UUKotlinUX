@@ -72,6 +72,13 @@ class UUAlpha(var alpha: Float = 1.0f,
         return UUAlpha(alpha, duration, startDelay, completion)
     }
 
+    fun withAlpha(alpha: Float): UUAlpha
+    {
+        val clone = clone()
+        clone.alpha = alpha
+        return clone
+    }
+
     fun withDuration(duration: Long): UUAlpha
     {
         val clone = clone()
@@ -83,6 +90,13 @@ class UUAlpha(var alpha: Float = 1.0f,
     {
         val clone = clone()
         clone.startDelay = delay
+        return clone
+    }
+
+    fun withCompletion(completion: (()->Unit)): UUAlpha
+    {
+        val clone = clone()
+        clone.completion = completion
         return clone
     }
 }
