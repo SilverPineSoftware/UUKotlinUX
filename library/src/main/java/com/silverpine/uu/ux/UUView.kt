@@ -110,5 +110,9 @@ fun uuBindAlpha(view: View, alphaObject: UUAlpha?)
         {
             view.uuFadeAlpha(it.alpha, it.duration, startDelay = it.startDelay, completion = it.completion)
         }
+        else
+        {
+            it.completion?.invoke()
+        }
     }
 }
