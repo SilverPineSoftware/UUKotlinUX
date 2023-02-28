@@ -64,11 +64,12 @@ fun uuBindAlpha(view: View, alpha: Float?, duration: Long = 200L, startDelay: Lo
 
 class UUAlpha(var alpha: Float = 1.0f,
               var duration: Long = 200L,
-              var startDelay: Long = 0L)
+              var startDelay: Long = 0L,
+              var completion: (()->Unit)? = null)
 {
     fun clone(): UUAlpha
     {
-        return UUAlpha(alpha, duration, startDelay)
+        return UUAlpha(alpha, duration, startDelay, completion)
     }
 
     fun withDuration(duration: Long): UUAlpha
@@ -93,7 +94,7 @@ fun uuBindAlpha(view: View, alphaObject: UUAlpha?)
     {
         if (view.alpha != it.alpha)
         {
-            view.uuFadeAlpha(it.alpha, it.duration, startDelay = it.startDelay)
+            view.uuFadeAlpha(it.alpha, it.duration, startDelay = it.startDelay, completion = it.completion)
         }
     }
 }

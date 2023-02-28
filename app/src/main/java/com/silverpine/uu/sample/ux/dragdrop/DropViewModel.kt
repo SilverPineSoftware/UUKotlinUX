@@ -1,5 +1,6 @@
 package com.silverpine.uu.sample.ux.dragdrop
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -174,11 +175,11 @@ class DropViewModel(private val slotAllowsDrop: Boolean): ViewModel(), UUDragDro
 
     private fun fadeIn()
     {
-        _alpha.value = UUAlpha(1.0f, 500L)
+        _alpha.value = UUAlpha(1.0f, 500L, completion = { Log.d("fadeIn", "FadeIn complete") })
     }
 
     private fun fadeOut()
     {
-        _alpha.value = UUAlpha(0.5f, 200L, 200L)
+        _alpha.value = UUAlpha(0.5f, 200L, 200L, completion = { Log.d("fadeOut", "FadeOut complete") })
     }
 }
