@@ -8,6 +8,7 @@ import com.silverpine.uu.core.UUThread
 import com.silverpine.uu.core.UUTimer
 import com.silverpine.uu.logging.UULog
 import com.silverpine.uu.sample.ux.R
+import com.silverpine.uu.ux.UUAlpha
 import com.silverpine.uu.ux.dragdrop.UUDragDropViewModel
 
 class DropViewModel(private val slotAllowsDrop: Boolean): ViewModel(), UUDragDropViewModel
@@ -24,11 +25,11 @@ class DropViewModel(private val slotAllowsDrop: Boolean): ViewModel(), UUDragDro
     private var _borderWidth = MutableLiveData(R.dimen.no_border)
     val borderWidth: LiveData<Int> = _borderWidth
 
-    private var _alpha = MutableLiveData(1.0f)
-    val alpha: LiveData<Float> = _alpha
+    private var _alpha = MutableLiveData(UUAlpha())
+    val alpha: LiveData<UUAlpha> = _alpha
 
-    private var _alphaDuration = MutableLiveData(2000L)
-    val alphaDuration: LiveData<Long> = _alphaDuration
+    //private var _alphaDuration = MutableLiveData(2000L)
+    //val alphaDuration: LiveData<Long> = _alphaDuration
 
     override val id: String = UURandom.uuid()
     override val name: String = ""
@@ -173,11 +174,11 @@ class DropViewModel(private val slotAllowsDrop: Boolean): ViewModel(), UUDragDro
 
     private fun fadeIn()
     {
-        _alpha.value = 1.0f
+        _alpha.value = UUAlpha(1.0f, 500L)
     }
 
     private fun fadeOut()
     {
-        _alpha.value = 0.5f
+        _alpha.value = UUAlpha(0.5f, 200L, 200L)
     }
 }

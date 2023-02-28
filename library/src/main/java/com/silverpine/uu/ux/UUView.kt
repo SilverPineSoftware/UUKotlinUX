@@ -61,3 +61,19 @@ fun uuBindAlpha(view: View, alpha: Float?, duration: Long = 200L, startDelay: Lo
         }
     }
 }
+
+class UUAlpha(var alpha: Float = 1.0f,
+              var duration: Long = 200L,
+              var startDelay: Long = 0L)
+
+@BindingAdapter("uuAlpha")
+fun uuBindAlpha(view: View, alphaObject: UUAlpha?)
+{
+    alphaObject?.let()
+    {
+        if (view.alpha != it.alpha)
+        {
+            view.uuFadeAlpha(it.alpha, it.duration, startDelay = it.startDelay)
+        }
+    }
+}
