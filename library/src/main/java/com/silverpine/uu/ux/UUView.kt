@@ -1,6 +1,9 @@
 package com.silverpine.uu.ux
 
 import android.view.View
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.Interpolator
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.databinding.BindingAdapter
@@ -65,11 +68,18 @@ fun uuBindAlpha(view: View, alpha: Float?, duration: Long = 200L, startDelay: Lo
 class UUAlpha(var alpha: Float = 1.0f,
               var duration: Long = 200L,
               var startDelay: Long = 0L,
+              var interpolator: Interpolator? = null,
               var completion: (()->Unit)? = null)
 {
+    companion object
+    {
+        val FADE_IN = UUAlpha(1.0f, 500L, 0L, AccelerateInterpolator())
+        val FADE_OUT = UUAlpha(0.0f, 500L, 0L, DecelerateInterpolator())
+    }
+
     fun clone(): UUAlpha
     {
-        return UUAlpha(alpha, duration, startDelay, completion)
+        return UUAlpha(alpha, duration, startDelay, interpolator, completion)
     }
 
     fun withAlpha(alpha: Float): UUAlpha
@@ -99,6 +109,13 @@ class UUAlpha(var alpha: Float = 1.0f,
         clone.completion = completion
         return clone
     }
+
+    fun withInterpolator(interpolator: Interpolator?): UUAlpha
+    {
+        val clone = clone()
+        clone.interpolator = interpolator
+        return clone
+    }
 }
 
 @BindingAdapter("uuAlpha")
@@ -106,13 +123,6 @@ fun uuBindAlpha(view: View, alphaObject: UUAlpha?)
 {
     alphaObject?.let()
     {
-        if (view.alpha != it.alpha)
-        {
-            view.uuFadeAlpha(it.alpha, it.duration, startDelay = it.startDelay, completion = it.completion)
-        }
-        else
-        {
-            it.completion?.invoke()
-        }
+        view.uuFadeAlpha(it.alpha, it.duration, it.interpolator, it.startDelay, it.completion)
     }
 }
