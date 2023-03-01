@@ -93,7 +93,7 @@ class UUAlpha(var alpha: Float = 1.0f,
         return clone
     }
 
-    fun withCompletion(completion: (()->Unit)): UUAlpha
+    fun withCompletion(completion: (()->Unit)?): UUAlpha
     {
         val clone = clone()
         clone.completion = completion
