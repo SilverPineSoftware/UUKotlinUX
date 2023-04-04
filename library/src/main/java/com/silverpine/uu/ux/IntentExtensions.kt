@@ -1,5 +1,6 @@
 package com.silverpine.uu.ux
 
+import android.content.Context
 import android.content.Intent
 import android.os.Parcelable
 
@@ -28,3 +29,5 @@ fun Intent.uuRequireString(key: String): String
         return obj
     }
 }
+
+inline fun <reified T : Any> uuNewIntent(context: Context): Intent = Intent(context, T::class.java)
