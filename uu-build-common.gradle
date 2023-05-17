@@ -27,14 +27,26 @@ def getBuildBranch = { ->
         val = ""
     }
 
-    def result = uuTrimAndQuote(val)
-    project.logger.lifecycle("buildBranch: $result")
-    return result
+    return val
 }
 
 ext {
-    BUILD_BRANCH = getBuildBranch()
+    BUILD_BRANCH = uuTrimAndQuote(getBuildBranch())
 }
+
+/*
+def getVersionName = { ->
+
+    def versionName = version
+    def buildBranch = getBuildBranch().trim()
+
+    if (buildBranch != 'main' && buildBranch != 'HEAD')
+    {
+        versionName = "${versionName}-${buildBranch}-SNAPSHOT"
+    }
+
+    return versionName
+}*/
 
 def getBuildCommitHash = { ->
 
@@ -82,7 +94,8 @@ ext {
 
 group = PUBLISH_GROUP_ID
 
-project.logger.lifecycle("version: $version")
+project.logger.lifecycle("BUILD_VERSION: $BUILD_VERSION")
+project.logger.lifecycle("BUILD_BRANCH: $BUILD_BRANCH")
 
 android {
 
@@ -115,6 +128,13 @@ signing {
             rootProject.ext["signing.password"],
     )
     sign publishing.publications
+}
+
+android {
+    publishing {
+        singleVariant("release") {
+        }
+    }
 }
 
 afterEvaluate {
