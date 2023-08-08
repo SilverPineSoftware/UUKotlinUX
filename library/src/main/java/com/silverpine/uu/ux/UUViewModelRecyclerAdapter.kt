@@ -6,11 +6,10 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
-import com.silverpine.uu.core.UUThread
+import com.silverpine.uu.core.uuDispatchMain
 
 class UUViewModelRecyclerAdapter(private val lifecycleOwner: LifecycleOwner, private val rowTapped: ((ViewModel)->Unit)): RecyclerView.Adapter<UUViewModelRecyclerAdapter.ViewHolder>()
 {
@@ -34,7 +33,7 @@ class UUViewModelRecyclerAdapter(private val lifecycleOwner: LifecycleOwner, pri
             data.addAll(list)
         }
 
-        UUThread.runOnMainThread()
+        uuDispatchMain()
         {
             notifyDataSetChanged()
         }

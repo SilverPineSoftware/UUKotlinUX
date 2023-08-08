@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.silverpine.uu.core.UURandom
-import com.silverpine.uu.core.UUThread
 import com.silverpine.uu.core.UUTimer
+import com.silverpine.uu.core.uuDispatchMain
 import com.silverpine.uu.logging.UULog
 import com.silverpine.uu.sample.ux.R
 import com.silverpine.uu.ux.UUAlpha
@@ -158,7 +158,7 @@ class DropViewModel(private val slotAllowsDrop: Boolean): ViewModel(), UUDragDro
     {
         UUTimer.startTimer("changeBorder", 200L, null)
         { _, _ ->
-            UUThread.runOnMainThread()
+            uuDispatchMain()
             {
                 _borderColor.value = color
                 _borderWidth.value = width

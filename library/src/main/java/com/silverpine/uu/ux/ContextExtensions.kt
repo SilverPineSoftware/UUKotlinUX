@@ -4,7 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.widget.Toast
 import androidx.annotation.StringRes
-import com.silverpine.uu.core.UUThread
+import com.silverpine.uu.core.uuDispatchMain
 
 fun Context.uuPrompt(
     @StringRes title: Int = -1,
@@ -139,7 +139,7 @@ fun Context.uuPrompt(
 
 fun Context.uuShowToast(text: String)
 {
-    UUThread.runOnMainThread()
+    uuDispatchMain()
     {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
