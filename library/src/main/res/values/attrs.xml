@@ -11,6 +11,12 @@
         <attr name="uuFillColor"/>
     </declare-styleable>
 
+    <declare-styleable name="UUCircleView">
+        <attr name="uuBorderWidth"/>
+        <attr name="uuBorderColor"/>
+        <attr name="uuFillColor"/>
+    </declare-styleable>
+
     <declare-styleable name="UUBorderedView">
         <attr name="uuBorderWidth"/>
         <attr name="uuBorderColor"/>
