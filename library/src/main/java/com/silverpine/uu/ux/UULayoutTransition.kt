@@ -69,6 +69,7 @@ fun uuBindLayoutTransition(target: ViewGroup, model: UULayoutTransition?)
 
             override fun endTransition(transition: LayoutTransition?, container: ViewGroup?, view: View?, transitionType: Int)
             {
+                target.layoutTransition = null
                 model.completion?.invoke()
             }
         })
