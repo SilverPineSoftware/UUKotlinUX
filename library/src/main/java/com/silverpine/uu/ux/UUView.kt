@@ -53,18 +53,6 @@ fun uuBindVisibleOrInvisible(view: View, visible: Boolean?)
     }
 }
 
-@BindingAdapter(value = ["bind:uuAlpha", "bind:uuAlphaDuration", "bind:uuAlphaStartDelay"], requireAll = false)
-fun uuBindAlpha(view: View, alpha: Float?, duration: Long = 200L, startDelay: Long = 0L)
-{
-    alpha?.let()
-    {
-        if (view.alpha != it)
-        {
-            view.uuFadeAlpha(it, duration, startDelay = startDelay)
-        }
-    }
-}
-
 class UUAlpha(var alpha: Float = 1.0f,
               var duration: Long = 200L,
               var startDelay: Long = 0L,

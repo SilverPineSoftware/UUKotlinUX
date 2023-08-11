@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.silverpine.uu.sample.ux.animation.LayoutAnimationActivity
 import com.silverpine.uu.sample.ux.binding.BindingActivity
 import com.silverpine.uu.sample.ux.databinding.ActivityMainBinding
 import com.silverpine.uu.sample.ux.dragdrop.DragDropActivity
@@ -52,6 +53,11 @@ class MainActivity : AppCompatActivity()
         menuHandler.add(R.string.activity_circular_image_button)
         {
             startActivity(Intent(this, CircularImageButtonActivity::class.java))
+        }
+
+        menuHandler.add(R.string.activity_layout_transition_animation)
+        {
+            startActivity(Intent(this, LayoutAnimationActivity::class.java))
         }
 
         return true

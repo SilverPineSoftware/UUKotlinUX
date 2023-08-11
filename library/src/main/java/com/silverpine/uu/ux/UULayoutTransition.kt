@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Interpolator
 import androidx.databinding.BindingAdapter
+import com.silverpine.uu.logging.UULog
 
 class UULayoutTransition(
     var duration: Long = 200L,
@@ -61,15 +62,20 @@ fun uuBindLayoutTransition(target: ViewGroup, model: UULayoutTransition?)
         lt.setInterpolator(LayoutTransition.CHANGING, model.interpolator)
         lt.enableTransitionType(LayoutTransition.CHANGING)
 
+
         lt.addTransitionListener(object: LayoutTransition.TransitionListener
         {
             override fun startTransition(transition: LayoutTransition?, container: ViewGroup?, view: View?, transitionType: Int)
             {
+                UULog.d(target.javaClass, "startTransition", "container: $container, view: $view, transitionType: $transitionType")
             }
 
             override fun endTransition(transition: LayoutTransition?, container: ViewGroup?, view: View?, transitionType: Int)
             {
-                target.layoutTransition = null
+                UULog.d(target.javaClass, "endTransition", "container: $container, view: $view, transitionType: $transitionType")
+
+                //target.layoutTransition = null
+                transition?.disableTransitionType(transitionType)
                 model.completion?.invoke()
             }
         })

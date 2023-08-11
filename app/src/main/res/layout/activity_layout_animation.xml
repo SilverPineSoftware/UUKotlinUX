@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="vm"
+            type="com.silverpine.uu.sample.ux.animation.LayoutAnimationViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:uuLayoutTransition="@{ vm.layoutTransition }"
+        android:background="#cba"
+        tools:context="com.silverpine.uu.sample.ux.animation.LayoutAnimationActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#CCC"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <View
+                android:id="@+id/one"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/two"
+                app:uuVisibleOrGone="@{ vm.oneVisibility }"
+                android:background="#F00" />
+
+            <View
+                android:id="@+id/two"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/one"
+                app:layout_constraintBottom_toTopOf="@+id/three"
+                app:uuVisibleOrGone="@{ vm.twoVisibility }"
+                android:background="#0F0" />
+
+            <View
+                android:id="@+id/three"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/two"
+                app:layout_constraintBottom_toTopOf="@+id/four"
+                app:uuVisibleOrGone="@{ vm.threeVisibility }"
+                android:background="#00F"/>
+
+            <View
+                android:id="@+id/four"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/three"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:uuVisibleOrGone="@{ vm.fourVisibility }"
+                android:background="#F0F" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

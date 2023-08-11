@@ -40,6 +40,10 @@
             android:name=".CircularImageButtonActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name=".animation.LayoutAnimationActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
     </application>
 
 </manifest>

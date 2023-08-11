@@ -1,6 +1,5 @@
 package com.silverpine.uu.ux
 
-import android.view.View
 import android.widget.ImageView
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
@@ -13,15 +12,7 @@ fun uuBindImageDrawable(view: ImageView, @DrawableRes sourceDrawable: Int?)
 {
     sourceDrawable?.let()
     {
-        view.setImageDrawable(UUResources.getDrawable(it, null))
-    }
-}
-
-@BindingAdapter("uuBackgroundDrawable")
-fun uuSetBackgroundDrawable(view: View, @DrawableRes drawableResource:  Int?)
-{
-    drawableResource?.let {
-        view.background = UUResources.getDrawable(it, null)
+        view.setImageDrawable(UUResources.getDrawable(it))
     }
 }
 
