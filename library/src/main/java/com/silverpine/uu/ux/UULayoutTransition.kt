@@ -11,7 +11,7 @@ class UULayoutTransition(
     var duration: Long = 200L,
     var startDelay: Long = 0L,
     var interpolator: Interpolator? = null,
-    var completion: (()->Unit)? = null)
+    var completion: ((ViewGroup?,View?,Int)->Unit)? = null)
 {
     fun clone(): UULayoutTransition
     {
@@ -32,7 +32,7 @@ class UULayoutTransition(
         return clone
     }
 
-    fun withCompletion(completion: (()->Unit)?): UULayoutTransition
+    fun withCompletion(completion: ((ViewGroup?,View?,Int)->Unit)?): UULayoutTransition
     {
         val clone = clone()
         clone.completion = completion
@@ -74,9 +74,8 @@ fun uuBindLayoutTransition(target: ViewGroup, model: UULayoutTransition?)
             {
                 UULog.d(target.javaClass, "endTransition", "container: $container, view: $view, transitionType: $transitionType")
 
-                //target.layoutTransition = null
                 transition?.disableTransitionType(transitionType)
-                model.completion?.invoke()
+                model.completion?.invoke(container, view, transitionType)
             }
         })
 

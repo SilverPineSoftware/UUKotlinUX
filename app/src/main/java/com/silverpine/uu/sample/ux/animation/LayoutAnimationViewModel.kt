@@ -28,7 +28,7 @@ class LayoutAnimationViewModel: ViewModel()
     {
         UULog.d(javaClass, "hideAll", "Starting layout animation")
         _layoutTransition.value = UULayoutTransition(1000L, 0L, AccelerateInterpolator())
-        {
+        { container, view, transitionType ->
             UULog.d(javaClass, "hideAll", "Ending layout animation")
         }
 
@@ -42,7 +42,7 @@ class LayoutAnimationViewModel: ViewModel()
     {
         UULog.d(javaClass, "showOne", "Starting layout animation")
         _layoutTransition.value = UULayoutTransition(1000L, 0L, AccelerateInterpolator())
-        {
+        { container, view, transitionType ->
             UULog.d(javaClass, "showOne", "Ending layout animation")
         }
 
@@ -56,7 +56,7 @@ class LayoutAnimationViewModel: ViewModel()
     {
         UULog.d(javaClass, "showTwo", "Starting layout animation")
         _layoutTransition.value = UULayoutTransition(1000L, 0L, AccelerateInterpolator())
-        {
+        { container, view, transitionType ->
             UULog.d(javaClass, "showTwo", "Ending layout animation")
         }
 
@@ -70,7 +70,7 @@ class LayoutAnimationViewModel: ViewModel()
     {
         UULog.d(javaClass, "showThree", "Starting layout animation")
         _layoutTransition.value = UULayoutTransition(1000L, 0L, AccelerateInterpolator())
-        {
+        { container, view, transitionType ->
             UULog.d(javaClass, "showThree", "Ending layout animation")
         }
 
@@ -84,7 +84,7 @@ class LayoutAnimationViewModel: ViewModel()
     {
         UULog.d(javaClass, "showFour", "Starting layout animation")
         _layoutTransition.value = UULayoutTransition(1000L, 0L, AccelerateInterpolator())
-        {
+        { container, view, transitionType ->
             UULog.d(javaClass, "showFour", "Ending layout animation")
         }
 
