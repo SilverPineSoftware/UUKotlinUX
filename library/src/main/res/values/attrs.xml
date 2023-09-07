@@ -4,6 +4,9 @@
     <attr name="uuBorderWidth" format="dimension" />
     <attr name="uuBorderColor" format="color" />
     <attr name="uuFillColor" format="color" />
+    <attr name="uuSides" format="integer" />
+    <attr name="uuCornerRadius" format="float" />
+    <attr name="uuRotationOffset" format="float" />
 
     <declare-styleable name="UUCircularImageButton">
         <attr name="uuBorderWidth"/>
@@ -20,12 +23,31 @@
     <declare-styleable name="UUBorderedView">
         <attr name="uuBorderWidth"/>
         <attr name="uuBorderColor"/>
+        <attr name="uuFillColor"/>
     </declare-styleable>
 
     <declare-styleable name="UUBorderedImageView">
         <attr name="uuBorderWidth"/>
         <attr name="uuBorderColor"/>
         <attr name="uuFillColor"/>
+    </declare-styleable>
+
+    <declare-styleable name="UUPolygonView">
+        <attr name="uuBorderWidth"/>
+        <attr name="uuBorderColor"/>
+        <attr name="uuFillColor"/>
+        <attr name="uuSides"/>
+        <attr name="uuCornerRadius"/>
+        <attr name="uuRotationOffset"/>
+    </declare-styleable>
+
+    <declare-styleable name="UUPolygonImageButton">
+        <attr name="uuBorderWidth"/>
+        <attr name="uuBorderColor"/>
+        <attr name="uuFillColor"/>
+        <attr name="uuSides"/>
+        <attr name="uuCornerRadius"/>
+        <attr name="uuRotationOffset"/>
     </declare-styleable>
 
 </resources>

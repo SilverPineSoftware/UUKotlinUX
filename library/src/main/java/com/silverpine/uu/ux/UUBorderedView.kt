@@ -2,9 +2,6 @@ package com.silverpine.uu.ux
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.ColorRes
@@ -14,73 +11,42 @@ import com.silverpine.uu.core.UUResources
 
 open class UUBorderedView(context: Context, attrs: AttributeSet?, defStyle: Int): View(context, attrs, defStyle)
 {
-    private var borderRect: Rect = Rect(0,0,0,0)
-    private val borderPaint: Paint = Paint()
+    private val shape: UURectangleShape by lazy()
+    {
+        UURectangleShape(this,
+            R.styleable.UUBorderedView,
+            R.styleable.UUBorderedView_uuBorderWidth,
+            R.styleable.UUBorderedView_uuBorderColor,
+            R.styleable.UUBorderedView_uuFillColor)
+    }
 
     constructor(context: Context): this(context, null, 0)
     constructor(context: Context, attrs: AttributeSet?): this(context, attrs, 0)
 
     init
     {
-        borderPaint.isDither = true
-        borderPaint.isAntiAlias = true
-        borderPaint.color = Color.TRANSPARENT
-        borderPaint.strokeWidth = 0.0f
-        borderPaint.strokeCap = Paint.Cap.ROUND
-        borderPaint.style = Paint.Style.STROKE
-
-        attrs?.let()
-        {
-            val a = context.obtainStyledAttributes(attrs, R.styleable.UUBorderedView)
-            val borderWidth = a.getDimensionPixelSize(R.styleable.UUBorderedView_uuBorderWidth, -1)
-            val borderColor = a.getColor(R.styleable.UUBorderedView_uuBorderColor, -1)
-
-            if (borderColor != -1 && borderWidth != -1)
-            {
-                borderPaint.color = borderColor
-                borderPaint.strokeWidth = borderWidth.toFloat()
-            }
-
-            a.recycle()
-        }
+        shape.initAttributes(context, attrs)
     }
-
-    var borderColor: Int
-        get() = borderPaint.color
-        set(value) = internalSetBorderColor(value)
-
-    var borderWidth: Float
-        get() = borderPaint.strokeWidth
-        set(value) = internalSetBorderWidth(value)
-
-    private fun internalSetBorderColor(color: Int)
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int)
     {
-        borderPaint.color = color
-        invalidate()
-    }
-
-    private fun internalSetBorderWidth(width: Float)
-    {
-        borderPaint.strokeWidth = width
-        invalidate()
-    }
-
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int)
-    {
-        super.onLayout(changed, left, top, right, bottom)
-
-        if (changed)
-        {
-            borderRect.right = (right - left)
-            borderRect.bottom = (bottom - top)
-        }
+        super.onSizeChanged(w, h, oldw, oldh)
+        shape.onSizeChanged(w, h, oldw, oldh)
     }
 
     override fun onDraw(canvas: Canvas)
     {
+        shape.preDraw(canvas)
         super.onDraw(canvas)
-        canvas.drawRect(borderRect, borderPaint)
+        shape.postDraw(canvas)
     }
+
+    var borderColor: Int
+        get() = shape.borderColor
+        set(value) { shape.borderColor = value }
+
+    var borderWidth: Float
+        get() = shape.borderWidth
+        set(value) { shape.borderWidth = value }
 }
 
 @BindingAdapter("uuBoundBorderColor")
@@ -94,3 +60,5 @@ fun uuBindBorderWidth(view: UUBorderedView, @DimenRes resourceId: Int)
 {
     view.borderWidth = UUResources.getDimension(resourceId)
 }
+
+

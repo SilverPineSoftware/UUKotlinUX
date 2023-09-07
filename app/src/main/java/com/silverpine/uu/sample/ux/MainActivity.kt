@@ -55,6 +55,11 @@ class MainActivity : AppCompatActivity()
             startActivity(Intent(this, CircularImageButtonActivity::class.java))
         }
 
+        menuHandler.add(R.string.activity_polygon_image_button)
+        {
+            startActivity(Intent(this, PolygonImageButtonActivity::class.java))
+        }
+
         menuHandler.add(R.string.activity_layout_transition_animation)
         {
             startActivity(Intent(this, LayoutAnimationActivity::class.java))
