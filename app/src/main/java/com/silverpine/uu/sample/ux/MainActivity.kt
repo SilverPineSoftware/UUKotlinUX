@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.silverpine.uu.sample.ux.animation.LayoutAnimationActivity
 import com.silverpine.uu.sample.ux.binding.BindingActivity
+import com.silverpine.uu.sample.ux.binding.PolygonImageButtonBindingActivity
 import com.silverpine.uu.sample.ux.databinding.ActivityMainBinding
 import com.silverpine.uu.sample.ux.dragdrop.DragDropActivity
 import com.silverpine.uu.ux.UUMenuHandler
@@ -58,6 +59,11 @@ class MainActivity : AppCompatActivity()
         menuHandler.add(R.string.activity_polygon_image_button)
         {
             startActivity(Intent(this, PolygonImageButtonActivity::class.java))
+        }
+
+        menuHandler.add(R.string.activity_polygon_image_button_binding)
+        {
+            startActivity(Intent(this, PolygonImageButtonBindingActivity::class.java))
         }
 
         menuHandler.add(R.string.activity_layout_transition_animation)

@@ -69,37 +69,37 @@ open class UUPolygonView(context: Context, attrs: AttributeSet?, defStyle: Int):
         set(value) { shape.rotationOffset = value }
 }
 
-@BindingAdapter("uuBoundBorderColor")
+@BindingAdapter("uuBorderColor")
 fun uuBindBorderColor(view: UUPolygonView, @ColorRes resourceId: Int)
 {
     view.borderColor = UUResources.getColor(resourceId)
 }
 
-@BindingAdapter("uuBoundBorderWidth")
+@BindingAdapter("uuBorderWidth")
 fun uuBindBorderWidth(view: UUPolygonView, @DimenRes resourceId: Int)
 {
     view.borderWidth = UUResources.getDimension(resourceId)
 }
 
-@BindingAdapter("uuBoundFillColor")
+@BindingAdapter("uuFillColor")
 fun uuBindFillColor(view: UUPolygonView, @ColorRes resourceId: Int)
 {
     view.fillColor = UUResources.getColor(resourceId)
 }
 
-@BindingAdapter("uuBoundSides")
+@BindingAdapter("uuSides")
 fun uuBindPolygonSides(view: UUPolygonView, sides: Int)
 {
     view.sides = sides
 }
 
-@BindingAdapter("uuBoundCornerRadius")
+@BindingAdapter("uuCornerRadius")
 fun uuBindPolygonCornerRadius(view: UUPolygonView, cornerRadius: Float)
 {
     view.cornerRadius = cornerRadius
 }
 
-@BindingAdapter("uuBoundRotationOffset")
+@BindingAdapter("uuRotationOffset")
 fun uuBindPolygonRotationOffset(view: UUPolygonView, rotationOffset: Float)
 {
     view.rotationOffset = rotationOffset

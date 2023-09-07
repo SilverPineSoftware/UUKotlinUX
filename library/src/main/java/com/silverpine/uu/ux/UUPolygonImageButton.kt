@@ -69,37 +69,37 @@ open class UUPolygonImageButton(context: Context, attrs: AttributeSet?, defStyle
         set(value) { shape.rotationOffset = value }
 }
 
-@BindingAdapter("uuBoundBorderColor")
+@BindingAdapter("uuBorderColor")
 fun uuBindBorderColor(view: UUPolygonImageButton, @ColorRes resourceId: Int)
 {
     view.borderColor = UUResources.getColor(resourceId)
 }
 
-@BindingAdapter("uuBoundBorderWidth")
+@BindingAdapter("uuBorderWidth")
 fun uuBindBorderWidth(view: UUPolygonImageButton, @DimenRes resourceId: Int)
 {
     view.borderWidth = UUResources.getDimension(resourceId)
 }
 
-@BindingAdapter("uuBoundFillColor")
+@BindingAdapter("uuFillColor")
 fun uuBindFillColor(view: UUPolygonImageButton, @ColorRes resourceId: Int)
 {
     view.fillColor = UUResources.getColor(resourceId)
 }
 
-@BindingAdapter("uuBoundSides")
+@BindingAdapter("uuSides")
 fun uuBindPolygonSides(view: UUPolygonImageButton, sides: Int)
 {
     view.sides = sides
 }
 
-@BindingAdapter("uuBoundCornerRadius")
+@BindingAdapter("uuCornerRadius")
 fun uuBindPolygonCornerRadius(view: UUPolygonImageButton, cornerRadius: Float)
 {
     view.cornerRadius = cornerRadius
 }
 
-@BindingAdapter("uuBoundRotationOffset")
+@BindingAdapter("uuRotationOffset")
 fun uuBindPolygonRotationOffset(view: UUPolygonImageButton, rotationOffset: Float)
 {
     view.rotationOffset = rotationOffset

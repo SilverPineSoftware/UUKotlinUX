@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="vm"
+            type="com.silverpine.uu.sample.ux.binding.PolygonImageButtonBindingViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.silverpine.uu.sample.ux.binding.PolygonImageButtonBindingActivity">
+
+        <com.silverpine.uu.ux.UUPolygonImageButton
+            android:id="@+id/one"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/two"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/three"
+            app:uuSourceDrawable="@{ vm.images[0] }"
+            app:uuBorderColor="@{ vm.borderColors[0] }"
+            app:uuBorderWidth="@{ vm.borderWidths[0] }"
+            app:uuFillColor="@{ vm.fillColors[0] }"
+            app:uuSides="@{ vm.sides[0] }"
+            app:uuCornerRadius="@{ vm.cornerRadius[0] }"
+            app:uuRotationOffset="@{ vm.rotationOffset[0] }"
+            tools:background="#aaa"/>
+
+        <com.silverpine.uu.ux.UUPolygonImageButton
+            android:id="@+id/two"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:layout_constraintStart_toEndOf="@+id/one"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/four"
+            app:uuSourceDrawable="@{ vm.images[1] }"
+            app:uuBorderColor="@{ vm.borderColors[1] }"
+            app:uuBorderWidth="@{ vm.borderWidths[1] }"
+            app:uuFillColor="@{ vm.fillColors[1] }"
+            app:uuSides="@{ vm.sides[1] }"
+            app:uuCornerRadius="@{ vm.cornerRadius[1] }"
+            app:uuRotationOffset="@{ vm.rotationOffset[1] }"
+            tools:background="#aaa"/>
+
+        <com.silverpine.uu.ux.UUPolygonImageButton
+            android:id="@+id/three"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/four"
+            app:layout_constraintTop_toBottomOf="@+id/one"
+            app:layout_constraintBottom_toTopOf="@+id/five"
+            app:uuSourceDrawable="@{ vm.images[2] }"
+            app:uuBorderColor="@{ vm.borderColors[2] }"
+            app:uuBorderWidth="@{ vm.borderWidths[2] }"
+            app:uuFillColor="@{ vm.fillColors[2] }"
+            app:uuSides="@{ vm.sides[2] }"
+            app:uuCornerRadius="@{ vm.cornerRadius[2] }"
+            app:uuRotationOffset="@{ vm.rotationOffset[2] }"
+            tools:background="#aaa"/>
+
+        <com.silverpine.uu.ux.UUPolygonImageButton
+            android:id="@+id/four"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:layout_constraintStart_toEndOf="@+id/three"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/two"
+            app:layout_constraintBottom_toTopOf="@+id/six"
+            app:uuSourceDrawable="@{ vm.images[3] }"
+            app:uuBorderColor="@{ vm.borderColors[3] }"
+            app:uuBorderWidth="@{ vm.borderWidths[3] }"
+            app:uuFillColor="@{ vm.fillColors[3] }"
+            app:uuSides="@{ vm.sides[3] }"
+            app:uuCornerRadius="@{ vm.cornerRadius[3] }"
+            app:uuRotationOffset="@{ vm.rotationOffset[3] }"
+            tools:background="#aaa"/>
+
+        <com.silverpine.uu.ux.UUPolygonImageButton
+            android:id="@+id/five"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/six"
+            app:layout_constraintTop_toBottomOf="@+id/three"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:uuSourceDrawable="@{ vm.images[4] }"
+            app:uuBorderColor="@{ vm.borderColors[4] }"
+            app:uuBorderWidth="@{ vm.borderWidths[4] }"
+            app:uuFillColor="@{ vm.fillColors[4] }"
+            app:uuSides="@{ vm.sides[4] }"
+            app:uuCornerRadius="@{ vm.cornerRadius[4] }"
+            app:uuRotationOffset="@{ vm.rotationOffset[4] }"
+            tools:background="#aaa"/>
+
+        <com.silverpine.uu.ux.UUPolygonImageButton
+            android:id="@+id/six"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:layout_constraintStart_toEndOf="@+id/five"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/four"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:uuSourceDrawable="@{ vm.images[5] }"
+            app:uuBorderColor="@{ vm.borderColors[5] }"
+            app:uuBorderWidth="@{ vm.borderWidths[5] }"
+            app:uuFillColor="@{ vm.fillColors[5] }"
+            app:uuSides="@{ vm.sides[5] }"
+            app:uuCornerRadius="@{ vm.cornerRadius[5] }"
+            app:uuRotationOffset="@{ vm.rotationOffset[5] }"
+            tools:background="#aaa"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

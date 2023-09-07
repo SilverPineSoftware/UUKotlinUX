@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -44,7 +43,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/four"
         app:layout_constraintTop_toBottomOf="@+id/one"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/five"
         app:uuBorderColor="#0000FF"
         app:uuBorderWidth="8dp"
         app:uuFillColor="@color/green"
@@ -60,12 +59,44 @@
         app:layout_constraintStart_toEndOf="@+id/three"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/two"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/six"
         app:uuBorderColor="#00FF00"
         app:uuBorderWidth="8dp"
         app:uuFillColor="@color/red"
         app:uuSides="6"
         app:uuCornerRadius="30"
+        app:uuRotationOffset="0"/>
+
+    <com.silverpine.uu.ux.UUPolygonImageButton
+        android:id="@+id/five"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/five"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/six"
+        app:layout_constraintTop_toBottomOf="@+id/three"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:uuBorderColor="#0000FF"
+        app:uuBorderWidth="8dp"
+        app:uuFillColor="@color/green"
+        app:uuSides="8"
+        app:uuCornerRadius="0"
+        app:uuRotationOffset="0"/>
+
+    <com.silverpine.uu.ux.UUPolygonImageButton
+        android:id="@+id/six"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/six"
+        app:layout_constraintStart_toEndOf="@+id/five"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/four"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:uuBorderColor="#00FF00"
+        app:uuBorderWidth="8dp"
+        app:uuFillColor="@color/red"
+        app:uuSides="9"
+        app:uuCornerRadius="0"
         app:uuRotationOffset="0"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
