@@ -81,6 +81,12 @@ fun uuBindBorderWidth(view: UUPolygonView, @DimenRes resourceId: Int)
     view.borderWidth = UUResources.getDimension(resourceId)
 }
 
+@BindingAdapter("uuBorderWidth")
+fun uuBindBorderWidth(view: UUPolygonView, value: Float)
+{
+    view.borderWidth = value
+}
+
 @BindingAdapter("uuFillColor")
 fun uuBindFillColor(view: UUPolygonView, @ColorRes resourceId: Int)
 {

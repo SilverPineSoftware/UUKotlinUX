@@ -54,19 +54,25 @@ open class UUBorderedImageView(context: Context, attrs: AttributeSet?, defStyle:
         set(value) { shape.fillColor = value }
 }
 
-@BindingAdapter("uuBoundBorderColor")
+@BindingAdapter("uuBorderColor")
 fun uuBindBorderColor(view: UUBorderedImageView, @ColorRes resourceId: Int)
 {
     view.borderColor = UUResources.getColor(resourceId)
 }
 
-@BindingAdapter("uuBoundBorderWidth")
+@BindingAdapter("uuBorderWidth")
 fun uuBindBorderWidth(view: UUBorderedImageView, @DimenRes resourceId: Int)
 {
-    view.borderWidth = UUResources.getDimension(resourceId)
+    view.borderWidth = UUResources.getDimensionPixelSize(resourceId, 0).toFloat()
 }
 
-@BindingAdapter("uuBoundFillColor")
+@BindingAdapter("uuBorderWidth")
+fun uuBindBorderWidth(view: UUBorderedImageView, value: Float)
+{
+    view.borderWidth = value
+}
+
+@BindingAdapter("uuFillColor")
 fun uuBindFillColor(view: UUBorderedImageView, @ColorRes resourceId: Int)
 {
     view.fillColor = UUResources.getColor(resourceId)

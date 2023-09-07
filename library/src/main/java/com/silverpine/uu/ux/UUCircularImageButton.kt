@@ -54,19 +54,25 @@ open class UUCircularImageButton(context: Context, attrs: AttributeSet?, defStyl
         set(value) { shape.fillColor = value }
 }
 
-@BindingAdapter("uuBoundBorderColor")
+@BindingAdapter("uuBorderColor")
 fun uuBindBorderColor(view: UUCircularImageButton, @ColorRes resourceId: Int)
 {
     view.borderColor = UUResources.getColor(resourceId)
 }
 
-@BindingAdapter("uuBoundBorderWidth")
+@BindingAdapter("uuBorderWidth")
 fun uuBindBorderWidth(view: UUCircularImageButton, @DimenRes resourceId: Int)
 {
-    view.borderWidth = UUResources.getDimension(resourceId)
+    view.borderWidth = UUResources.getDimensionPixelSize(resourceId, 0).toFloat()
 }
 
-@BindingAdapter("uuBoundFillColor")
+@BindingAdapter("uuBorderWidth")
+fun uuBindBorderWidth(view: UUCircularImageButton, value: Float)
+{
+    view.borderWidth = value
+}
+
+@BindingAdapter("uuFillColor")
 fun uuBindFillColor(view: UUCircularImageButton, @ColorRes resourceId: Int)
 {
     view.fillColor = UUResources.getColor(resourceId)
