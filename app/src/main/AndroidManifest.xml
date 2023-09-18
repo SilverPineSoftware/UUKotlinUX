@@ -45,6 +45,10 @@
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"/>
         <activity
+            android:name=".animation.FadeAnimationActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
             android:name=".PolygonImageButtonActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"/>

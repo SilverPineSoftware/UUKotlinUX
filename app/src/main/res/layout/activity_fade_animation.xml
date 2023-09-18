@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="vm"
+            type="com.silverpine.uu.sample.ux.animation.FadeAnimationViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context="com.silverpine.uu.sample.ux.animation.FadeAnimationActivity">
+
+        <TextView
+            android:id="@+id/duration_label"
+            android:text="@string/duration"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:gravity="end|center_vertical"
+            app:layout_constraintTop_toTopOf="@+id/duration"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/duration"
+            app:layout_constraintBottom_toBottomOf="@+id/duration" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/duration"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:valueFrom="0"
+            android:valueTo="10000"
+            android:stepSize="1"
+            android:value="@={ vm.duration }"
+            app:layout_constraintWidth_percent="0.5"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/duration_label"
+            app:layout_constraintEnd_toStartOf="@+id/duration_value"
+            app:layout_constraintBottom_toTopOf="@+id/start_delay"/>
+
+        <TextView
+            android:id="@+id/duration_value"
+            android:text="@{ vm.durationText }"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:gravity="start|center_vertical"
+            app:layout_constraintTop_toTopOf="@+id/duration"
+            app:layout_constraintStart_toEndOf="@+id/duration"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/duration"
+            tools:text="500ms"/>
+
+        <TextView
+            android:id="@+id/start_delay_label"
+            android:text="@string/start_delay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:gravity="end|center_vertical"
+            app:layout_constraintTop_toTopOf="@+id/start_delay"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/start_delay"
+            app:layout_constraintBottom_toBottomOf="@+id/start_delay" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/start_delay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:valueFrom="0"
+            android:valueTo="10000"
+            android:stepSize="1"
+            android:value="@={ vm.startDelay }"
+            app:layout_constraintWidth_percent="0.5"
+            app:layout_constraintTop_toBottomOf="@+id/duration"
+            app:layout_constraintStart_toEndOf="@+id/start_delay_label"
+            app:layout_constraintEnd_toStartOf="@+id/start_delay_value"
+            app:layout_constraintBottom_toTopOf="@+id/alpha"/>
+
+        <TextView
+            android:id="@+id/start_delay_value"
+            android:text="@{ vm.startDelayText }"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:gravity="start|center_vertical"
+            app:layout_constraintTop_toTopOf="@+id/start_delay"
+            app:layout_constraintStart_toEndOf="@+id/start_delay"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/start_delay"
+            tools:text="0ms"/>
+
+        <TextView
+            android:id="@+id/alpha_label"
+            android:text="@string/alpha"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:gravity="end|center_vertical"
+            app:layout_constraintTop_toTopOf="@+id/alpha"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/alpha"
+            app:layout_constraintBottom_toBottomOf="@+id/alpha" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/alpha"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:valueFrom="0.0"
+            android:valueTo="1.0"
+            android:value="@={ vm.alpha }"
+            app:layout_constraintWidth_percent="0.5"
+            app:layout_constraintTop_toBottomOf="@+id/start_delay"
+            app:layout_constraintStart_toEndOf="@+id/alpha_label"
+            app:layout_constraintEnd_toStartOf="@+id/alpha_value"
+            app:layout_constraintBottom_toTopOf="@+id/view"/>
+
+        <TextView
+            android:id="@+id/alpha_value"
+            android:text="@{ vm.alphaText }"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:gravity="start|center_vertical"
+            app:layout_constraintTop_toTopOf="@+id/alpha"
+            app:layout_constraintStart_toEndOf="@+id/alpha"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/alpha"
+            tools:text="0ms"/>
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_margin="50dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/alpha"
+                app:layout_constraintBottom_toTopOf="@+id/button"
+                app:uuAlpha="@{ vm.viewAlpha }"
+                android:background="@color/black" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/animate"
+            android:layout_margin="20dp"
+            android:onClick="@{()-> vm.onAnimate() }"
+            app:layout_constraintTop_toBottomOf="@+id/view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

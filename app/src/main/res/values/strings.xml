@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">UUKotlinUX</string>
+    <string name="welcome_message">Select an option from the menu to explore UUKotlinUX</string>
     <string name="activity_main_title">Home</string>
     <string name="activity_drag_drop_title">Drag &amp; Drop</string>
     <string name="activity_binding_title">Binding</string>
@@ -7,5 +8,12 @@
     <string name="activity_layout_transition_animation">Layout Transition Animation</string>
     <string name="activity_polygon_image_button">Polygon Image Button</string>
     <string name="activity_polygon_image_button_binding">Polygon Image Button w/ Bindings</string>
-    <string name="welcome_message">Select an option from the menu to explore UUKotlinUX</string>
+    <string name="activity_fade_animation">Fade Animation</string>
+    <string name="duration">Duration</string>
+    <string name="start_delay">Start Delay</string>
+    <string name="interpolator">Interpolator</string>
+    <string name="accelerate">Accelerate</string>
+    <string name="decelerate">Decelerate</string>
+    <string name="alpha">Alpha</string>
+    <string name="animate">Animate</string>
 </resources>
