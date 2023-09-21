@@ -4,9 +4,9 @@ interface UUDragDropViewModel
 {
     val id: String
     val name: String
-    val allowDrag: Boolean
     val allowDrop: Boolean
     val mimeType: String
+    val dragTriggerType: UUDragTriggerType
 
     fun handleDragStart(other: UUDragDropViewModel): Boolean
     fun handleDragEnter(other: UUDragDropViewModel)

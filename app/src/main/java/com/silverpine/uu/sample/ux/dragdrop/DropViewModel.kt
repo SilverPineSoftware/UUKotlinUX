@@ -11,6 +11,7 @@ import com.silverpine.uu.logging.UULog
 import com.silverpine.uu.sample.ux.R
 import com.silverpine.uu.ux.UUAlpha
 import com.silverpine.uu.ux.dragdrop.UUDragDropViewModel
+import com.silverpine.uu.ux.dragdrop.UUDragTriggerType
 
 class DropViewModel(private val slotAllowsDrop: Boolean): ViewModel(), UUDragDropViewModel
 {
@@ -36,8 +37,8 @@ class DropViewModel(private val slotAllowsDrop: Boolean): ViewModel(), UUDragDro
     override val name: String = ""
     override val mimeType: String = "UU/CustomMimeType"
 
-    override val allowDrag: Boolean
-        get() = (model != null)
+    override val dragTriggerType: UUDragTriggerType
+        get() = (model?.dragTriggerType ?: UUDragTriggerType.None)
 
     override val allowDrop: Boolean
         get() = slotAllowsDrop
