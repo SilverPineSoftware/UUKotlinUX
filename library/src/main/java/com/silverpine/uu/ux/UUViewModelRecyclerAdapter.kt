@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.silverpine.uu.core.uuDispatchMain
 
-class UUViewModelRecyclerAdapter(private val lifecycleOwner: LifecycleOwner, private val rowTapped: ((ViewModel)->Unit)): RecyclerView.Adapter<UUViewModelRecyclerAdapter.ViewHolder>()
+class UUViewModelRecyclerAdapter(private val lifecycleOwner: LifecycleOwner, private val rowTapped: ((ViewModel)->Unit)? = null): RecyclerView.Adapter<UUViewModelRecyclerAdapter.ViewHolder>()
 {
     private val data: ArrayList<ViewModel> = ArrayList()
     private var viewTypes: ArrayList<Class<out ViewModel>> = ArrayList()
@@ -99,7 +99,7 @@ class UUViewModelRecyclerAdapter(private val lifecycleOwner: LifecycleOwner, pri
         return null
     }
 
-    inner class ViewHolder(private val lifecycleOwner: LifecycleOwner, view: View, private val bindingId: Int, private val rowTapped: ((ViewModel)->Unit)) : RecyclerView.ViewHolder(view)
+    inner class ViewHolder(private val lifecycleOwner: LifecycleOwner, view: View, private val bindingId: Int, private val rowTapped: ((ViewModel)->Unit)? = null)  : RecyclerView.ViewHolder(view)
     {
         private val binding: ViewDataBinding? = DataBindingUtil.bind(itemView)
 
@@ -109,9 +109,12 @@ class UUViewModelRecyclerAdapter(private val lifecycleOwner: LifecycleOwner, pri
             binding?.setVariable(bindingId, model)
             binding?.executePendingBindings()
 
-            itemView.setOnClickListener()
-            {
-                rowTapped.invoke(model)
+            rowTapped?.let()
+            { onRowTap ->
+                itemView.setOnClickListener()
+                {
+                    onRowTap(model)
+                }
             }
         }
 
