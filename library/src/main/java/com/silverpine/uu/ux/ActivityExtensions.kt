@@ -5,8 +5,17 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import android.provider.Settings
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
+
+private fun Activity.uuStartActivity(activityClass: Class<out AppCompatActivity>, args: Bundle?)
+{
+    val intent = Intent(applicationContext, activityClass)
+    args?.let { intent.putExtras(it) }
+    startActivity(intent)
+}
 
 fun Activity.uuOpenUrl(url: String)
 {
