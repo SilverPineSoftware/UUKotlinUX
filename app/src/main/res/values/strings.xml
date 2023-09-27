@@ -9,6 +9,7 @@
     <string name="activity_polygon_image_button">Polygon Image Button</string>
     <string name="activity_polygon_image_button_binding">Polygon Image Button w/ Bindings</string>
     <string name="activity_fade_animation">Fade Animation</string>
+    <string name="activity_alert_dialog">Alert Dialogs</string>
     <string name="duration">Duration</string>
     <string name="start_delay">Start Delay</string>
     <string name="interpolator">Interpolator</string>
@@ -16,4 +17,12 @@
     <string name="decelerate">Decelerate</string>
     <string name="alpha">Alpha</string>
     <string name="animate">Animate</string>
+    <string name="alert_dialog_message">Select an option from the menu to try out UUAlertDialog</string>
+    <string name="message_alert">Message Alert</string>
+    <string name="title_message_alert">Title &amp; Message Alert</string>
+    <string name="yes_no_alert">Yes/No Alert</string>
+    <string name="choices_alert">Choices Alert</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="ok">OK</string>
 </resources>

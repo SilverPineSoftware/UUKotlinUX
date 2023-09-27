@@ -11,6 +11,7 @@ import com.silverpine.uu.sample.ux.animation.LayoutAnimationActivity
 import com.silverpine.uu.sample.ux.binding.BindingActivity
 import com.silverpine.uu.sample.ux.binding.PolygonImageButtonBindingActivity
 import com.silverpine.uu.sample.ux.databinding.ActivityMainBinding
+import com.silverpine.uu.sample.ux.dialog.AlertDialogActivity
 import com.silverpine.uu.sample.ux.dragdrop.DragDropActivity
 import com.silverpine.uu.ux.UUMenuHandler
 
@@ -75,6 +76,11 @@ class MainActivity : AppCompatActivity()
         menuHandler.add(R.string.activity_fade_animation)
         {
             startActivity(Intent(this, FadeAnimationActivity::class.java))
+        }
+
+        menuHandler.add(R.string.activity_alert_dialog)
+        {
+            startActivity(Intent(this, AlertDialogActivity::class.java))
         }
 
         return true

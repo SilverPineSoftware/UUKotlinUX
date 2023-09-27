@@ -47,51 +47,58 @@ open class SomeActivity: AppCompatActivity()
 
 open class UUMenuHandler(private val menu: Menu)
 {
-    private val handlers: HashMap<Int, Runnable> = HashMap()
-    private var lastId = 0
+    private val items = ArrayList<UUMenuItem>()
 
-    fun add(title: String, action: Runnable): MenuItem
+    fun add(item: UUMenuItem): MenuItem
     {
-        val id = addHandler(action)
-        return menu.add(0, id, 0, title)
+        if (item.itemId == 0)
+        {
+            item.itemId = (items.size + 1)
+        }
+
+        val mi = menu.add(item.groupId, item.itemId, item.order, item.title)
+
+        if (item.isAction)
+        {
+            mi.uuSetAsActionAlways()
+        }
+
+        synchronized(items)
+        {
+            items.add(item)
+        }
+
+
+        return mi
     }
 
-    fun add(@StringRes titleResource: Int, action: Runnable): MenuItem
+    fun add(title: String, action: ()->Unit): MenuItem
     {
-        val id = addHandler(action)
-        return menu.add(0, id, 0, titleResource)
+        return add(UUMenuItem(title, action, false))
     }
 
-    fun addAction(title: String, action: Runnable): MenuItem
+    fun add(@StringRes titleResource: Int, action: ()->Unit): MenuItem
     {
-        val id = addHandler(action)
-        val item = menu.add(0, id, 0, title)
-        item.uuSetAsActionAlways()
-        return item
+        return add(UUMenuItem(titleResource, action, false))
     }
 
-    fun addAction(@StringRes titleResource: Int, action: Runnable): MenuItem
+    fun addAction(title: String, action: ()->Unit): MenuItem
     {
-        val id = addHandler(action)
-        val item = menu.add(0, id, 0, titleResource)
-        item.uuSetAsActionAlways()
-        return item
+        return add(UUMenuItem(title, action, true))
     }
 
-    private fun addHandler(action: Runnable): Int
+    fun addAction(@StringRes titleResource: Int, action: ()->Unit): MenuItem
     {
-        lastId++
-        handlers[lastId] = action
-        return lastId
+        return add(UUMenuItem(titleResource, action, false))
     }
 
     fun handleMenuClick(item: MenuItem):  Boolean
     {
-        val handler = handlers[item.itemId]
+        val mi = items.firstOrNull { it.groupId == item.groupId && it.itemId == item.itemId && it.order == item.order }
 
-        return if (handler != null)
+        return if (mi != null)
         {
-            handler.run()
+            mi.action()
             true
         }
         else
