@@ -8,9 +8,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 
-private fun Activity.uuStartActivity(activityClass: Class<out AppCompatActivity>, args: Bundle?)
+fun Activity.uuStartActivity(activityClass: Class<out Activity>, args: Bundle?)
 {
     val intent = Intent(applicationContext, activityClass)
     args?.let { intent.putExtras(it) }
