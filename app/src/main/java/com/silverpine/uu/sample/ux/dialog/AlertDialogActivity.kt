@@ -1,12 +1,14 @@
 package com.silverpine.uu.sample.ux.dialog
 
 import android.os.Bundle
+import android.text.InputType
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.silverpine.uu.sample.ux.R
 import com.silverpine.uu.ux.UUAlertDialog
 import com.silverpine.uu.ux.UUButton
+import com.silverpine.uu.ux.UUEditText
 import com.silverpine.uu.ux.UUMenuHandler
 import com.silverpine.uu.ux.uuShowAlertDialog
 import com.silverpine.uu.ux.uuShowToast
@@ -96,6 +98,37 @@ class AlertDialogActivity : AppCompatActivity()
                     uuShowToast("Four was tapped")
                 }
             )
+
+            uuShowAlertDialog(dlg)
+        }
+
+        menuHandler.add(R.string.text_input_alert)
+        {
+            val dlg = UUAlertDialog()
+            dlg.title = "Text Input"
+            dlg.message = "Please enter some text"
+
+            val editText = UUEditText("type here")
+            dlg.editText = editText
+            dlg.positiveButton = UUButton("Done")
+            {
+                uuShowToast("You entered ${editText.text}")
+            }
+
+            uuShowAlertDialog(dlg)
+        }
+
+        menuHandler.add(R.string.number_input_alert)
+        {
+            val dlg = UUAlertDialog()
+            dlg.title = "Number Input"
+
+            val editText = UUEditText("", InputType.TYPE_CLASS_NUMBER)
+            dlg.editText = editText
+            dlg.positiveButton = UUButton("Done")
+            {
+                uuShowToast("You entered ${editText.text}")
+            }
 
             uuShowAlertDialog(dlg)
         }

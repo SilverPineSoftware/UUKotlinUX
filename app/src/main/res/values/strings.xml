@@ -22,6 +22,8 @@
     <string name="title_message_alert">Title &amp; Message Alert</string>
     <string name="yes_no_alert">Yes/No Alert</string>
     <string name="choices_alert">Choices Alert</string>
+    <string name="text_input_alert">Text Input Alert</string>
+    <string name="number_input_alert">Number Input Alert</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="ok">OK</string>

@@ -2,6 +2,9 @@ package com.silverpine.uu.ux
 
 import android.app.AlertDialog
 import android.content.Context
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.EditText
 import androidx.annotation.StringRes
 import com.silverpine.uu.core.UUResources
 
@@ -14,6 +17,7 @@ class UUAlertDialog
     var positiveButton: UUButton? = null
     var negativeButton: UUButton? = null
     var neutralButton: UUButton? = null
+    var editText: UUEditText? = null
 
     fun setTitleResource(@StringRes resourceId: Int)
     {
@@ -38,6 +42,30 @@ fun Context.uuShowAlertDialog(dialog: UUAlertDialog)
     builder.setTitle(dialog.title)
     builder.setMessage(dialog.message)
     builder.setCancelable(dialog.cancelable)
+
+    dialog.editText?.let()
+    {
+        val editBox = EditText(builder.context)
+        editBox.inputType = it.inputType
+
+        editBox.addTextChangedListener(object: TextWatcher
+        {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int)
+            {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int)
+            {
+                it.text = s?.toString() ?: ""
+            }
+
+            override fun afterTextChanged(s: Editable?)
+            {
+            }
+        })
+
+        builder.setView(editBox)
+    }
 
     dialog.items?.let()
     { dlgItems ->
