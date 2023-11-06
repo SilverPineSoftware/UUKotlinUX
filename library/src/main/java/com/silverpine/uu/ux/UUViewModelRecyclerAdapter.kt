@@ -1,5 +1,6 @@
 package com.silverpine.uu.ux
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,30 +8,41 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.silverpine.uu.core.uuDispatchMain
 
-class UUViewModelRecyclerAdapter(private val lifecycleOwner: LifecycleOwner, private val rowTapped: ((ViewModel)->Unit)? = null): RecyclerView.Adapter<UUViewModelRecyclerAdapter.ViewHolder>()
+class UUViewModelRecyclerAdapter(private val lifecycleOwner: LifecycleOwner, private val rowTapped: ((UUAdapterItemViewModel)->Unit)? = null): RecyclerView.Adapter<UUViewModelRecyclerAdapter.ViewHolder>()
 {
-    private val data: ArrayList<ViewModel> = ArrayList()
-    private var viewTypes: ArrayList<Class<out ViewModel>> = ArrayList()
+    private val data: ArrayList<UUAdapterItemViewModel> = ArrayList()
+    private var viewTypes: ArrayList<Class<out UUAdapterItemViewModel>> = ArrayList()
     private var layoutTypes: ArrayList<Int> = ArrayList()
     private var bindingIds: ArrayList<Int> = ArrayList()
 
-    fun registerClass(viewModelClass: Class<out ViewModel>, @LayoutRes layoutResourceId: Int, bindingId: Int)
+    fun registerClass(viewModelClass: Class<out UUAdapterItemViewModel>, @LayoutRes layoutResourceId: Int, bindingId: Int)
     {
         viewTypes.add(viewModelClass)
         layoutTypes.add(layoutResourceId)
         bindingIds.add(bindingId)
     }
 
-    fun update(list: List<ViewModel>)
+    @SuppressLint("NotifyDataSetChanged")
+    fun update(list: List<UUAdapterItemViewModel>)
     {
         synchronized(data)
         {
             data.clear()
             data.addAll(list)
+
+            data.forEachIndexed()
+            { index, item ->
+                item.onDataChanged =
+                {
+                    uuDispatchMain()
+                    {
+                        notifyItemChanged(index)
+                    }
+                }
+            }
         }
 
         uuDispatchMain()
@@ -50,10 +62,7 @@ class UUViewModelRecyclerAdapter(private val lifecycleOwner: LifecycleOwner, pri
     override fun getItemViewType(position: Int): Int
     {
         val item = getItem(position)
-        if (item == null)
-        {
-            throw RuntimeException("Unable to get model at position $position")
-        }
+            ?: throw RuntimeException("Unable to get model at position $position")
 
         val viewType = viewTypes.indexOf(item::class.java)
         if (viewType == -1)
@@ -86,7 +95,7 @@ class UUViewModelRecyclerAdapter(private val lifecycleOwner: LifecycleOwner, pri
         }
     }
 
-    private fun getItem(position: Int): ViewModel?
+    private fun getItem(position: Int): UUAdapterItemViewModel?
     {
         synchronized(data)
         {
@@ -99,11 +108,11 @@ class UUViewModelRecyclerAdapter(private val lifecycleOwner: LifecycleOwner, pri
         return null
     }
 
-    inner class ViewHolder(private val lifecycleOwner: LifecycleOwner, view: View, private val bindingId: Int, private val rowTapped: ((ViewModel)->Unit)? = null)  : RecyclerView.ViewHolder(view)
+    inner class ViewHolder(private val lifecycleOwner: LifecycleOwner, view: View, private val bindingId: Int, private val rowTapped: ((UUAdapterItemViewModel)->Unit)? = null)  : RecyclerView.ViewHolder(view)
     {
         private val binding: ViewDataBinding? = DataBindingUtil.bind(itemView)
 
-        fun bind(model: ViewModel)
+        fun bind(model: UUAdapterItemViewModel)
         {
             binding?.lifecycleOwner = lifecycleOwner
             binding?.setVariable(bindingId, model)
