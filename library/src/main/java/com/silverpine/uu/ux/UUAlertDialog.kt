@@ -2,13 +2,15 @@ package com.silverpine.uu.ux
 
 import android.app.AlertDialog
 import android.content.Context
+import android.os.Parcel
+import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
 import androidx.annotation.StringRes
 import com.silverpine.uu.core.UUResources
 
-class UUAlertDialog
+class UUAlertDialog() : Parcelable
 {
     var title: String? = null
     var message: String? = null
@@ -18,6 +20,23 @@ class UUAlertDialog
     var negativeButton: UUButton? = null
     var neutralButton: UUButton? = null
     var editText: UUEditText? = null
+
+    constructor(parcel: Parcel) : this()
+    {
+        title = parcel.readString()
+        message = parcel.readString()
+        cancelable = parcel.readByte() != 0.toByte()
+        val itemsList = parcel.readParcelableArray(UUButton::class.java.classLoader)?.mapNotNull { it as? UUButton }
+        itemsList?.let()
+        { list ->
+            items = ArrayList(list)
+        }
+
+        positiveButton = parcel.readParcelable(UUButton::class.java.classLoader)
+        negativeButton = parcel.readParcelable(UUButton::class.java.classLoader)
+        neutralButton = parcel.readParcelable(UUButton::class.java.classLoader)
+        editText = parcel.readParcelable(UUEditText::class.java.classLoader)
+    }
 
     fun setTitleResource(@StringRes resourceId: Int)
     {
@@ -32,6 +51,35 @@ class UUAlertDialog
         if (resourceId != -1)
         {
             message = UUResources.getString(resourceId)
+        }
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(title)
+        parcel.writeString(message)
+        parcel.writeByte(if (cancelable) 1 else 0)
+        parcel.writeParcelableArray(items?.toTypedArray(), flags)
+        parcel.writeParcelable(positiveButton, flags)
+        parcel.writeParcelable(negativeButton, flags)
+        parcel.writeParcelable(neutralButton, flags)
+        parcel.writeParcelable(editText, flags)
+    }
+
+    override fun describeContents(): Int
+    {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<UUAlertDialog>
+    {
+        override fun createFromParcel(parcel: Parcel): UUAlertDialog
+        {
+            return UUAlertDialog(parcel)
+        }
+
+        override fun newArray(size: Int): Array<UUAlertDialog?>
+        {
+            return arrayOfNulls(size)
         }
     }
 }

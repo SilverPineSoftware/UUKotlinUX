@@ -123,7 +123,7 @@ class AlertDialogActivity : AppCompatActivity()
             val dlg = UUAlertDialog()
             dlg.title = "Number Input"
 
-            val editText = UUEditText("", InputType.TYPE_CLASS_NUMBER)
+            val editText = UUEditText("", "", InputType.TYPE_CLASS_NUMBER)
             dlg.editText = editText
             dlg.positiveButton = UUButton("Done")
             {
