@@ -129,6 +129,14 @@ class DropViewModel(private val slotAllowsDrop: Boolean): ViewModel(), UUDragDro
         clearDrag()
     }
 
+    override fun handleTap()
+    {
+        UULog.d(javaClass, "handleTap", "View Model tapped: ${text.value}")
+    }
+
+    override val longPressTriggerTime: Long
+        get() = 150L
+
     fun doWiggle()
     {
         changeBorder(R.color.red, R.dimen.small_border)
