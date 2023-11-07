@@ -14,5 +14,4 @@ interface UUDragDropViewModel
     fun handleDragExit(other: UUDragDropViewModel)
     fun handleDrop(other: UUDragDropViewModel)
     fun handleDragEnd(other: UUDragDropViewModel)
-    fun handleTap()
 }

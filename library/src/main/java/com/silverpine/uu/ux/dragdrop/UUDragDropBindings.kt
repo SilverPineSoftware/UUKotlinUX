@@ -23,7 +23,6 @@ fun View.uuConfigureDragDrop(
     if (viewModel == null)
     {
         setOnLongClickListener(null)
-        setOnTouchListener(null)
         setOnDragListener(null)
         setOnClickListener(null)
         return
@@ -38,10 +37,5 @@ fun View.uuConfigureDragDrop(
     if (configureDropSupport)
     {
         setOnDragListener(UUViewModelDragListener(viewModel))
-    }
-
-    setOnClickListener()
-    {
-        viewModel.handleTap()
     }
 }

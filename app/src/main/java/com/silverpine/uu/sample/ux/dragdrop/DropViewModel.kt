@@ -129,7 +129,7 @@ class DropViewModel(private val slotAllowsDrop: Boolean): ViewModel(), UUDragDro
         clearDrag()
     }
 
-    override fun handleTap()
+    fun handleTap()
     {
         UULog.d(javaClass, "handleTap", "View Model tapped: ${text.value}")
     }
