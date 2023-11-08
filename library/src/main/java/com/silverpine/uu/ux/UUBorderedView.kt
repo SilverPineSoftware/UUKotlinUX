@@ -17,7 +17,8 @@ open class UUBorderedView(context: Context, attrs: AttributeSet?, defStyle: Int)
             R.styleable.UUBorderedView,
             R.styleable.UUBorderedView_uuBorderWidth,
             R.styleable.UUBorderedView_uuBorderColor,
-            R.styleable.UUBorderedView_uuFillColor)
+            R.styleable.UUBorderedView_uuFillColor,
+            R.styleable.UUBorderedView_uuCornerRadius)
     }
 
     constructor(context: Context): this(context, null, 0)

@@ -83,6 +83,11 @@ class MainActivity : AppCompatActivity()
             startActivity(Intent(this, AlertDialogActivity::class.java))
         }
 
+        menuHandler.add(R.string.activity_bordered_views)
+        {
+            startActivity(Intent(this, BorderedViewsActivity::class.java))
+        }
+
         return true
     }
 

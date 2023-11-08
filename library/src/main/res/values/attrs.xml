@@ -24,12 +24,14 @@
         <attr name="uuBorderWidth"/>
         <attr name="uuBorderColor"/>
         <attr name="uuFillColor"/>
+        <attr name="uuCornerRadius"/>
     </declare-styleable>
 
     <declare-styleable name="UUBorderedImageView">
         <attr name="uuBorderWidth"/>
         <attr name="uuBorderColor"/>
         <attr name="uuFillColor"/>
+        <attr name="uuCornerRadius"/>
     </declare-styleable>
 
     <declare-styleable name="UUBorderedImageButton">

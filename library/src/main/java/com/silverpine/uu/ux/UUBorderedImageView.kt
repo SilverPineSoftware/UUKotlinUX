@@ -17,7 +17,8 @@ open class UUBorderedImageView(context: Context, attrs: AttributeSet?, defStyle:
             R.styleable.UUBorderedImageView,
             R.styleable.UUBorderedImageView_uuBorderWidth,
             R.styleable.UUBorderedImageView_uuBorderColor,
-            R.styleable.UUBorderedImageView_uuFillColor)
+            R.styleable.UUBorderedImageView_uuFillColor,
+            R.styleable.UUBorderedImageView_uuCornerRadius)
     }
 
     constructor(context: Context): this(context, null, 0)

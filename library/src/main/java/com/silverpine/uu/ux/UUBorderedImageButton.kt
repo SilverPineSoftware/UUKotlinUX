@@ -8,20 +8,17 @@ import androidx.annotation.DimenRes
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.databinding.BindingAdapter
 import com.silverpine.uu.core.UUResources
-import java.lang.Math.PI
 
 open class UUBorderedImageButton(context: Context, attrs: AttributeSet?, defStyle: Int): AppCompatImageButton(context, attrs, defStyle)
 {
-    private val shape: UUPolygonShape by lazy()
+    private val shape: UURectangleShape by lazy()
     {
-        UUPolygonShape(this,
+        UURectangleShape(this,
             R.styleable.UUBorderedImageButton,
             R.styleable.UUBorderedImageButton_uuBorderWidth,
             R.styleable.UUBorderedImageButton_uuBorderColor,
             R.styleable.UUBorderedImageButton_uuFillColor,
-            -1,
-            R.styleable.UUBorderedImageButton_uuCornerRadius,
-            -1)
+            R.styleable.UUBorderedImageButton_uuCornerRadius)
     }
 
     constructor(context: Context): this(context, null, 0)
@@ -30,8 +27,6 @@ open class UUBorderedImageButton(context: Context, attrs: AttributeSet?, defStyl
     init
     {
         shape.initAttributes(context, attrs)
-        shape.sides = 4
-        shape.rotationOffset = (PI / 4).toFloat()
     }
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int)
     {

@@ -60,6 +60,10 @@
             android:name=".dialog.AlertDialogActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name=".BorderedViewsActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
     </application>
 
 </manifest>
