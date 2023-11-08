@@ -40,9 +40,9 @@ abstract class UUViewShape(
 
     open fun applyAttributes(attributes: TypedArray)
     {
-        borderWidth = attributes.getDimensionPixelSize(borderWidthAttributeId, 0).toFloat()
-        borderColor = attributes.getColor(borderColorAttributeId, Color.TRANSPARENT)
-        fillColor = attributes.getColor(fillColorAttributeId, Color.TRANSPARENT)
+        borderWidth = attributes.uuGetDimensionPixelSize(borderWidthAttributeId, 0.0f)
+        borderColor = attributes.uuGetColor(borderColorAttributeId, Color.TRANSPARENT)
+        fillColor = attributes.uuGetColor(fillColorAttributeId, Color.TRANSPARENT)
     }
 
     var borderColor: Int

@@ -67,9 +67,9 @@ open class UUPolygonShape(view: View,
     {
         super.applyAttributes(attributes)
 
-        sides = attributes.getInteger(sidesAttributeId, DEFAULT_SIDES)
-        cornerRadius = attributes.getFloat(cornerRadiusAttributeId, DEFAULT_CORNER_RADIUS)
-        rotationOffset = attributes.getFloat(rotationOffsetAttributeId, DEFAULT_ROTATION_OFFSET)
+        sides = attributes.uuGetInteger(sidesAttributeId, DEFAULT_SIDES)
+        cornerRadius = attributes.uuGetFloat(cornerRadiusAttributeId, DEFAULT_CORNER_RADIUS)
+        rotationOffset = attributes.uuGetFloat(rotationOffsetAttributeId, DEFAULT_ROTATION_OFFSET)
     }
 
     private fun rebuildBorderPath(w: Int, h: Int)
