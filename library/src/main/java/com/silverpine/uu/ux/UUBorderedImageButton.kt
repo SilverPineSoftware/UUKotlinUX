@@ -11,13 +11,19 @@ import com.silverpine.uu.core.UUResources
 
 open class UUBorderedImageButton(context: Context, attrs: AttributeSet?, defStyle: Int): AppCompatImageButton(context, attrs, defStyle)
 {
-    private val shape: UURectangleShape by lazy()
+    private val shape: UUPolygonShape by lazy()
     {
-        UURectangleShape(this,
+        val shape = UUPolygonShape(this,
             R.styleable.UUBorderedImageButton,
             R.styleable.UUBorderedImageButton_uuBorderWidth,
             R.styleable.UUBorderedImageButton_uuBorderColor,
-            R.styleable.UUBorderedImageButton_uuFillColor)
+            R.styleable.UUBorderedImageButton_uuFillColor,
+            -1,
+            R.styleable.UUBorderedImageButton_uuCornerRadius,
+            -1)
+
+        shape.sides = 4 
+        shape
     }
 
     constructor(context: Context): this(context, null, 0)
@@ -51,6 +57,10 @@ open class UUBorderedImageButton(context: Context, attrs: AttributeSet?, defStyl
     var fillColor: Int
         get() = shape.fillColor
         set(value) { shape.fillColor = value }
+
+    var cornerRadius: Float
+        get() = shape.cornerRadius
+        set(value) { shape.cornerRadius = value }
 }
 
 @BindingAdapter("uuBorderColor")
@@ -77,3 +87,8 @@ fun uuBindFillColor(view: UUBorderedImageButton, @ColorRes resourceId: Int)
     view.fillColor = UUResources.getColor(resourceId)
 }
 
+@BindingAdapter("uuCornerRadius")
+fun uuBindPolygonCornerRadius(view: UUBorderedImageButton, cornerRadius: Float)
+{
+    view.cornerRadius = cornerRadius
+}
