@@ -32,6 +32,12 @@
         <attr name="uuFillColor"/>
     </declare-styleable>
 
+    <declare-styleable name="UUBorderedImageButton">
+        <attr name="uuBorderWidth"/>
+        <attr name="uuBorderColor"/>
+        <attr name="uuFillColor"/>
+    </declare-styleable>
+
     <declare-styleable name="UUPolygonView">
         <attr name="uuBorderWidth"/>
         <attr name="uuBorderColor"/>
