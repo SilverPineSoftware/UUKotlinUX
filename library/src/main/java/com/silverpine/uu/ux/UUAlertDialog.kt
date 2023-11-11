@@ -37,7 +37,7 @@ open class UUAlertDialog()
     }
 }
 
-class UUAlertDialogViewModel(var model: UUAlertDialog): ViewModel()
+open class UUAlertDialogViewModel(var model: UUAlertDialog): ViewModel()
 
 fun Context.uuShowAlertDialog(dialog: UUAlertDialog)
 {
