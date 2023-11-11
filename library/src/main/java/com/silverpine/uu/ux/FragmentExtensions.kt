@@ -6,3 +6,7 @@ fun Fragment.uuHideKeyboard()
 {
     activity?.uuHideKeyboard()
 }
+fun Fragment.uuFinish()
+{
+    activity?.uuRemoveFragment(this)
+}

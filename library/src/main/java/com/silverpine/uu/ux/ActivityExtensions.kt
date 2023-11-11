@@ -8,6 +8,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.IdRes
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import com.silverpine.uu.core.uuDispatchMain
 
 fun Activity.uuStartActivity(activityClass: Class<out Activity>, args: Bundle?)
 {
@@ -66,5 +70,49 @@ fun Activity.uuOpenAppInGooglePlay(appId: String){
                 Uri.parse("https://play.google.com/store/apps/details?id=$appId")
             )
         )
+    }
+}
+
+fun FragmentActivity.uuRemoveFragment(fragment: Fragment)
+{
+    uuDispatchMain()
+    {
+        with(supportFragmentManager.beginTransaction())
+        {
+            remove(fragment)
+            commit()
+        }
+    }
+}
+
+fun FragmentActivity.uuRemoveFragmentByTag(tag: String)
+{
+    supportFragmentManager.findFragmentByTag(tag)?.let()
+    { fragment ->
+        uuRemoveFragment(fragment)
+    }
+}
+
+fun FragmentActivity.uuReplaceFragment(fragment: Fragment, @IdRes frame: Int, tag: String = fragment.javaClass.name)
+{
+    uuDispatchMain()
+    {
+        with(supportFragmentManager.beginTransaction())
+        {
+            replace(frame, fragment, tag)
+            commit()
+        }
+    }
+}
+
+fun FragmentActivity.uuAddFragment(fragment: Fragment, @IdRes frame: Int, tag: String = fragment.javaClass.name)
+{
+    uuDispatchMain()
+    {
+        with(supportFragmentManager.beginTransaction())
+        {
+            add(frame, fragment, tag)
+            commit()
+        }
     }
 }
