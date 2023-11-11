@@ -4,6 +4,7 @@ import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.Interpolator
+import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.databinding.BindingAdapter
@@ -15,6 +16,15 @@ fun uuBindBackgroundColor(view: View, @ColorRes resourceId: Int?)
     resourceId?.let()
     {
         view.setBackgroundColor(UUResources.getColor(it))
+    }
+}
+
+@BindingAdapter("uuTextColor")
+fun uuBindTextColor(view: TextView, @ColorRes resourceId: Int?)
+{
+    resourceId?.let()
+    {
+        view.setTextColor(UUResources.getColor(it))
     }
 }
 
