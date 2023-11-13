@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleOwner
@@ -18,11 +17,11 @@ class UUViewModelRecyclerAdapter(private val lifecycleOwner: LifecycleOwner, pri
     private var layoutTypes: ArrayList<Int> = ArrayList()
     private var bindingIds: ArrayList<Int> = ArrayList()
 
-    fun registerClass(viewModelClass: Class<out UUAdapterItemViewModel>, @LayoutRes layoutResourceId: Int, bindingId: Int)
+    fun registerLayoutMapping(mapping: UUAdapterItemViewModelLayoutMapping)
     {
-        viewTypes.add(viewModelClass)
-        layoutTypes.add(layoutResourceId)
-        bindingIds.add(bindingId)
+        viewTypes.add(mapping.viewModelClass)
+        layoutTypes.add(mapping.layoutResourceId)
+        bindingIds.add(mapping.bindingId)
     }
 
     @SuppressLint("NotifyDataSetChanged")
