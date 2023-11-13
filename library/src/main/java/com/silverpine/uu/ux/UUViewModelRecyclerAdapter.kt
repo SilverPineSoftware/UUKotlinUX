@@ -13,15 +13,11 @@ import com.silverpine.uu.core.uuDispatchMain
 class UUViewModelRecyclerAdapter(private val lifecycleOwner: LifecycleOwner, private val rowTapped: ((UUAdapterItemViewModel)->Unit)? = null): RecyclerView.Adapter<UUViewModelRecyclerAdapter.ViewHolder>()
 {
     private val data: ArrayList<UUAdapterItemViewModel> = ArrayList()
-    private var viewTypes: ArrayList<Class<out UUAdapterItemViewModel>> = ArrayList()
-    private var layoutTypes: ArrayList<Int> = ArrayList()
-    private var bindingIds: ArrayList<Int> = ArrayList()
+    private val viewModelTypes = ArrayList<UUAdapterItemViewModelMapping>()
 
-    fun registerLayoutMapping(mapping: UUAdapterItemViewModelLayoutMapping)
+    fun registerViewModel(mapping: UUAdapterItemViewModelMapping)
     {
-        viewTypes.add(mapping.viewModelClass)
-        layoutTypes.add(mapping.layoutResourceId)
-        bindingIds.add(mapping.bindingId)
+        viewModelTypes.add(mapping)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -52,10 +48,10 @@ class UUViewModelRecyclerAdapter(private val lifecycleOwner: LifecycleOwner, pri
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UUViewModelRecyclerAdapter.ViewHolder
     {
-        val layoutId = layoutTypes[viewType]
+        val mapping = viewModelTypes[viewType]
         val layoutInflater = LayoutInflater.from(parent.context)
-        val view = layoutInflater.inflate(layoutId, parent, false)
-        return ViewHolder(lifecycleOwner, view, bindingIds[viewType], rowTapped)
+        val view = layoutInflater.inflate(mapping.layoutResourceId, parent, false)
+        return ViewHolder(lifecycleOwner, view, mapping.bindingId, rowTapped)
     }
 
     override fun getItemViewType(position: Int): Int
@@ -63,7 +59,7 @@ class UUViewModelRecyclerAdapter(private val lifecycleOwner: LifecycleOwner, pri
         val item = getItem(position)
             ?: throw RuntimeException("Unable to get model at position $position")
 
-        val viewType = viewTypes.indexOf(item::class.java)
+        val viewType = viewModelTypes.indexOfFirst { it.viewModelClass == item::class.java }
         if (viewType == -1)
         {
             throw RuntimeException("Unable to get view type for position $position, model: ${item::class.java}")

@@ -12,4 +12,4 @@ open class UUAdapterItemViewModel: ViewModel()
     var onDataChanged: ()->Unit = { }
 }
 
-data class UUAdapterItemViewModelLayoutMapping(val viewModelClass: Class<out UUAdapterItemViewModel>, @LayoutRes val layoutResourceId: Int, val bindingId: Int)
+data class UUAdapterItemViewModelMapping(val viewModelClass: Class<out UUAdapterItemViewModel>, @LayoutRes val layoutResourceId: Int, val bindingId: Int)
