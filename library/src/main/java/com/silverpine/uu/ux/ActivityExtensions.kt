@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.IdRes
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.silverpine.uu.core.uuDispatchMain
@@ -114,5 +115,14 @@ fun FragmentActivity.uuAddFragment(fragment: Fragment, @IdRes frame: Int, tag: S
             add(frame, fragment, tag)
             commit()
         }
+    }
+}
+
+fun FragmentActivity.uuShowDialogFragment(fragment: DialogFragment, tag: String)
+{
+    uuDispatchMain()
+    {
+        uuRemoveFragmentByTag(tag)
+        fragment.show(supportFragmentManager, tag)
     }
 }
