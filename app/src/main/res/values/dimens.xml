@@ -6,4 +6,10 @@
     <dimen name="large_border">30dp</dimen>
     <dimen name="drop_accept_border_width">10dp</dimen>
     <dimen name="drop_hover_border_width">30dp</dimen>
+
+    <dimen name="text_size_12">12sp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
+    <dimen name="text_size_20">20sp</dimen>
+    <dimen name="text_size_24">24sp</dimen>
+
 </resources>

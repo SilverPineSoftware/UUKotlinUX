@@ -10,6 +10,7 @@ import com.silverpine.uu.sample.ux.animation.FadeAnimationActivity
 import com.silverpine.uu.sample.ux.animation.LayoutAnimationActivity
 import com.silverpine.uu.sample.ux.binding.BindingActivity
 import com.silverpine.uu.sample.ux.binding.PolygonImageButtonBindingActivity
+import com.silverpine.uu.sample.ux.binding.TextStyleActivity
 import com.silverpine.uu.sample.ux.databinding.ActivityMainBinding
 import com.silverpine.uu.sample.ux.dialog.AlertDialogActivity
 import com.silverpine.uu.sample.ux.dragdrop.DragDropActivity
@@ -86,6 +87,11 @@ class MainActivity : AppCompatActivity()
         menuHandler.add(R.string.activity_bordered_views)
         {
             startActivity(Intent(this, BorderedViewsActivity::class.java))
+        }
+
+        menuHandler.add(R.string.activity_text_style)
+        {
+            startActivity(Intent(this, TextStyleActivity::class.java))
         }
 
         return true
