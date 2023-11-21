@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.silverpine.uu.core.UURandom
 import com.silverpine.uu.core.UUTimer
-import com.silverpine.uu.core.uuDispatchMain
+import com.silverpine.uu.core.uuDispatch
 import com.silverpine.uu.logging.UULog
 
 class UUTypewriterTextViewModel: ViewModel()
@@ -24,6 +24,7 @@ class UUTypewriterTextViewModel: ViewModel()
     var completion: ()->Unit = { }
 
     private var model: String = ""
+    private var displayedText = StringBuilder()
     private var animationType = AnimationType.Letters
     private var sections: ArrayList<TextSection> = arrayListOf()
     private var didCompleteTyping = false
@@ -31,7 +32,8 @@ class UUTypewriterTextViewModel: ViewModel()
     fun update(model: String)
     {
         this.model = model
-        _text.value = ""
+        displayedText = StringBuilder()
+        _text.postValue("")
         didCompleteTyping = false
         splitIntoParts()
         typeNextSection()
@@ -41,7 +43,7 @@ class UUTypewriterTextViewModel: ViewModel()
     {
         UULog.d(javaClass, "forceComplete", "Text playback force quit")
         notifyCompletion()
-        _text.value = model
+        _text.postValue(model)
     }
 
     private fun typeNextSection()
@@ -59,12 +61,14 @@ class UUTypewriterTextViewModel: ViewModel()
             return
         }
 
-        _text.value = _text.value + section.text
+        displayedText.append(section.text)
+
+        _text.postValue(displayedText.toString())
 
         UUTimer.startTimer(timerId, section.delayMillis, section)
         { _, _ ->
 
-            uuDispatchMain(this::typeNextSection)
+            uuDispatch(this::typeNextSection)
         }
     }
 
