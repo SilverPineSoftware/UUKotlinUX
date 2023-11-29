@@ -39,6 +39,12 @@ class UUTypewriterTextViewModel: ViewModel()
         typeNextSection()
     }
 
+    fun setText(model: String)
+    {
+        _text.postValue(model)
+        notifyCompletion()
+    }
+
     fun forceComplete()
     {
         UULog.d(javaClass, "forceComplete", "Text playback force quit")
@@ -77,7 +83,7 @@ class UUTypewriterTextViewModel: ViewModel()
         didCompleteTyping = true
         UUTimer.cancelActiveTimer(timerId)
         sections.clear()
-        completion.invoke()
+        completion()
     }
 
     private fun splitIntoParts()
@@ -114,14 +120,13 @@ class UUTypewriterTextViewModel: ViewModel()
 
     private fun String.delayForWord(): Long
     {
-        if (this.contains('.') ||
-                this.contains('\n'))
+        return if (this.contains('.') || this.contains('\n'))
         {
-            return 1400
+            1400
         }
         else
         {
-            return (this.count() * 30L)
+            (this.count() * 30L)
         }
     }
 
