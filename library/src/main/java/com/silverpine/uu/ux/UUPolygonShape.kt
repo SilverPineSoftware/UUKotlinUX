@@ -74,7 +74,7 @@ open class UUPolygonShape(view: View,
 
     private fun rebuildBorderPath(w: Int, h: Int)
     {
-        borderPath.uuMakePolygonPath(w, h, borderWidth, _sides, _cornerRadius, _rotationOffset)
+        borderPath.uuMakePolygonPath(w.toFloat(), h.toFloat(), borderWidth, _sides, _cornerRadius, _rotationOffset)
         view.invalidate()
     }
 
@@ -95,11 +95,11 @@ open class UUPolygonShape(view: View,
     }
 }
 
-fun Path.uuMakePolygonPath(width: Int, height: Int, borderWidth: Float, sides: Int, cornerRadius: Float, rotationOffset: Float = 0.0f): Array<PointF>
+fun Path.uuMakePolygonPath(width: Float, height: Float, borderWidth: Float, sides: Int, cornerRadius: Float, rotationOffset: Float = 0.0f): Array<PointF>
 {
     reset()
 
-    val rect = RectF(0.0f, 0.0f, width.toFloat(), height.toFloat())
+    val rect = RectF(0.0f, 0.0f, width, height)
     val theta: Float = ((2.0f * Math.PI) / sides).toFloat() // How much to turn at every corner
 
     val center = PointF(rect.centerX(), rect.centerY())
