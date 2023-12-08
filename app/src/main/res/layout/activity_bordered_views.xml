@@ -1,58 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.silverpine.uu.sample.ux.BorderedViewsActivity">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <com.silverpine.uu.ux.UUBorderedImageButton
-        android:id="@+id/one"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/two"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/three"
-        app:uuBorderColor="#721EA5"
-        app:uuBorderWidth="8dp"
-        app:uuCornerRadius="50"/>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context="com.silverpine.uu.sample.ux.BorderedViewsActivity">
 
-    <com.silverpine.uu.ux.UUBorderedImageButton
-        android:id="@+id/two"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        app:layout_constraintStart_toEndOf="@+id/one"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/four"
-        app:uuBorderColor="#2831D1"
-        app:uuBorderWidth="8dp" />
+        <com.silverpine.uu.ux.UUBorderedImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            app:uuBorderColor="#721EA5"
+            app:uuBorderWidth="8dp"
+            app:uuCornerRadius="50"/>
 
-    <com.silverpine.uu.ux.UUBorderedView
-        android:id="@+id/three"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/four"
-        app:layout_constraintTop_toBottomOf="@+id/one"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:uuBorderColor="#0000FF"
-        app:uuBorderWidth="8dp"
-        app:uuFillColor="@color/green"/>
+        <com.silverpine.uu.ux.UUBorderedImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            app:uuBorderColor="#2831D1"
+            app:uuBorderWidth="8dp" />
 
-    <com.silverpine.uu.ux.UUBorderedImageView
-        android:id="@+id/four"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        app:layout_constraintStart_toEndOf="@+id/three"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/two"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:uuBorderColor="#00FF00"
-        app:uuBorderWidth="8dp"
-        app:uuFillColor="@color/red"
-        app:uuCornerRadius="10"/>
+        <com.silverpine.uu.ux.UUBorderedView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            app:uuBorderColor="#0000FF"
+            app:uuBorderWidth="8dp"
+            app:uuFillColor="@color/green"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.silverpine.uu.ux.UUBorderedImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            app:uuBorderColor="#00FF00"
+            app:uuBorderWidth="8dp"
+            app:uuFillColor="@color/red"
+            app:uuCornerRadius="10"/>
+
+    </LinearLayout>
+</ScrollView>
