@@ -12,18 +12,20 @@ fun uuConfigureDragDropBindings(view: View?, viewModel: UUDragDropViewModel?)
 @BindingAdapter("uuDropTargetViewModel")
 fun uuConfigureDropTargetBindings(view: View?, viewModel: UUDragDropViewModel?)
 {
-    view?.uuConfigureDragDrop(viewModel, configureDragSupport = false)
+    view?.uuConfigureDragDrop(viewModel, configureDragSupport = false, configureTapSupport = false)
 }
 
 fun View.uuConfigureDragDrop(
     viewModel: UUDragDropViewModel?,
     configureDragSupport: Boolean = true,
-    configureDropSupport: Boolean = true)
+    configureDropSupport: Boolean = true,
+    configureTapSupport: Boolean = true)
 {
     if (viewModel == null)
     {
         setOnLongClickListener(null)
         setOnDragListener(null)
+        setOnClickListener(null)
         setOnClickListener(null)
         return
     }
@@ -37,5 +39,10 @@ fun View.uuConfigureDragDrop(
     if (configureDropSupport)
     {
         setOnDragListener(UUViewModelDragListener(viewModel))
+    }
+
+    if (configureTapSupport)
+    {
+        setOnClickListener(UUViewModelDragClickListener(viewModel))
     }
 }

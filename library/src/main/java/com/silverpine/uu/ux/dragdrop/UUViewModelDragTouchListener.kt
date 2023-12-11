@@ -4,7 +4,6 @@ import android.content.ClipData
 import android.os.SystemClock
 import android.view.MotionEvent
 import android.view.View
-import com.silverpine.uu.logging.UULog
 
 class UUViewModelDragTouchListener(private val viewModel: UUDragDropViewModel): View.OnTouchListener
 {
@@ -28,6 +27,11 @@ class UUViewModelDragTouchListener(private val viewModel: UUDragDropViewModel): 
                 v?.startDragAndDrop(dragData, shadowBuilder.invoke(v), viewModel, 0)
                 return true
             }
+        }
+
+        if (e.action == MotionEvent.ACTION_UP)
+        {
+            v?.performClick()
         }
 
         return false

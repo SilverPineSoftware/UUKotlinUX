@@ -129,9 +129,9 @@ class DropViewModel(private val slotAllowsDrop: Boolean): ViewModel(), UUDragDro
         clearDrag()
     }
 
-    fun handleTap()
+    override fun onClick()
     {
-        UULog.d(javaClass, "handleTap", "View Model tapped: ${text.value}")
+        UULog.d(javaClass, "onClick", "View Model tapped: ${text.value}")
     }
 
     override val longPressTriggerTime: Long
