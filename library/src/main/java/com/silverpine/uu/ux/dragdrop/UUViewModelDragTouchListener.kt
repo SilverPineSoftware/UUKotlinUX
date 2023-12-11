@@ -14,6 +14,7 @@ class UUViewModelDragTouchListener(private val viewModel: UUDragDropViewModel): 
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean
     {
+        val view = v ?: return false
         val e = event ?: return false
 
         val duration = SystemClock.uptimeMillis() - e.downTime
@@ -31,7 +32,8 @@ class UUViewModelDragTouchListener(private val viewModel: UUDragDropViewModel): 
 
         if (e.action == MotionEvent.ACTION_UP)
         {
-            v?.performClick()
+            //UULog.d(javaClass, "onTouch", "action: ${e.action}, $duration, calling performClick method")
+            return view.performClick()
         }
 
         return false
