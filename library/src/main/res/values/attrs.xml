@@ -34,6 +34,13 @@
         <attr name="uuCornerRadius"/>
     </declare-styleable>
 
+    <declare-styleable name="UUBorderedButton">
+        <attr name="uuBorderWidth"/>
+        <attr name="uuBorderColor"/>
+        <attr name="uuFillColor"/>
+        <attr name="uuCornerRadius"/>
+    </declare-styleable>
+
     <declare-styleable name="UUBorderedImageButton">
         <attr name="uuBorderWidth"/>
         <attr name="uuBorderColor"/>

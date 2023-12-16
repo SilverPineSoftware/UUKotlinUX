@@ -48,5 +48,32 @@
             app:uuFillColor="@color/red"
             app:uuCornerRadius="10"/>
 
+        <com.silverpine.uu.ux.UUBorderedButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:text="1234"
+            app:uuBorderColor="#0000FF"
+            app:uuBorderWidth="8dp"
+            app:uuFillColor="@color/green"
+            tools:ignore="HardcodedText"/>
+
+        <com.silverpine.uu.ux.UUBorderedButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:text="Hello\nWorld"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:uuBorderColor="#00FF00"
+            app:uuBorderWidth="8dp"
+            app:uuFillColor="@color/red"
+            app:uuCornerRadius="40"
+            tools:ignore="HardcodedText"/>
+
     </LinearLayout>
 </ScrollView>
