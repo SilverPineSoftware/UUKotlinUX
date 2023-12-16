@@ -38,8 +38,10 @@ android {
     }
 
     buildFeatures {
-        dataBinding = true
+        dataBinding true
+        buildConfig true
     }
+
     namespace 'com.silverpine.uu.ux'
 }
 
