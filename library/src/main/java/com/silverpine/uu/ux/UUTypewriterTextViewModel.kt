@@ -31,6 +31,12 @@ class UUTypewriterTextViewModel: ViewModel()
 
     fun update(model: String)
     {
+        if (this.model == model)
+        {
+            notifyCompletion()
+            return
+        }
+
         this.model = model
         displayedText = StringBuilder()
         _text.postValue("")
@@ -41,6 +47,7 @@ class UUTypewriterTextViewModel: ViewModel()
 
     fun setText(model: String)
     {
+        this.model = model
         _text.postValue(model)
         notifyCompletion()
     }
