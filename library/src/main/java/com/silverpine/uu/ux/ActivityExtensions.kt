@@ -16,61 +16,81 @@ import com.silverpine.uu.core.uuDispatchMain
 
 fun Activity.uuStartActivity(activityClass: Class<out Activity>, args: Bundle?)
 {
-    val intent = Intent(applicationContext, activityClass)
-    args?.let { intent.putExtras(it) }
-    startActivity(intent)
+    uuDispatchMain()
+    {
+        val intent = Intent(applicationContext, activityClass)
+        args?.let { intent.putExtras(it) }
+        startActivity(intent)
+    }
 }
 
 fun Activity.uuOpenUrl(url: String)
 {
-    val intent = Intent(Intent.ACTION_VIEW)
-    intent.data = Uri.parse(url)
-    startActivity(intent)
+    uuDispatchMain()
+    {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(url)
+        startActivity(intent)
+    }
 }
 
 fun Activity.uuCallPhoneNumber(phoneNumber: String)
 {
-    val intent = Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null))
-    startActivity(intent)
+    uuDispatchMain()
+    {
+        val intent = Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null))
+        startActivity(intent)
+    }
 }
 
 fun Activity.uuOpenSystemSettings()
 {
-    val intent = Intent()
-    intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-    val uri = Uri.fromParts("package", packageName, null)
-    intent.data = uri
-    startActivity(intent)
+    uuDispatchMain()
+    {
+        val intent = Intent()
+        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+        val uri = Uri.fromParts("package", packageName, null)
+        intent.data = uri
+        startActivity(intent)
+    }
 }
 
 fun Activity.uuOpenEmail(email: String)
 {
-    val emailIntent = Intent(Intent.ACTION_SENDTO)
-    emailIntent.data = Uri.parse("mailto: $email")
-    startActivity(Intent.createChooser(emailIntent, title))
+    uuDispatchMain()
+    {
+        val emailIntent = Intent(Intent.ACTION_SENDTO)
+        emailIntent.data = Uri.parse("mailto: $email")
+        startActivity(Intent.createChooser(emailIntent, title))
+    }
 }
 
 fun Activity.uuHideKeyboard()
 {
-    currentFocus?.let()
-    { view ->
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-        imm?.hideSoftInputFromWindow(view.windowToken, 0)
-        view.clearFocus()
+    uuDispatchMain()
+    {
+        currentFocus?.let()
+        { view ->
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            imm?.hideSoftInputFromWindow(view.windowToken, 0)
+            view.clearFocus()
+        }
     }
 }
 
 //appId -> package name
-fun Activity.uuOpenAppInGooglePlay(appId: String){
-    try {
-        this.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appId")))
-    } catch (ex: ActivityNotFoundException) {
-        this.startActivity(
-            Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse("https://play.google.com/store/apps/details?id=$appId")
-            )
-        )
+fun Activity.uuOpenAppInGooglePlay(appId: String)
+{
+    uuDispatchMain()
+    {
+        try
+        {
+            this.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appId")))
+        }
+        catch (ex: ActivityNotFoundException)
+        {
+            this.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appId")))
+        }
     }
 }
 
