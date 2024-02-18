@@ -9,6 +9,8 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.silverpine.uu.core.uuDispatchMain
+import com.silverpine.uu.ux.viewmodel.UUAdapterItemViewModel
+import com.silverpine.uu.ux.viewmodel.UUAdapterItemViewModelMapping
 
 class UUViewModelRecyclerAdapter(private val lifecycleOwner: LifecycleOwner, private val rowTapped: ((UUAdapterItemViewModel)->Unit)? = null): RecyclerView.Adapter<UUViewModelRecyclerAdapter.ViewHolder>()
 {

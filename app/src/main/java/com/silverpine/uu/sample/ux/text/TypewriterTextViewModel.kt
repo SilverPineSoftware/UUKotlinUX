@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import com.silverpine.uu.sample.ux.viewmodels.BaseViewModel
 import com.silverpine.uu.ux.UUMenuItem
 import com.silverpine.uu.ux.UUToast
-import com.silverpine.uu.ux.UUTypewriterTextViewModel
+import com.silverpine.uu.ux.viewmodel.UUTypewriterTextViewModel
 
 class TypewriterTextViewModel: BaseViewModel()
 {

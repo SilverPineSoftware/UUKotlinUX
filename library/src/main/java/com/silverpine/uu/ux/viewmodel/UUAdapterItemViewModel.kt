@@ -1,4 +1,4 @@
-package com.silverpine.uu.ux
+package com.silverpine.uu.ux.viewmodel
 
 import androidx.annotation.LayoutRes
 import androidx.lifecycle.ViewModel
