@@ -1,6 +1,7 @@
 package com.silverpine.uu.ux
 
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.Interpolator
@@ -60,5 +61,45 @@ fun uuBindVisibleOrInvisible(view: View, visible: Boolean?)
     else
     {
         view.visibility = View.INVISIBLE
+    }
+}
+
+@BindingAdapter("uuBottomMargin")
+fun View.uuBindBottomMargin(margin: Int)
+{
+    (layoutParams as? ViewGroup.MarginLayoutParams)?.let()
+    { lp ->
+        lp.bottomMargin = margin
+        layoutParams = lp
+    }
+}
+
+@BindingAdapter("uuTopMargin")
+fun View.uuBindTopMargin(margin: Int)
+{
+    (layoutParams as? ViewGroup.MarginLayoutParams)?.let()
+    { lp ->
+        lp.topMargin = margin
+        layoutParams = lp
+    }
+}
+
+@BindingAdapter("uuStartMargin")
+fun View.uuBindStartMargin(margin: Int)
+{
+    (layoutParams as? ViewGroup.MarginLayoutParams)?.let()
+    { lp ->
+        lp.marginStart = margin
+        layoutParams = lp
+    }
+}
+
+@BindingAdapter("uuEndMargin")
+fun View.uuBindEndMargin(margin: Int)
+{
+    (layoutParams as? ViewGroup.MarginLayoutParams)?.let()
+    { lp ->
+        lp.marginEnd = margin
+        layoutParams = lp
     }
 }
