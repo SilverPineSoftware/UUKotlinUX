@@ -7,6 +7,7 @@ import android.view.WindowInsetsAnimation
 import android.view.WindowInsetsAnimation.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE
 import androidx.annotation.RequiresApi
 import androidx.databinding.BindingAdapter
+import com.silverpine.uu.logging.UULog
 
 interface UUKeyboardListener
 {
@@ -32,6 +33,8 @@ private class UUWindowInsetAnimationListener(dispatchMode: Int, private val list
 
         val visible = insets.isVisible(WindowInsets.Type.ime())
         val height = insets.getInsets(WindowInsets.Type.ime()).bottom
+        UULog.d(javaClass, "onEnd", "imeVisible: $visible, imeHeight: $height")
+
         if (visible != imeVisible || height != imeHeight)
         {
             imeVisible = visible
