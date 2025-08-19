@@ -10,6 +10,7 @@ ext["signing.key"] = System.getenv('SIGNING_KEY')
 
 project.logger.lifecycle("mavenCentralNexusUrl: $mavenCentralNexusUrl")
 project.logger.lifecycle("mavenCentralSnapshotUrl: $mavenCentralSnapshotUrl")
+project.logger.lifecycle("ossrhUsername: $ossrhUsername")
 
 nexusPublishing {
     repositories {
@@ -17,8 +18,8 @@ nexusPublishing {
             stagingProfileId = sonatypeStagingProfileId
             username = ossrhUsername
             password = ossrhPassword
-            nexusUrl.set(uri(mavenCentralNexusUrl))
-            snapshotRepositoryUrl.set(uri(mavenCentralSnapshotUrl))
+            nexusUrl.set(uri("${mavenCentralNexusUrl}"))
+            snapshotRepositoryUrl.set(uri("${mavenCentralSnapshotUrl}"))
         }
     }
 }
