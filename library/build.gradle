@@ -13,41 +13,12 @@ ext {
     SCM_MODULE_NAME = 'UUKotlinUX'
 }
 
-apply from: "../uu-build-common.gradle"
+apply from: "${uu_build_common}/uu-build-common.gradle"
 
 android {
-    compileSdkVersion target_sdk
-
-    defaultConfig {
-        minSdkVersion min_sdk
-        targetSdkVersion target_sdk
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility java_version
-        targetCompatibility java_version
-    }
-
-    kotlinOptions {
-        jvmTarget = java_version
-    }
-
     buildFeatures {
         dataBinding true
-        buildConfig true
     }
-
-    namespace 'com.silverpine.uu.ux'
 }
 
 dependencies {
