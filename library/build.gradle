@@ -7,13 +7,7 @@ plugins {
     id 'signing'
 }
 
-ext {
-    PUBLISH_ARTIFACT_ID = 'uu-ux-ktx'
-    PUBLISH_DESCRIPTION = 'Useful Utilities UX'
-    SCM_MODULE_NAME = 'UUKotlinUX'
-}
-
-apply from: "${uu_build_common}/uu-build-common.gradle"
+apply from: "${uu_build_common}/uu-build-library-common.gradle"
 
 android {
     buildFeatures {
