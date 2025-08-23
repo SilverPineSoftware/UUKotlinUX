@@ -1,11 +1,17 @@
 package com.silverpine.uu.ux
 
 import android.os.Bundle
+import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class UURecyclerActivity: UUAppCompatActivity(layoutResourceId = R.layout.uu_recycler_activity)
+abstract class UURecyclerActivity(
+    @StringRes titleResourceId: Int = -1,
+    @LayoutRes layoutResourceId: Int = R.layout.uu_recycler_activity): UUAppCompatActivity(
+    titleResourceId = titleResourceId,
+    layoutResourceId = layoutResourceId)
 {
     protected lateinit var adapter: UUViewModelRecyclerAdapter
 
