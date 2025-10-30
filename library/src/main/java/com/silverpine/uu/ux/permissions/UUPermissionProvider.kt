@@ -1,0 +1,147 @@
+package com.silverpine.uu.ux.permissions
+
+/**
+ * Interface for checking and requesting Android runtime permissions with detailed status reporting.
+ *
+ * This interface provides a clean abstraction for requesting multiple permissions
+ * and receiving comprehensive status information for each permission requested.
+ *
+ * @see UUPermissionStatus for available permission states
+ *
+ */
+interface UUPermissionProvider
+{
+    /**
+     * Gets the current status of a specific permission.
+     *
+     * @param permission The permission string to check (e.g., "android.permission.CAMERA")
+     * @return The current [com.silverpine.uu.ux.permissions.UUPermissionStatus] of the permission
+     */
+    fun getPermissionStatus(permission: String): UUPermissionStatus
+
+    /**
+     * Requests multiple Android runtime permissions and provides detailed status for each.
+     *
+     * This method handles the complete permission request flow, including:
+     * - Checking if permissions are already granted
+     * - Launching the system permission dialog if needed
+     * - Tracking permission request history
+     * - Determining if permissions can be requested again
+     *
+     * @param permissions Array of permission strings to request (e.g., "android.permission.CAMERA")
+     * @param completion Callback invoked when permission request is complete.
+     *                   The map contains each requested permission as a key with its corresponding
+     *                   [UUPermissionStatus] as the value.
+     *
+     * @see UUPermissionStatus for possible status values:
+     * - [UUPermissionStatus.GRANTED] - Permission was granted
+     * - [UUPermissionStatus.DENIED] - Permission was denied but can be requested again
+     * - [UUPermissionStatus.PERMANENTLY_DENIED] - Permission was permanently denied
+     * - [UUPermissionStatus.NEVER_ASKED] - Permission was never requested (shouldn't occur in completion)
+     * - [UUPermissionStatus.UNDETERMINED] - Status could not be determined
+     *
+     * @sample
+     * ```kotlin
+     * permissionRequester.requestPermissions(
+     *     arrayOf("android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE")
+     * ) { results ->
+     *     results.forEach { (permission, status) ->
+     *         when (status) {
+     *             UUPermissionStatus.GRANTED -> {
+     *                 // Permission granted, proceed with functionality
+     *                 startCamera()
+     *             }
+     *             UUPermissionStatus.DENIED -> {
+     *                 // Permission denied, can ask again
+     *                 showPermissionRationale(permission)
+     *             }
+     *             UUPermissionStatus.PERMANENTLY_DENIED -> {
+     *                 // Permission permanently denied, direct to settings
+     *                 openAppSettings()
+     *             }
+     *             else -> {
+     *                 // Handle other cases
+     *             }
+     *         }
+     *     }
+     * }
+     * ```
+     */
+    fun requestPermissions(permissions: Array<String>, completion: (Map<String, UUPermissionStatus>)->Unit)
+}
+
+/**
+ * Gets the current status of multiple permissions in a single call.
+ *
+ * This extension function provides a convenient way to check the status of multiple
+ * permissions at once, returning a map where each permission string is associated
+ * with its corresponding [UUPermissionStatus].
+ *
+ * @param permissions Array of permission strings to check
+ * @return Map where keys are permission strings and values are their corresponding status
+ */
+fun UUPermissionProvider.getPermissionStatusMultiple(permissions: Array<String>): Map<String, UUPermissionStatus>
+{
+    return permissions.associate()
+    { permission ->
+        permission to getPermissionStatus(permission)
+    }
+}
+
+/**
+ * Checks if all specified permissions have been granted.
+ *
+ * This extension function provides a convenient way to verify that all permissions
+ * in the given array have been granted by the user. It internally uses
+ * [getPermissionStatusMultiple] to check the status of all permissions and returns
+ * `true` only if every permission has a status of [UUPermissionStatus.GRANTED].
+ *
+ * @param permissions Array of permission strings to check
+ * @return `true` if all permissions are granted, `false` if any permission is not granted
+ *
+ * @sample
+ * ```kotlin
+ * val permissions = arrayOf("android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE")
+ * if (permissionChecker.areAllPermissionsGranted(permissions)) {
+ *     // All permissions are granted, proceed with functionality
+ * } else {
+ *     // Some permissions are not granted, request them
+ * }
+ * ```
+ */
+fun UUPermissionProvider.areAllPermissionsGranted(permissions: Array<String>): Boolean
+{
+    return getPermissionStatusMultiple(permissions).all { it.value.isGranted }
+}
+
+/**
+ * Checks if any of the specified permissions have been permanently denied.
+ *
+ * This extension function provides a convenient way to verify if any permissions
+ * in the given array have been permanently denied by the user. It internally uses
+ * [getPermissionStatusMultiple] to check the status of all permissions and returns
+ * `true` if any permission has a status of [UUPermissionStatus.PERMANENTLY_DENIED].
+ *
+ * Permanently denied permissions occur when the user selects "Don't ask again" or
+ * when the permission is restricted by device policy. These permissions cannot be
+ * requested again and typically require the user to manually enable them in settings.
+ *
+ * @param permissions Array of permission strings to check
+ * @return `true` if any permission is permanently denied, `false` if no permissions are permanently denied
+ *
+ * @sample
+ * ```kotlin
+ * val permissions = arrayOf("android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE")
+ * if (permissionChecker.areAnyPermissionsPermanentlyDenied(permissions)) {
+ *     // Some permissions are permanently denied, direct user to settings
+ *     showSettingsDialog()
+ * } else {
+ *     // No permissions are permanently denied, can request them normally
+ *     requestPermissions(permissions)
+ * }
+ * ```
+ */
+fun UUPermissionProvider.areAnyPermissionsPermanentlyDenied(permissions: Array<String>): Boolean
+{
+    return getPermissionStatusMultiple(permissions).any { it.value.isPermanentlyDenied }
+}
