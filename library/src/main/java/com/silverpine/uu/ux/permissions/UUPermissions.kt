@@ -3,23 +3,50 @@ package com.silverpine.uu.ux.permissions
 import android.app.Activity
 import android.content.pm.PackageManager
 import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 
 private const val PREFS_NAME = "com.silverpine.uu.ux.UUPermissions"
 
-class UUPermissions(private val activity: ComponentActivity): UUPermissionProvider
+object UUPermissions: UUPermissionProvider
 {
-    private val prefs = activity.getSharedPreferences(PREFS_NAME, Activity.MODE_PRIVATE)
-    private var requestMultipleCompletion: ((Map<String, UUPermissionStatus>) -> Unit)? = null
+    private var activity: ComponentActivity? = null
+    private var launcher:  ActivityResultLauncher<Array<String>>? = null
 
-    private val multiplePermissionsLauncher by lazy {
-        activity.registerForActivityResult(
+    fun init(activity: ComponentActivity)
+    {
+        this.activity = activity
+        this.launcher = activity.registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions(),
             this::handlePermissionResults
         )
     }
+
+    private fun requireActivity(): ComponentActivity
+    {
+        val activity = this.activity
+        if (activity == null)
+        {
+            throw RuntimeException("UUPermissions not initialized. Must call UUPermissions.init(context) on app startup.")
+        }
+
+        return activity
+    }
+
+    private val prefs by lazy {
+        requireActivity().getSharedPreferences(PREFS_NAME, Activity.MODE_PRIVATE)
+    }
+
+    /*private val multiplePermissionsLauncher by lazy {
+        requireActivity().registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions(),
+            this::handlePermissionResults
+        )
+    }*/
+
+    private var requestMultipleCompletion: ((Map<String, UUPermissionStatus>) -> Unit)? = null
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // UUPermissionProvider
@@ -62,7 +89,7 @@ class UUPermissions(private val activity: ComponentActivity): UUPermissionProvid
         }
 
         requestMultipleCompletion = completion
-        multiplePermissionsLauncher.launch(permissions)
+        launcher?.launch(permissions)
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -90,7 +117,7 @@ class UUPermissions(private val activity: ComponentActivity): UUPermissionProvid
     private fun hasPermission(permission: String): Result<Boolean> = runCatching()
     {
         (ContextCompat.checkSelfPermission(
-            activity,
+            requireActivity(),
             permission
         ) == PackageManager.PERMISSION_GRANTED)
     }
@@ -102,7 +129,7 @@ class UUPermissions(private val activity: ComponentActivity): UUPermissionProvid
 
     private fun shouldShowRationale(permission: String): Result<Boolean> = runCatching()
     {
-        activity.shouldShowRequestPermissionRationale(permission)
+        requireActivity().shouldShowRequestPermissionRationale(permission)
     }
 
     private fun handlePermissionResults(results: Map<String, Boolean>)
