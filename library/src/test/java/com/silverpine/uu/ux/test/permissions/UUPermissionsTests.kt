@@ -14,20 +14,14 @@ import com.silverpine.uu.ux.permissions.UUPermissions
 import com.silverpine.uu.ux.permissions.areAllPermissionsGranted
 import com.silverpine.uu.ux.permissions.areAnyPermissionsPermanentlyDenied
 import com.silverpine.uu.ux.permissions.getPermissionStatusMultiple
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mock
-import org.mockito.MockedStatic
 import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
 
 /**
  * JUnit 5 unit tests for UUPermissions class using Mockito.
@@ -38,122 +32,115 @@ import java.util.concurrent.TimeUnit
 @ExtendWith(MockitoExtension::class)
 class UUPermissionsTests
 {
-    @Mock
-    private lateinit var mockActivity: ComponentActivity
+    private data class Quad<A, B, C, D>(val first: A, val second: B, val third: C, val fourth: D)
 
-    @Mock
-    private lateinit var mockContext: Context
-
-    @Mock
-    private lateinit var mockSharedPreferences: SharedPreferences
-
-    @Mock
-    private lateinit var mockEditor: SharedPreferences.Editor
-
-    private lateinit var permissions: UUPermissionProvider
-    private lateinit var contextCompatMock: MockedStatic<ContextCompat>
-
-    @BeforeEach
-    fun setUp()
+    private fun buildActivityWithPrefs(): Quad<ComponentActivity, Context, SharedPreferences, SharedPreferences.Editor>
     {
-        // Setup mock behavior with lenient stubbing
-        Mockito.lenient().`when`(mockActivity.applicationContext).thenReturn(mockContext)
-        Mockito.lenient().`when`(mockActivity.getSharedPreferences(Mockito.anyString(), Mockito.anyInt())).thenReturn(mockSharedPreferences)
-        Mockito.lenient().`when`(mockSharedPreferences.edit()).thenReturn(mockEditor)
-        Mockito.lenient().`when`(mockEditor.putBoolean(Mockito.anyString(), Mockito.anyBoolean())).thenReturn(mockEditor)
-        Mockito.lenient().`when`(mockEditor.commit()).thenReturn(true)
+        val activity = Mockito.mock(ComponentActivity::class.java)
+        val context = Mockito.mock(Context::class.java)
+        val prefs = Mockito.mock(SharedPreferences::class.java)
+        val editor = Mockito.mock(SharedPreferences.Editor::class.java)
 
-        // Mock registerForActivityResult to return a mock launcher
+        Mockito.lenient().`when`(activity.applicationContext).thenReturn(context)
+        Mockito.lenient().`when`(activity.getSharedPreferences(Mockito.anyString(), Mockito.anyInt())).thenReturn(prefs)
+        Mockito.lenient().`when`(prefs.edit()).thenReturn(editor)
+        Mockito.lenient().`when`(editor.putBoolean(Mockito.anyString(), Mockito.anyBoolean())).thenReturn(editor)
+        Mockito.lenient().`when`(editor.commit()).thenReturn(true)
+
         @Suppress("UNCHECKED_CAST")
-        val mockLauncher = Mockito.mock(ActivityResultLauncher::class.java) as ActivityResultLauncher<Array<String>>
-        Mockito.lenient().`when`(mockActivity.registerForActivityResult(
+        val launcher = Mockito.mock(ActivityResultLauncher::class.java) as ActivityResultLauncher<Array<String>>
+        Mockito.lenient().`when`(activity.registerForActivityResult(
             Mockito.any<ActivityResultContract<Array<String>, Map<String, Boolean>>>(),
             Mockito.any<ActivityResultCallback<Map<String, Boolean>>>()
-        )).thenReturn(mockLauncher)
+        )).thenReturn(launcher)
 
-        // Mock ContextCompat static methods
-        contextCompatMock = Mockito.mockStatic(ContextCompat::class.java)
-
-        UUPermissions.init(mockActivity)
-
-        // Create UUPermissions instance
-        permissions = UUPermissions //(mockActivity)
-    }
-
-    @AfterEach
-    fun tearDown()
-    {
-        contextCompatMock.close()
+        return Quad(activity, context, prefs, editor)
     }
 
     @Test
     fun `getPermissionStatus returns GRANTED when permission is granted`()
     {
-        // Given: Permission is granted
         val permission = "android.permission.CAMERA"
-        contextCompatMock.`when`<Int> { ContextCompat.checkSelfPermission(mockActivity, permission) }.thenReturn(PackageManager.PERMISSION_GRANTED)
-        Mockito.lenient().`when`(mockSharedPreferences.getBoolean("UU_HAS_REQUESTED_$permission", false)).thenReturn(true) // Has been requested before
+        val (activity, _, prefs, _) = buildActivityWithPrefs()
 
-        // When: Getting permission status
-        val status = permissions.getPermissionStatus(permission)
+        Mockito.mockStatic(ContextCompat::class.java).use { cc ->
+            cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, permission) }.thenReturn(PackageManager.PERMISSION_GRANTED)
+            Mockito.lenient().`when`(prefs.getBoolean("UU_HAS_REQUESTED_$permission", false)).thenReturn(true)
+
+            UUPermissions.init(activity)
+            val permissions: UUPermissionProvider = UUPermissions
+            val status = permissions.getPermissionStatus(permission)
 
         // Then: Should return GRANTED
         assertEquals(UUPermissionStatus.GRANTED, status)
         assertTrue(status.isGranted)
         assertFalse(status.canRequest)
+        }
     }
 
     @Test
     fun `getPermissionStatus returns NEVER_ASKED when permission never requested`()
     {
-        // Given: Permission never requested
         val permission = "android.permission.ACCESS_FINE_LOCATION"
-        Mockito.lenient().`when`(mockSharedPreferences.getBoolean("UU_HAS_REQUESTED_$permission", false)).thenReturn(false) // Never requested
+        val (activity, _, prefs, _) = buildActivityWithPrefs()
 
-        // When: Getting permission status
-        val status = permissions.getPermissionStatus(permission)
+        Mockito.mockStatic(ContextCompat::class.java).use { _ ->
+            Mockito.lenient().`when`(prefs.getBoolean("UU_HAS_REQUESTED_$permission", false)).thenReturn(false)
+
+            UUPermissions.init(activity)
+            val permissions: UUPermissionProvider = UUPermissions
+            val status = permissions.getPermissionStatus(permission)
 
         // Then: Should return NEVER_ASKED
         assertEquals(UUPermissionStatus.NEVER_ASKED, status)
         assertFalse(status.isGranted)
         assertTrue(status.canRequest)
+        }
     }
 
     @Test
     fun `getPermissionStatus returns DENIED when permission denied but can request again`()
     {
-        // Given: Permission denied but can request again
         val permission = "android.permission.CAMERA"
-        contextCompatMock.`when`<Int> { ContextCompat.checkSelfPermission(mockActivity, permission) }.thenReturn(PackageManager.PERMISSION_DENIED)
-        Mockito.lenient().`when`(mockSharedPreferences.getBoolean("UU_HAS_REQUESTED_$permission", false)).thenReturn(true) // Has been requested before
-        Mockito.lenient().`when`(mockActivity.shouldShowRequestPermissionRationale(permission)).thenReturn(true) // Can request again
+        val (activity, _, prefs, _) = buildActivityWithPrefs()
 
-        // When: Getting permission status
-        val status = permissions.getPermissionStatus(permission)
+        Mockito.mockStatic(ContextCompat::class.java).use { cc ->
+            cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, permission) }.thenReturn(PackageManager.PERMISSION_DENIED)
+            Mockito.lenient().`when`(prefs.getBoolean("UU_HAS_REQUESTED_$permission", false)).thenReturn(true)
+            Mockito.lenient().`when`(activity.shouldShowRequestPermissionRationale(permission)).thenReturn(true)
+
+            UUPermissions.init(activity)
+            val permissions: UUPermissionProvider = UUPermissions
+            val status = permissions.getPermissionStatus(permission)
 
         // Then: Should return DENIED
         assertEquals(UUPermissionStatus.DENIED, status)
         assertFalse(status.isGranted)
         assertTrue(status.canRequest)
+        }
     }
 
     @Test
     fun `getPermissionStatus returns PERMANENTLY_DENIED when permission permanently denied`()
     {
-        // Given: Permission permanently denied
         val permission = "android.permission.CAMERA"
-        contextCompatMock.`when`<Int> { ContextCompat.checkSelfPermission(mockActivity, permission) }.thenReturn(PackageManager.PERMISSION_DENIED)
-        Mockito.lenient().`when`(mockSharedPreferences.getBoolean("UU_HAS_REQUESTED_$permission", false)).thenReturn(true) // Has been requested before
-        Mockito.lenient().`when`(mockActivity.shouldShowRequestPermissionRationale(permission)).thenReturn(false) // Cannot request again
+        val (activity, _, prefs, _) = buildActivityWithPrefs()
 
-        // When: Getting permission status
-        val status = permissions.getPermissionStatus(permission)
+        Mockito.mockStatic(ContextCompat::class.java).use { cc ->
+            cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, permission) }.thenReturn(PackageManager.PERMISSION_DENIED)
+            Mockito.lenient().`when`(prefs.getBoolean("UU_HAS_REQUESTED_$permission", false)).thenReturn(true)
+            Mockito.lenient().`when`(activity.shouldShowRequestPermissionRationale(permission)).thenReturn(false)
+
+            UUPermissions.init(activity)
+            val permissions: UUPermissionProvider = UUPermissions
+            val status = permissions.getPermissionStatus(permission)
 
         // Then: Should return PERMANENTLY_DENIED
         assertEquals(UUPermissionStatus.PERMANENTLY_DENIED, status)
         assertFalse(status.isGranted)
         assertFalse(status.canRequest)
         assertTrue(status.isPermanentlyDenied)
+        }
     }
 
     @Test
@@ -164,21 +151,22 @@ class UUPermissionsTests
             "android.permission.CAMERA",
             "android.permission.ACCESS_FINE_LOCATION"
         )
+        val (activity, _, prefs, _) = buildActivityWithPrefs()
 
-        // Mock CAMERA as granted
-        contextCompatMock.`when`<Int> { ContextCompat.checkSelfPermission(mockActivity, "android.permission.CAMERA") }.thenReturn(PackageManager.PERMISSION_GRANTED)
-        Mockito.`when`(mockSharedPreferences.getBoolean("UU_HAS_REQUESTED_android.permission.CAMERA", false)).thenReturn(true)
+        Mockito.mockStatic(ContextCompat::class.java).use { cc ->
+            cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, "android.permission.CAMERA") }.thenReturn(PackageManager.PERMISSION_GRANTED)
+            Mockito.lenient().`when`(prefs.getBoolean("UU_HAS_REQUESTED_android.permission.CAMERA", false)).thenReturn(true)
+            Mockito.lenient().`when`(prefs.getBoolean("UU_HAS_REQUESTED_android.permission.ACCESS_FINE_LOCATION", false)).thenReturn(false)
 
-        // Mock ACCESS_FINE_LOCATION as never asked
-        Mockito.`when`(mockSharedPreferences.getBoolean("UU_HAS_REQUESTED_android.permission.ACCESS_FINE_LOCATION", false)).thenReturn(false)
-
-        // When: Getting status for multiple permissions
-        val statuses = permissions.getPermissionStatusMultiple(perms)
+            UUPermissions.init(activity)
+            val permissions: UUPermissionProvider = UUPermissions
+            val statuses = permissions.getPermissionStatusMultiple(perms)
 
         // Then: Each permission should have correct status
         assertEquals(UUPermissionStatus.GRANTED, statuses["android.permission.CAMERA"])
         assertEquals(UUPermissionStatus.NEVER_ASKED, statuses["android.permission.ACCESS_FINE_LOCATION"])
         assertEquals(2, statuses.size)
+        }
     }
 
     @Test
@@ -189,17 +177,21 @@ class UUPermissionsTests
             "android.permission.CAMERA",
             "android.permission.ACCESS_FINE_LOCATION"
         )
+        val (activity, _, prefs, _) = buildActivityWithPrefs()
 
-        perms.forEach { permission ->
-            contextCompatMock.`when`<Int> { ContextCompat.checkSelfPermission(mockActivity, permission) }.thenReturn(PackageManager.PERMISSION_GRANTED)
-            Mockito.lenient().`when`(mockSharedPreferences.getBoolean("UU_HAS_REQUESTED_$permission", false)).thenReturn(true)
-        }
+        Mockito.mockStatic(ContextCompat::class.java).use { cc ->
+            perms.forEach { permission ->
+                cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, permission) }.thenReturn(PackageManager.PERMISSION_GRANTED)
+                Mockito.lenient().`when`(prefs.getBoolean("UU_HAS_REQUESTED_$permission", false)).thenReturn(true)
+            }
 
-        // When: Checking if all permissions are granted
-        val allGranted = permissions.areAllPermissionsGranted(perms)
+            UUPermissions.init(activity)
+            val permissions: UUPermissionProvider = UUPermissions
+            val allGranted = permissions.areAllPermissionsGranted(perms)
 
         // Then: Should return true
         assertTrue(allGranted)
+        }
     }
 
     @Test
@@ -210,20 +202,21 @@ class UUPermissionsTests
             "android.permission.CAMERA",
             "android.permission.ACCESS_FINE_LOCATION"
         )
+        val (activity, _, prefs, _) = buildActivityWithPrefs()
 
-        // CAMERA is granted
-        contextCompatMock.`when`<Int> { ContextCompat.checkSelfPermission(mockActivity, "android.permission.CAMERA") }.thenReturn(PackageManager.PERMISSION_GRANTED)
-        Mockito.lenient().`when`(mockSharedPreferences.getBoolean("UU_HAS_REQUESTED_android.permission.CAMERA", false)).thenReturn(true)
+        Mockito.mockStatic(ContextCompat::class.java).use { cc ->
+            cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, "android.permission.CAMERA") }.thenReturn(PackageManager.PERMISSION_GRANTED)
+            Mockito.lenient().`when`(prefs.getBoolean("UU_HAS_REQUESTED_android.permission.CAMERA", false)).thenReturn(true)
+            cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, "android.permission.ACCESS_FINE_LOCATION") }.thenReturn(PackageManager.PERMISSION_DENIED)
+            Mockito.lenient().`when`(prefs.getBoolean("UU_HAS_REQUESTED_android.permission.ACCESS_FINE_LOCATION", false)).thenReturn(false)
 
-        // ACCESS_FINE_LOCATION is not granted
-        contextCompatMock.`when`<Int> { ContextCompat.checkSelfPermission(mockActivity, "android.permission.ACCESS_FINE_LOCATION") }.thenReturn(PackageManager.PERMISSION_DENIED)
-        Mockito.lenient().`when`(mockSharedPreferences.getBoolean("UU_HAS_REQUESTED_android.permission.ACCESS_FINE_LOCATION", false)).thenReturn(false)
-
-        // When: Checking if all permissions are granted
-        val allGranted = permissions.areAllPermissionsGranted(perms)
+            UUPermissions.init(activity)
+            val permissions: UUPermissionProvider = UUPermissions
+            val allGranted = permissions.areAllPermissionsGranted(perms)
 
         // Then: Should return false
         assertFalse(allGranted)
+        }
     }
 
     @Test
@@ -234,21 +227,22 @@ class UUPermissionsTests
             "android.permission.CAMERA",
             "android.permission.ACCESS_FINE_LOCATION"
         )
+        val (activity, _, prefs, _) = buildActivityWithPrefs()
 
-        // CAMERA is granted
-        contextCompatMock.`when`<Int> { ContextCompat.checkSelfPermission(mockActivity, "android.permission.CAMERA") }.thenReturn(PackageManager.PERMISSION_GRANTED)
-        Mockito.lenient().`when`(mockSharedPreferences.getBoolean("UU_HAS_REQUESTED_android.permission.CAMERA", false)).thenReturn(true)
+        Mockito.mockStatic(ContextCompat::class.java).use { cc ->
+            cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, "android.permission.CAMERA") }.thenReturn(PackageManager.PERMISSION_GRANTED)
+            Mockito.lenient().`when`(prefs.getBoolean("UU_HAS_REQUESTED_android.permission.CAMERA", false)).thenReturn(true)
+            cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, "android.permission.ACCESS_FINE_LOCATION") }.thenReturn(PackageManager.PERMISSION_DENIED)
+            Mockito.lenient().`when`(prefs.getBoolean("UU_HAS_REQUESTED_android.permission.ACCESS_FINE_LOCATION", false)).thenReturn(true)
+            Mockito.lenient().`when`(activity.shouldShowRequestPermissionRationale("android.permission.ACCESS_FINE_LOCATION")).thenReturn(false)
 
-        // ACCESS_FINE_LOCATION is permanently denied
-        contextCompatMock.`when`<Int> { ContextCompat.checkSelfPermission(mockActivity, "android.permission.ACCESS_FINE_LOCATION") }.thenReturn(PackageManager.PERMISSION_DENIED)
-        Mockito.lenient().`when`(mockSharedPreferences.getBoolean("UU_HAS_REQUESTED_android.permission.ACCESS_FINE_LOCATION", false)).thenReturn(true)
-        Mockito.lenient().`when`(mockActivity.shouldShowRequestPermissionRationale("android.permission.ACCESS_FINE_LOCATION")).thenReturn(false)
-
-        // When: Checking if any permissions are permanently denied
-        val anyPermanentlyDenied = permissions.areAnyPermissionsPermanentlyDenied(perms)
+            UUPermissions.init(activity)
+            val permissions: UUPermissionProvider = UUPermissions
+            val anyPermanentlyDenied = permissions.areAnyPermissionsPermanentlyDenied(perms)
 
         // Then: Should return true
         assertTrue(anyPermanentlyDenied)
+        }
     }
 
     @Test
@@ -259,21 +253,22 @@ class UUPermissionsTests
             "android.permission.CAMERA",
             "android.permission.ACCESS_FINE_LOCATION"
         )
+        val (activity, _, prefs, _) = buildActivityWithPrefs()
 
-        // CAMERA is granted
-        contextCompatMock.`when`<Int> { ContextCompat.checkSelfPermission(mockActivity, "android.permission.CAMERA") }.thenReturn(PackageManager.PERMISSION_GRANTED)
-        Mockito.lenient().`when`(mockSharedPreferences.getBoolean("UU_HAS_REQUESTED_android.permission.CAMERA", false)).thenReturn(true)
+        Mockito.mockStatic(ContextCompat::class.java).use { cc ->
+            cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, "android.permission.CAMERA") }.thenReturn(PackageManager.PERMISSION_GRANTED)
+            Mockito.lenient().`when`(prefs.getBoolean("UU_HAS_REQUESTED_android.permission.CAMERA", false)).thenReturn(true)
+            cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, "android.permission.ACCESS_FINE_LOCATION") }.thenReturn(PackageManager.PERMISSION_DENIED)
+            Mockito.lenient().`when`(prefs.getBoolean("UU_HAS_REQUESTED_android.permission.ACCESS_FINE_LOCATION", false)).thenReturn(true)
+            Mockito.lenient().`when`(activity.shouldShowRequestPermissionRationale("android.permission.ACCESS_FINE_LOCATION")).thenReturn(true)
 
-        // ACCESS_FINE_LOCATION is denied but can request again
-        contextCompatMock.`when`<Int> { ContextCompat.checkSelfPermission(mockActivity, "android.permission.ACCESS_FINE_LOCATION") }.thenReturn(PackageManager.PERMISSION_DENIED)
-        Mockito.lenient().`when`(mockSharedPreferences.getBoolean("UU_HAS_REQUESTED_android.permission.ACCESS_FINE_LOCATION", false)).thenReturn(true)
-        Mockito.lenient().`when`(mockActivity.shouldShowRequestPermissionRationale("android.permission.ACCESS_FINE_LOCATION")).thenReturn(true)
-
-        // When: Checking if any permissions are permanently denied
-        val anyPermanentlyDenied = permissions.areAnyPermissionsPermanentlyDenied(perms)
+            UUPermissions.init(activity)
+            val permissions: UUPermissionProvider = UUPermissions
+            val anyPermanentlyDenied = permissions.areAnyPermissionsPermanentlyDenied(perms)
 
         // Then: Should return false
         assertFalse(anyPermanentlyDenied)
+        }
     }
 
     @Test
@@ -281,23 +276,23 @@ class UUPermissionsTests
     {
         // Given: Empty permissions array
         val perms = emptyArray<String>()
+        val (activity, _, _, _) = buildActivityWithPrefs()
 
-        val latch = CountDownLatch(1)
-        var completionCalled = false
-        var resultStatuses: Map<String, UUPermissionStatus>? = null
+        Mockito.mockStatic(ContextCompat::class.java).use { _ ->
+            UUPermissions.init(activity)
+            val permissions: UUPermissionProvider = UUPermissions
 
-        // When: Requesting permissions
-        permissions.requestPermissions(perms) { statuses ->
-            completionCalled = true
-            resultStatuses = statuses
-            latch.countDown()
+            var completionCalled = false
+            var resultStatuses: Map<String, UUPermissionStatus>? = null
+            permissions.requestPermissions(perms) { statuses ->
+                completionCalled = true
+                resultStatuses = statuses
+            }
+
+            assertTrue(completionCalled)
+            assertNotNull(resultStatuses)
+            assertTrue(resultStatuses?.isEmpty() == true)
         }
-
-        // Then: Completion should be called immediately with empty map
-        assertTrue(latch.await(1, TimeUnit.SECONDS))
-        assertTrue(completionCalled)
-        assertNotNull(resultStatuses)
-        assertTrue(resultStatuses?.isEmpty() == true)
     }
 
     @Test
@@ -308,31 +303,30 @@ class UUPermissionsTests
             "android.permission.CAMERA",
             "android.permission.ACCESS_FINE_LOCATION"
         )
+        val (activity, _, prefs, _) = buildActivityWithPrefs()
 
-        // Both permissions are granted
-        contextCompatMock.`when`<Int> { ContextCompat.checkSelfPermission(mockActivity, "android.permission.CAMERA") }.thenReturn(PackageManager.PERMISSION_GRANTED)
-        Mockito.lenient().`when`(mockSharedPreferences.getBoolean("UU_HAS_REQUESTED_android.permission.CAMERA", false)).thenReturn(true)
+        Mockito.mockStatic(ContextCompat::class.java).use { cc ->
+            cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, "android.permission.CAMERA") }.thenReturn(PackageManager.PERMISSION_GRANTED)
+            Mockito.lenient().`when`(prefs.getBoolean("UU_HAS_REQUESTED_android.permission.CAMERA", false)).thenReturn(true)
+            cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, "android.permission.ACCESS_FINE_LOCATION") }.thenReturn(PackageManager.PERMISSION_GRANTED)
+            Mockito.lenient().`when`(prefs.getBoolean("UU_HAS_REQUESTED_android.permission.ACCESS_FINE_LOCATION", false)).thenReturn(true)
 
-        contextCompatMock.`when`<Int> { ContextCompat.checkSelfPermission(mockActivity, "android.permission.ACCESS_FINE_LOCATION") }.thenReturn(PackageManager.PERMISSION_GRANTED)
-        Mockito.lenient().`when`(mockSharedPreferences.getBoolean("UU_HAS_REQUESTED_android.permission.ACCESS_FINE_LOCATION", false)).thenReturn(true)
+            UUPermissions.init(activity)
+            val permissions: UUPermissionProvider = UUPermissions
 
-        var completionCalled = false
-        var resultStatuses: Map<String, UUPermissionStatus>? = null
+            var completionCalled = false
+            var resultStatuses: Map<String, UUPermissionStatus>? = null
+            permissions.requestPermissions(perms) { statuses ->
+                completionCalled = true
+                resultStatuses = statuses
+            }
 
-        // When: Requesting permissions
-        permissions.requestPermissions(perms) { statuses ->
-            completionCalled = true
-            resultStatuses = statuses
+            assertTrue(completionCalled)
+            assertNotNull(resultStatuses)
+            assertEquals(2, resultStatuses?.size)
+            assertEquals(UUPermissionStatus.GRANTED, resultStatuses?.get("android.permission.CAMERA"))
+            assertEquals(UUPermissionStatus.GRANTED, resultStatuses?.get("android.permission.ACCESS_FINE_LOCATION"))
         }
-
-        // Then: Completion should be called immediately (synchronously)
-        assertTrue(completionCalled)
-        assertNotNull(resultStatuses)
-
-        // Should have results for both permissions
-        assertEquals(2, resultStatuses?.size)
-        assertEquals(UUPermissionStatus.GRANTED, resultStatuses?.get("android.permission.CAMERA"))
-        assertEquals(UUPermissionStatus.GRANTED, resultStatuses?.get("android.permission.ACCESS_FINE_LOCATION"))
     }
 
     @Test
@@ -372,80 +366,101 @@ class UUPermissionsTests
     @Test
     fun `getPermissionStatus handles exceptions gracefully`()
     {
-        // Given: An exception occurs during permission check
         val permission = "android.permission.CAMERA"
-        contextCompatMock.`when`<Int> { ContextCompat.checkSelfPermission(mockActivity, permission) }.thenThrow(RuntimeException("Test exception"))
-        Mockito.lenient().`when`(mockSharedPreferences.getBoolean("UU_HAS_REQUESTED_$permission", false)).thenReturn(true)
+        val (activity, _, prefs, _) = buildActivityWithPrefs()
 
-        // When: Getting permission status
-        val status = permissions.getPermissionStatus(permission)
+        Mockito.mockStatic(ContextCompat::class.java).use { cc ->
+            cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, permission) }.thenThrow(RuntimeException("Test exception"))
+            Mockito.lenient().`when`(prefs.getBoolean("UU_HAS_REQUESTED_$permission", false)).thenReturn(true)
+
+            UUPermissions.init(activity)
+            val permissions: UUPermissionProvider = UUPermissions
+            val status = permissions.getPermissionStatus(permission)
 
         // Then: Should return DENIED (fallback for hasPermission exception)
         assertEquals(UUPermissionStatus.DENIED, status)
+        }
     }
 
     @Test
     fun `getPermissionStatus handles SharedPreferences exception gracefully`()
     {
-        // Given: An exception occurs during SharedPreferences access
         val permission = "android.permission.CAMERA"
-        Mockito.lenient().`when`(mockSharedPreferences.getBoolean("UU_HAS_REQUESTED_$permission", false)).thenThrow(RuntimeException("Test exception"))
+        val (activity, _, prefs, _) = buildActivityWithPrefs()
 
-        // When: Getting permission status
-        val status = permissions.getPermissionStatus(permission)
+        Mockito.mockStatic(ContextCompat::class.java).use { cc ->
+            Mockito.lenient().`when`(prefs.getBoolean("UU_HAS_REQUESTED_$permission", false)).thenThrow(RuntimeException("Test exception"))
+            cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, permission) }.thenReturn(PackageManager.PERMISSION_DENIED)
+            Mockito.lenient().`when`(activity.shouldShowRequestPermissionRationale(permission)).thenReturn(false)
 
-        // Then: Should return NEVER_ASKED (fallback for SharedPreferences exception)
-        assertEquals(UUPermissionStatus.NEVER_ASKED, status)
+            UUPermissions.init(activity)
+            val permissions: UUPermissionProvider = UUPermissions
+            val status = permissions.getPermissionStatus(permission)
+
+            assertEquals(UUPermissionStatus.NEVER_ASKED, status)
+        }
     }
 
     @Test
     fun `getPermissionStatus handles shouldShowRationale exception gracefully`()
     {
-        // Given: An exception occurs during shouldShowRationale check
         val permission = "android.permission.CAMERA"
-        contextCompatMock.`when`<Int> { ContextCompat.checkSelfPermission(mockActivity, permission) }.thenReturn(PackageManager.PERMISSION_DENIED)
-        Mockito.lenient().`when`(mockSharedPreferences.getBoolean("UU_HAS_REQUESTED_$permission", false)).thenReturn(true)
-        Mockito.lenient().`when`(mockActivity.shouldShowRequestPermissionRationale(permission)).thenThrow(RuntimeException("Test exception"))
+        val (activity, _, prefs, _) = buildActivityWithPrefs()
 
-        // When: Getting permission status
-        val status = permissions.getPermissionStatus(permission)
+        Mockito.mockStatic(ContextCompat::class.java).use { cc ->
+            cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, permission) }.thenReturn(PackageManager.PERMISSION_DENIED)
+            Mockito.lenient().`when`(prefs.getBoolean("UU_HAS_REQUESTED_$permission", false)).thenReturn(true)
+            Mockito.lenient().`when`(activity.shouldShowRequestPermissionRationale(permission)).thenThrow(RuntimeException("Test exception"))
+
+            UUPermissions.init(activity)
+            val permissions: UUPermissionProvider = UUPermissions
+            val status = permissions.getPermissionStatus(permission)
 
         // Then: Should return DENIED (fallback for shouldShowRationale exception in canRequestPermission)
         assertEquals(UUPermissionStatus.DENIED, status)
+        }
     }
 
     @Test
     fun `permission status consistency across multiple calls`()
     {
-        // Given: A specific permission
         val permission = "android.permission.CAMERA"
-        contextCompatMock.`when`<Int> { ContextCompat.checkSelfPermission(mockActivity, permission) }.thenReturn(PackageManager.PERMISSION_GRANTED)
-        Mockito.lenient().`when`(mockSharedPreferences.getBoolean("UU_HAS_REQUESTED_$permission", false)).thenReturn(true)
+        val (activity, _, prefs, _) = buildActivityWithPrefs()
 
-        // When: Getting status multiple times
-        val status1 = permissions.getPermissionStatus(permission)
-        val status2 = permissions.getPermissionStatus(permission)
-        val status3 = permissions.getPermissionStatus(permission)
+        Mockito.mockStatic(ContextCompat::class.java).use { cc ->
+            cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, permission) }.thenReturn(PackageManager.PERMISSION_GRANTED)
+            Mockito.lenient().`when`(prefs.getBoolean("UU_HAS_REQUESTED_$permission", false)).thenReturn(true)
+
+            UUPermissions.init(activity)
+            val permissions: UUPermissionProvider = UUPermissions
+            val status1 = permissions.getPermissionStatus(permission)
+            val status2 = permissions.getPermissionStatus(permission)
+            val status3 = permissions.getPermissionStatus(permission)
 
         // Then: All calls should return the same status
         assertEquals(status1, status2)
         assertEquals(status2, status3)
         assertEquals(status1, status3)
+        }
     }
 
     @Test
     fun `getPermissionStatus handles invalid permission gracefully`()
     {
-        // Given: An invalid permission string
         val invalidPermission = "invalid.permission.name"
-        Mockito.lenient().`when`(mockSharedPreferences.getBoolean("UU_HAS_REQUESTED_$invalidPermission", false)).thenReturn(false)
+        val (activity, _, prefs, _) = buildActivityWithPrefs()
 
-        // When: Getting permission status
-        val status = permissions.getPermissionStatus(invalidPermission)
+        Mockito.mockStatic(ContextCompat::class.java).use { _ ->
+            Mockito.lenient().`when`(prefs.getBoolean("UU_HAS_REQUESTED_$invalidPermission", false)).thenReturn(false)
+
+            UUPermissions.init(activity)
+            val permissions: UUPermissionProvider = UUPermissions
+            val status = permissions.getPermissionStatus(invalidPermission)
 
         // Then: Should return a valid status (not crash)
         assertNotNull(status)
         assertTrue(status in UUPermissionStatus.entries.toTypedArray())
         assertEquals(UUPermissionStatus.NEVER_ASKED, status)
+        }
     }
 }
