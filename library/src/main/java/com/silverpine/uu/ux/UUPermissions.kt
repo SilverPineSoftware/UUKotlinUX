@@ -1,199 +1,159 @@
 package com.silverpine.uu.ux
 
 import android.app.Activity
-import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Build
-import androidx.core.app.ActivityCompat
+import androidx.activity.ComponentActivity
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import com.silverpine.uu.logging.UULog
+import androidx.core.content.edit
 
-typealias UUSinglePermissionDelegate = (String,Boolean)->Unit
-typealias UUMultiplePermissionDelegate = (HashMap<String,Boolean>)->Unit
+private const val PREFS_NAME = "com.silverpine.uu.ux.UUPermissions"
 
-object UUPermissions
+enum class UUPermissionStatus
 {
-    private val callbacks = HashMap<Int, UUMultiplePermissionDelegate>()
+    UNDETERMINED,
+    NEVER_ASKED,
+    GRANTED,
+    DENIED,
+    PERMANENTLY_DENIED;
 
-    fun hasPermission(context: Context?, permission: String?): Boolean
+    val canRequest: Boolean
+        get() = this == NEVER_ASKED || this == DENIED
+
+    val isGranted: Boolean
+        get() = this == GRANTED
+
+    val isPermanentlyDenied: Boolean
+        get() = this == PERMANENTLY_DENIED
+}
+
+interface UUPermissionsProvider
+{
+    fun checkPermissionStatus(permission: String): UUPermissionStatus
+
+    fun requestPermissions(permissions: Array<String>, completion: (Map<String, UUPermissionStatus>)->Unit)
+}
+
+fun UUPermissionsProvider.checkPermissionStatusMultiple(permissions: Array<String>): Map<String, UUPermissionStatus>
+{
+    return permissions.associate()
+    { permission ->
+        permission to checkPermissionStatus(permission)
+    }
+}
+
+class UUPermissions(private val activity: ComponentActivity): UUPermissionsProvider
+{
+    private val prefs = activity.getSharedPreferences(PREFS_NAME, Activity.MODE_PRIVATE)
+    private var requestMultipleCompletion: ((Map<String, UUPermissionStatus>) -> Unit)? = null
+
+    private val multiplePermissionsLauncher by lazy()
     {
-        val permissionCheck = ContextCompat.checkSelfPermission(
-            context!!,
-            permission!!
-        )
-        return permissionCheck == PackageManager.PERMISSION_GRANTED
+        activity.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions(), this::handlePermissionResults)
     }
 
-    fun hasAllPermissions(context: Context, permissions: Array<String>): Boolean
+    private fun handlePermissionResults(results: Map<String, Boolean>)
     {
-        for (permission in permissions)
+        val statusResults: MutableMap<String, UUPermissionStatus> = mutableMapOf()
+
+        results.forEach()
+        { permission, granted ->
+            setHasRequestedPermission(permission)
+            statusResults[permission] = if (granted) UUPermissionStatus.GRANTED else deniedStatus(permission)
+        }
+
+        val block = requestMultipleCompletion ?: return
+        requestMultipleCompletion = null
+        block(statusResults)
+    }
+
+    private fun deniedStatus(permission: String): UUPermissionStatus
+    {
+        val canRequest = canRequestPermission(permission).getOrElse { return UUPermissionStatus.DENIED }
+
+        return if (canRequest)
         {
-            if (!hasPermission(context, permission))
+            UUPermissionStatus.DENIED
+        }
+        else
+        {
+            UUPermissionStatus.PERMANENTLY_DENIED
+        }
+    }
+
+    override fun checkPermissionStatus(permission: String): UUPermissionStatus = runCatching()
+    {
+        // Check if permission has ever been requested
+        val hasEverRequested = hasEverRequestedPermission(permission).getOrElse { return@runCatching UUPermissionStatus.NEVER_ASKED }
+        
+        if (!hasEverRequested)
+        {
+            UUPermissionStatus.NEVER_ASKED
+        }
+        else
+        {
+            // Check if permission is currently granted
+            val isGranted = hasPermission(permission).getOrElse { return@runCatching UUPermissionStatus.DENIED }
+            
+            if (isGranted)
             {
-                return false
+                UUPermissionStatus.GRANTED
             }
-        }
-
-        return true
-    }
-
-    private fun hasEverRequestedPermission(context: Context, permission: String): Boolean
-    {
-        val prefs = context.getSharedPreferences(UUPermissions::class.java.name, Activity.MODE_PRIVATE)
-        return prefs.getBoolean("HAS_REQUESTED_$permission", false)
-    }
-
-    private fun setHasRequestedPermission(context: Context, permission: String)
-    {
-        val prefs = context.getSharedPreferences(UUPermissions::class.java.name, Activity.MODE_PRIVATE)
-        val prefsEditor = prefs.edit()
-        prefsEditor.putBoolean("HAS_REQUESTED_$permission", true)
-        prefsEditor.apply()
-    }
-
-    fun canRequestPermission(activity: Activity, permission: String): Boolean
-    {
-        try
-        {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            else
             {
-                return !hasEverRequestedPermission(activity, permission) || activity.shouldShowRequestPermissionRationale(permission)
+                deniedStatus(permission)
             }
         }
-        catch (ex: Exception)
-        {
-            UULog.e(javaClass, "canRequestPermission", "", ex)
-        }
+    }.getOrDefault(UUPermissionStatus.UNDETERMINED)
 
-        return true
-    }
-
-    fun canRequestAllPermissions(activity: Activity, permissions: Array<String>): Boolean
+    private fun hasPermission(permission: String): Result<Boolean> = runCatching()
     {
-        var canRequestAll = true
-        for (p in permissions)
-        {
-            if (!canRequestPermission(activity, p))
-            {
-                canRequestAll = false
-                break
-            }
-        }
-
-        return canRequestAll
+        (ContextCompat.checkSelfPermission(
+            activity,
+            permission
+        ) == PackageManager.PERMISSION_GRANTED)
     }
 
-    fun requestPermissions(
-        activity: Activity,
-        permission: String,
-        requestId: Int,
-        delegate: UUSinglePermissionDelegate
-    )
+    private fun canRequestPermission(permission: String): Result<Boolean> = runCatching()
     {
-        requestMultiplePermissions(activity, arrayOf(permission), requestId)
-        { results ->
-            var granted = false
-            if (results != null) {
-                val result = results[permission]
-                if (result != null) {
-                    granted = result
-                }
-            }
-            safeNotifyDelegate(delegate, permission, granted)
+        !hasEverRequestedPermission(permission).getOrThrow() || shouldShowRationale(permission).getOrThrow()
+    }
+
+    override fun requestPermissions(permissions: Array<String>, completion: (Map<String, UUPermissionStatus>) -> Unit)
+    {
+        val permissionStatuses = checkPermissionStatusMultiple(permissions)
+
+        // If all permissions are granted already, return success immediately
+        if (permissionStatuses.all { it.value.isGranted })
+        {
+            completion(permissionStatuses)
+            return
+        }
+
+        requestMultipleCompletion = completion
+        multiplePermissionsLauncher.launch(permissions)
+    }
+
+    private fun prefKey(permission: String): String
+    {
+        return "HAS_REQUESTED_$permission"
+    }
+
+    private fun hasEverRequestedPermission(permission: String): Result<Boolean> = runCatching()
+    {
+        prefs.getBoolean(prefKey(permission), false)
+    }
+
+    private fun setHasRequestedPermission(permission: String)
+    {
+        prefs.edit(commit = true)
+        {
+            putBoolean(prefKey(permission), true)
         }
     }
 
-    fun requestMultiplePermissions(
-        activity: Activity,
-        permissions: Array<String>,
-        requestId: Int,
-        delegate: UUMultiplePermissionDelegate
-    ) {
-        if (hasAllPermissions(activity, permissions)) {
-            val results = HashMap<String, Boolean>()
-            for (p in permissions) {
-                results[p] = java.lang.Boolean.TRUE
-            }
-            safeNotifyDelegate(delegate, results)
-            removeDelegate(requestId)
-        } else {
-            // Wait for the results
-            saveDelegate(delegate, requestId)
-            ActivityCompat.requestPermissions(activity!!, permissions, requestId)
-        }
-    }
-
-    fun handleRequestPermissionsResult(
-        activity: Activity,
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ): Boolean {
-        try {
-            var delegate: UUMultiplePermissionDelegate? = null
-            if (callbacks.containsKey(requestCode)) {
-                delegate = callbacks[requestCode]
-                if (permissions.size == grantResults.size) {
-                    val results = HashMap<String, Boolean>()
-                    for (i in permissions.indices) {
-                        val permission = permissions[i]
-                        setHasRequestedPermission(activity, permission)
-                        val result = grantResults[i]
-                        results[permission] = result == PackageManager.PERMISSION_GRANTED
-                    }
-                    safeNotifyDelegate(delegate, results)
-                }
-                removeDelegate(requestCode)
-                return true
-            }
-        } catch (ex: Exception) {
-            UULog.e(javaClass, "handleRequestPermissionsResult", "", ex)
-        }
-        return false
-    }
-
-    @Synchronized
-    private fun saveDelegate(delegate: UUMultiplePermissionDelegate?, requestId: Int) {
-        try {
-            if (delegate != null) {
-                callbacks[requestId] = delegate
-            }
-        } catch (ex: Exception) {
-            UULog.e(javaClass, "saveDelegate", "", ex)
-        }
-    }
-
-    @Synchronized
-    private fun removeDelegate(requestId: Int) {
-        try {
-            if (callbacks.containsKey(requestId)) {
-                callbacks.remove(requestId)
-            }
-        } catch (ex: Exception) {
-            UULog.e(javaClass, "safeNotifyDelegate", "", ex)
-        }
-    }
-
-    private fun safeNotifyDelegate(
-        delegate: UUSinglePermissionDelegate?,
-        permission: String,
-        granted: Boolean
-    ) {
-        try {
-            delegate?.invoke(permission, granted)
-        } catch (ex: Exception) {
-            UULog.e(javaClass, "safeNotifyDelegate", "", ex)
-        }
-    }
-
-    private fun safeNotifyDelegate(
-        delegate: UUMultiplePermissionDelegate?,
-        results: HashMap<String, Boolean>
-    ) {
-        try {
-            delegate?.invoke(results)
-        } catch (ex: Exception) {
-            UULog.e(javaClass, "safeNotifyDelegate", "", ex)
-        }
+    private fun shouldShowRationale(permission: String): Result<Boolean> = runCatching()
+    {
+        activity.shouldShowRequestPermissionRationale(permission)
     }
 }
