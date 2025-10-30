@@ -4,6 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.content.ContextCompat
 import com.silverpine.uu.ux.permissions.UUPermissionStatus
 import com.silverpine.uu.ux.permissions.UUPermissions
@@ -58,6 +61,14 @@ class UUPermissionsTests
         Mockito.lenient().`when`(mockSharedPreferences.edit()).thenReturn(mockEditor)
         Mockito.lenient().`when`(mockEditor.putBoolean(Mockito.anyString(), Mockito.anyBoolean())).thenReturn(mockEditor)
         Mockito.lenient().`when`(mockEditor.commit()).thenReturn(true)
+
+        // Mock registerForActivityResult to return a mock launcher
+        @Suppress("UNCHECKED_CAST")
+        val mockLauncher = Mockito.mock(ActivityResultLauncher::class.java) as ActivityResultLauncher<Array<String>>
+        Mockito.lenient().`when`(mockActivity.registerForActivityResult(
+            Mockito.any<ActivityResultContract<Array<String>, Map<String, Boolean>>>(),
+            Mockito.any<ActivityResultCallback<Map<String, Boolean>>>()
+        )).thenReturn(mockLauncher)
 
         // Mock ContextCompat static methods
         contextCompatMock = Mockito.mockStatic(ContextCompat::class.java)

@@ -3,6 +3,7 @@ package com.silverpine.uu.ux.permissions
 import android.app.Activity
 import android.content.pm.PackageManager
 import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
@@ -14,12 +15,14 @@ class UUPermissions(private val activity: ComponentActivity): UUPermissionProvid
     private val prefs = activity.getSharedPreferences(PREFS_NAME, Activity.MODE_PRIVATE)
     private var requestMultipleCompletion: ((Map<String, UUPermissionStatus>) -> Unit)? = null
 
-    private val multiplePermissionsLauncher by lazy()
+    private val multiplePermissionsLauncher: ActivityResultLauncher<Array<String>>
+
+    init
     {
-        activity.registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions(),
-            this::handlePermissionResults
-        )
+        multiplePermissionsLauncher = activity
+            .registerForActivityResult(
+                ActivityResultContracts.RequestMultiplePermissions(),
+                this::handlePermissionResults)
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
