@@ -13,7 +13,9 @@ import com.silverpine.uu.ux.permissions.UUPermissionStatus
 import com.silverpine.uu.ux.permissions.UUPermissions
 import com.silverpine.uu.ux.permissions.areAllPermissionsGranted
 import com.silverpine.uu.ux.permissions.areAnyPermissionsPermanentlyDenied
+import com.silverpine.uu.ux.permissions.combinedPermissionStatus
 import com.silverpine.uu.ux.permissions.getPermissionStatusMultiple
+import com.silverpine.uu.ux.permissions.uuCombinedStatus
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -485,6 +487,307 @@ class UUPermissionsTests
         assertNotNull(status)
         assertTrue(status in UUPermissionStatus.entries.toTypedArray())
         assertEquals(UUPermissionStatus.NEVER_ASKED, status)
+        }
+    }
+
+    // ==================== uuCombinedStatus Tests ====================
+
+    @Test
+    fun `uuCombinedStatus returns GRANTED when all permissions are granted`()
+    {
+        // Given: All permissions are granted
+        val statuses = mapOf(
+            "android.permission.CAMERA" to UUPermissionStatus.GRANTED,
+            "android.permission.WRITE_EXTERNAL_STORAGE" to UUPermissionStatus.GRANTED,
+            "android.permission.ACCESS_FINE_LOCATION" to UUPermissionStatus.GRANTED
+        )
+
+        // When: Computing combined status
+        val combined = statuses.uuCombinedStatus
+
+        // Then: Should return GRANTED
+        assertEquals(UUPermissionStatus.GRANTED, combined)
+        assertTrue(combined.isGranted)
+    }
+
+    @Test
+    fun `uuCombinedStatus returns PERMANENTLY_DENIED when any permission is permanently denied`()
+    {
+        // Given: Mix of statuses with one permanently denied
+        val statuses = mapOf(
+            "android.permission.CAMERA" to UUPermissionStatus.GRANTED,
+            "android.permission.WRITE_EXTERNAL_STORAGE" to UUPermissionStatus.PERMANENTLY_DENIED,
+            "android.permission.ACCESS_FINE_LOCATION" to UUPermissionStatus.DENIED
+        )
+
+        // When: Computing combined status
+        val combined = statuses.uuCombinedStatus
+
+        // Then: Should return PERMANENTLY_DENIED (has priority)
+        assertEquals(UUPermissionStatus.PERMANENTLY_DENIED, combined)
+        assertTrue(combined.isPermanentlyDenied)
+        assertFalse(combined.canRequest)
+    }
+
+    @Test
+    fun `uuCombinedStatus returns NEVER_ASKED when all permissions are never asked`()
+    {
+        // Given: All permissions are never asked
+        val statuses = mapOf(
+            "android.permission.CAMERA" to UUPermissionStatus.NEVER_ASKED,
+            "android.permission.WRITE_EXTERNAL_STORAGE" to UUPermissionStatus.NEVER_ASKED
+        )
+
+        // When: Computing combined status
+        val combined = statuses.uuCombinedStatus
+
+        // Then: Should return NEVER_ASKED
+        assertEquals(UUPermissionStatus.NEVER_ASKED, combined)
+        assertTrue(combined.canRequest)
+        assertFalse(combined.isGranted)
+    }
+
+    @Test
+    fun `uuCombinedStatus returns DENIED when mixed statuses with no permanently denied`()
+    {
+        // Given: Mix of statuses without permanently denied
+        val statuses = mapOf(
+            "android.permission.CAMERA" to UUPermissionStatus.GRANTED,
+            "android.permission.WRITE_EXTERNAL_STORAGE" to UUPermissionStatus.DENIED,
+            "android.permission.ACCESS_FINE_LOCATION" to UUPermissionStatus.NEVER_ASKED
+        )
+
+        // When: Computing combined status
+        val combined = statuses.uuCombinedStatus
+
+        // Then: Should return DENIED (default for mixed non-permanently-denied states)
+        assertEquals(UUPermissionStatus.DENIED, combined)
+        assertTrue(combined.canRequest)
+        assertFalse(combined.isGranted)
+        assertFalse(combined.isPermanentlyDenied)
+    }
+
+    @Test
+    fun `uuCombinedStatus returns DENIED when all permissions are denied`()
+    {
+        // Given: All permissions are denied
+        val statuses = mapOf(
+            "android.permission.CAMERA" to UUPermissionStatus.DENIED,
+            "android.permission.WRITE_EXTERNAL_STORAGE" to UUPermissionStatus.DENIED
+        )
+
+        // When: Computing combined status
+        val combined = statuses.uuCombinedStatus
+
+        // Then: Should return DENIED
+        assertEquals(UUPermissionStatus.DENIED, combined)
+        assertTrue(combined.canRequest)
+        assertFalse(combined.isGranted)
+    }
+
+    @Test
+    fun `uuCombinedStatus handles empty map`()
+    {
+        // Given: Empty map
+        val statuses = emptyMap<String, UUPermissionStatus>()
+
+        // When: Computing combined status
+        val combined = statuses.uuCombinedStatus
+
+        // Then: Should return GRANTED (all values are granted when empty)
+        assertEquals(UUPermissionStatus.GRANTED, combined)
+        assertTrue(combined.isGranted)
+    }
+
+    @Test
+    fun `uuCombinedStatus prioritizes PERMANENTLY_DENIED over other non-granted states`()
+    {
+        // Given: Mix with permanently denied taking priority
+        val statuses = mapOf(
+            "android.permission.CAMERA" to UUPermissionStatus.NEVER_ASKED,
+            "android.permission.WRITE_EXTERNAL_STORAGE" to UUPermissionStatus.PERMANENTLY_DENIED,
+            "android.permission.ACCESS_FINE_LOCATION" to UUPermissionStatus.DENIED,
+            "android.permission.RECORD_AUDIO" to UUPermissionStatus.NEVER_ASKED
+        )
+
+        // When: Computing combined status
+        val combined = statuses.uuCombinedStatus
+
+        // Then: Should return PERMANENTLY_DENIED (has highest priority for non-granted)
+        assertEquals(UUPermissionStatus.PERMANENTLY_DENIED, combined)
+    }
+
+    // ==================== combinedPermissionStatus Tests ====================
+
+    @Test
+    fun `combinedPermissionStatus returns GRANTED when all permissions are granted`()
+    {
+        // Given: All permissions are granted
+        val perms = arrayOf(
+            "android.permission.CAMERA",
+            "android.permission.WRITE_EXTERNAL_STORAGE"
+        )
+        val (activity, _, _, _) = buildActivityWithPrefs()
+
+        Mockito.mockStatic(ContextCompat::class.java).use { cc ->
+            perms.forEach { permission ->
+                cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, permission) }.thenReturn(PackageManager.PERMISSION_GRANTED)
+            }
+
+            UUPermissions.init(activity)
+            val sp = obtainSingletonPrefs()
+            Mockito.reset(sp)
+            perms.forEach { permission ->
+                Mockito.lenient().`when`(sp.getBoolean("UU_HAS_REQUESTED_$permission", false)).thenReturn(true)
+            }
+            val permissions: UUPermissionProvider = UUPermissions
+            val combined = permissions.combinedPermissionStatus(perms)
+
+            // Then: Should return GRANTED
+            assertEquals(UUPermissionStatus.GRANTED, combined)
+            assertTrue(combined.isGranted)
+        }
+    }
+
+    @Test
+    fun `combinedPermissionStatus returns PERMANENTLY_DENIED when any permission is permanently denied`()
+    {
+        // Given: Mix with one permanently denied
+        val perms = arrayOf(
+            "android.permission.CAMERA",
+            "android.permission.ACCESS_FINE_LOCATION"
+        )
+        val (activity, _, _, _) = buildActivityWithPrefs()
+
+        Mockito.mockStatic(ContextCompat::class.java).use { cc ->
+            cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, "android.permission.CAMERA") }.thenReturn(PackageManager.PERMISSION_GRANTED)
+            cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, "android.permission.ACCESS_FINE_LOCATION") }.thenReturn(PackageManager.PERMISSION_DENIED)
+
+            UUPermissions.init(activity)
+            val sp = obtainSingletonPrefs()
+            Mockito.reset(sp)
+            Mockito.lenient().`when`(sp.getBoolean("UU_HAS_REQUESTED_android.permission.CAMERA", false)).thenReturn(true)
+            Mockito.lenient().`when`(sp.getBoolean("UU_HAS_REQUESTED_android.permission.ACCESS_FINE_LOCATION", false)).thenReturn(true)
+            Mockito.lenient().`when`(activity.shouldShowRequestPermissionRationale("android.permission.ACCESS_FINE_LOCATION")).thenReturn(false)
+
+            val permissions: UUPermissionProvider = UUPermissions
+            val combined = permissions.combinedPermissionStatus(perms)
+
+            // Then: Should return PERMANENTLY_DENIED
+            assertEquals(UUPermissionStatus.PERMANENTLY_DENIED, combined)
+            assertTrue(combined.isPermanentlyDenied)
+            assertFalse(combined.canRequest)
+        }
+    }
+
+    @Test
+    fun `combinedPermissionStatus returns NEVER_ASKED when all permissions are never asked`()
+    {
+        // Given: All permissions never asked
+        val perms = arrayOf(
+            "android.permission.CAMERA",
+            "android.permission.ACCESS_FINE_LOCATION"
+        )
+        val (activity, _, _, _) = buildActivityWithPrefs()
+
+        Mockito.mockStatic(ContextCompat::class.java).use { _ ->
+            UUPermissions.init(activity)
+            val sp = obtainSingletonPrefs()
+            Mockito.reset(sp)
+            perms.forEach { permission ->
+                Mockito.lenient().`when`(sp.getBoolean("UU_HAS_REQUESTED_$permission", false)).thenReturn(false)
+            }
+            val permissions: UUPermissionProvider = UUPermissions
+            val combined = permissions.combinedPermissionStatus(perms)
+
+            // Then: Should return NEVER_ASKED
+            assertEquals(UUPermissionStatus.NEVER_ASKED, combined)
+            assertTrue(combined.canRequest)
+            assertFalse(combined.isGranted)
+        }
+    }
+
+    @Test
+    fun `combinedPermissionStatus returns DENIED when mixed statuses`()
+    {
+        // Given: Mix of granted and denied permissions
+        val perms = arrayOf(
+            "android.permission.CAMERA",
+            "android.permission.ACCESS_FINE_LOCATION"
+        )
+        val (activity, _, _, _) = buildActivityWithPrefs()
+
+        Mockito.mockStatic(ContextCompat::class.java).use { cc ->
+            cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, "android.permission.CAMERA") }.thenReturn(PackageManager.PERMISSION_GRANTED)
+            cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, "android.permission.ACCESS_FINE_LOCATION") }.thenReturn(PackageManager.PERMISSION_DENIED)
+
+            UUPermissions.init(activity)
+            val sp = obtainSingletonPrefs()
+            Mockito.reset(sp)
+            Mockito.lenient().`when`(sp.getBoolean("UU_HAS_REQUESTED_android.permission.CAMERA", false)).thenReturn(true)
+            Mockito.lenient().`when`(sp.getBoolean("UU_HAS_REQUESTED_android.permission.ACCESS_FINE_LOCATION", false)).thenReturn(true)
+            Mockito.lenient().`when`(activity.shouldShowRequestPermissionRationale("android.permission.ACCESS_FINE_LOCATION")).thenReturn(true)
+
+            val permissions: UUPermissionProvider = UUPermissions
+            val combined = permissions.combinedPermissionStatus(perms)
+
+            // Then: Should return DENIED (default for mixed states)
+            assertEquals(UUPermissionStatus.DENIED, combined)
+            assertTrue(combined.canRequest)
+            assertFalse(combined.isGranted)
+        }
+    }
+
+    @Test
+    fun `combinedPermissionStatus handles empty array`()
+    {
+        // Given: Empty permissions array
+        val perms = emptyArray<String>()
+        val (activity, _, _, _) = buildActivityWithPrefs()
+
+        Mockito.mockStatic(ContextCompat::class.java).use { _ ->
+            UUPermissions.init(activity)
+            val permissions: UUPermissionProvider = UUPermissions
+            val combined = permissions.combinedPermissionStatus(perms)
+
+            // Then: Should return GRANTED (empty map means all granted)
+            assertEquals(UUPermissionStatus.GRANTED, combined)
+            assertTrue(combined.isGranted)
+        }
+    }
+
+    @Test
+    fun `combinedPermissionStatus uses uuCombinedStatus internally`()
+    {
+        // Given: Multiple permissions with different states
+        val perms = arrayOf(
+            "android.permission.CAMERA",
+            "android.permission.ACCESS_FINE_LOCATION",
+            "android.permission.RECORD_AUDIO"
+        )
+        val (activity, _, _, _) = buildActivityWithPrefs()
+
+        Mockito.mockStatic(ContextCompat::class.java).use { cc ->
+            cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, "android.permission.CAMERA") }.thenReturn(PackageManager.PERMISSION_GRANTED)
+            cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, "android.permission.ACCESS_FINE_LOCATION") }.thenReturn(PackageManager.PERMISSION_DENIED)
+            cc.`when`<Int> { ContextCompat.checkSelfPermission(activity, "android.permission.RECORD_AUDIO") }.thenReturn(PackageManager.PERMISSION_DENIED)
+
+            UUPermissions.init(activity)
+            val sp = obtainSingletonPrefs()
+            Mockito.reset(sp)
+            Mockito.lenient().`when`(sp.getBoolean("UU_HAS_REQUESTED_android.permission.CAMERA", false)).thenReturn(true)
+            Mockito.lenient().`when`(sp.getBoolean("UU_HAS_REQUESTED_android.permission.ACCESS_FINE_LOCATION", false)).thenReturn(false)
+            Mockito.lenient().`when`(sp.getBoolean("UU_HAS_REQUESTED_android.permission.RECORD_AUDIO", false)).thenReturn(true)
+            Mockito.lenient().`when`(activity.shouldShowRequestPermissionRationale("android.permission.RECORD_AUDIO")).thenReturn(true)
+
+            val permissions: UUPermissionProvider = UUPermissions
+            val statuses = permissions.getPermissionStatusMultiple(perms)
+            val combinedFromStatuses = statuses.uuCombinedStatus
+            val combinedFromFunction = permissions.combinedPermissionStatus(perms)
+
+            // Then: Both should return the same value
+            assertEquals(combinedFromStatuses, combinedFromFunction)
+            assertEquals(UUPermissionStatus.DENIED, combinedFromFunction)
         }
     }
 }

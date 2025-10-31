@@ -145,3 +145,115 @@ fun UUPermissionProvider.areAnyPermissionsPermanentlyDenied(permissions: Array<S
 {
     return getPermissionStatusMultiple(permissions).any { it.value.isPermanentlyDenied }
 }
+
+/**
+ * Computes a combined permission status from a map of individual permission statuses.
+ *
+ * This extension property provides a single, prioritized status representing the overall
+ * state of multiple permissions. The combined status is determined using the following priority:
+ *
+ * 1. **All Granted** - If all permissions are [UUPermissionStatus.GRANTED], returns [UUPermissionStatus.GRANTED]
+ * 2. **Any Permanently Denied** - If any permission is [UUPermissionStatus.PERMANENTLY_DENIED],
+ *    returns [UUPermissionStatus.PERMANENTLY_DENIED] (highest priority for non-granted states)
+ * 3. **All Never Asked** - If all permissions are [UUPermissionStatus.NEVER_ASKED],
+ *    returns [UUPermissionStatus.NEVER_ASKED]
+ * 4. **Default** - Otherwise returns [UUPermissionStatus.DENIED]
+ *
+ * This is useful for determining the overall state of a permission group when you need
+ * a single status value rather than handling individual permission states.
+ *
+ * @return A single [UUPermissionStatus] representing the combined state of all permissions
+ *
+ * @sample
+ * ```kotlin
+ * val statuses = mapOf(
+ *     "android.permission.CAMERA" to UUPermissionStatus.GRANTED,
+ *     "android.permission.WRITE_EXTERNAL_STORAGE" to UUPermissionStatus.GRANTED
+ * )
+ * val combined = statuses.uuCombinedStatus
+ * // Returns: UUPermissionStatus.GRANTED
+ *
+ * val mixedStatuses = mapOf(
+ *     "android.permission.CAMERA" to UUPermissionStatus.GRANTED,
+ *     "android.permission.LOCATION" to UUPermissionStatus.PERMANENTLY_DENIED
+ * )
+ * val mixedCombined = mixedStatuses.uuCombinedStatus
+ * // Returns: UUPermissionStatus.PERMANENTLY_DENIED (because any permanently denied takes priority)
+ * ```
+ */
+val Map<String, UUPermissionStatus>.uuCombinedStatus: UUPermissionStatus
+    get()
+    {
+        return if (values.all { it == UUPermissionStatus.GRANTED })
+        {
+            UUPermissionStatus.GRANTED
+        }
+        // If any required permissions are permanently denied, then instruct the user to go to settings
+        else if (values.any { it == UUPermissionStatus.PERMANENTLY_DENIED })
+        {
+            UUPermissionStatus.PERMANENTLY_DENIED
+        }
+        else if (values.all { it == UUPermissionStatus.NEVER_ASKED })
+        {
+            UUPermissionStatus.NEVER_ASKED
+        }
+        else
+        {
+            // Default to denied
+            UUPermissionStatus.DENIED
+        }
+    }
+
+/**
+ * Gets a combined status for multiple permissions in a single call.
+ *
+ * This extension function provides a convenient way to check the overall state of multiple
+ * permissions and receive a single combined status value. It internally uses
+ * [getPermissionStatusMultiple] to retrieve individual statuses and then applies
+ * [uuCombinedStatus] to compute the combined result.
+ *
+ * The combined status uses a priority system:
+ * - If all permissions are granted, returns [UUPermissionStatus.GRANTED]
+ * - If any permission is permanently denied, returns [UUPermissionStatus.PERMANENTLY_DENIED]
+ * - If all permissions are never asked, returns [UUPermissionStatus.NEVER_ASKED]
+ * - Otherwise, returns [UUPermissionStatus.DENIED]
+ *
+ * This is particularly useful when you need a single status value to make UI decisions
+ * (e.g., show settings dialog, enable/disable a feature, etc.) rather than handling
+ * individual permission states.
+ *
+ * @param permissions Array of permission strings to check
+ * @return A single [UUPermissionStatus] representing the combined state of all permissions
+ *
+ * @sample
+ * ```kotlin
+ * val permissions = arrayOf(
+ *     "android.permission.CAMERA",
+ *     "android.permission.WRITE_EXTERNAL_STORAGE"
+ * )
+ * val combined = permissionProvider.combinedPermissionStatus(permissions)
+ *
+ * when (combined) {
+ *     UUPermissionStatus.GRANTED -> {
+ *         // All permissions granted, proceed with functionality
+ *         startFeature()
+ *     }
+ *     UUPermissionStatus.PERMANENTLY_DENIED -> {
+ *         // Some permissions permanently denied, direct to settings
+ *         showSettingsDialog()
+ *     }
+ *     UUPermissionStatus.NEVER_ASKED -> {
+ *         // Permissions never requested, request them now
+ *         requestPermissions(permissions) { /* handle results */ }
+ *     }
+ *     else -> {
+ *         // Some permissions denied but can be requested again
+ *         requestPermissions(permissions) { /* handle results */ }
+ *     }
+ * }
+ * ```
+ */
+fun UUPermissionProvider.combinedPermissionStatus(permissions: Array<String>): UUPermissionStatus
+{
+    return getPermissionStatusMultiple(permissions).uuCombinedStatus
+}
