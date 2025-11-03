@@ -7,7 +7,7 @@ buildscript {
     ext.uu_min_sdk = 26
     ext.uu_target_sdk = 36
     ext.uu_gradle_version = '8.10.1'
-    ext.uu_kotlin_version = '2.1.20'
+    ext.uu_kotlin_version = '2.2.10'
     ext.uu_nexus_version = '2.0.0'
     ext.uu_java_version = JavaVersion.VERSION_17
 
