@@ -42,7 +42,7 @@ interface UUEventHandler
 /**
  * Install this handler for all event classes defined in [UUEventHandler.eventClasses].
  * The handler will be registered with [UUEventBus] and will receive events of the
- * types specified in [eventClasses].
+ * types specified in [UUEventHandler.eventClasses].
  */
 fun UUEventHandler.install()
 {
@@ -66,15 +66,17 @@ fun UUEventHandler.uninstall()
  * Composable that automatically installs and uninstalls an event handler.
  * The handler is installed when this composable enters composition and uninstalled
  * when it leaves composition.
+ *
+ * @param eventHandler The event handler to install/uninstall automatically
  */
 @Composable
-fun UUEventHandler.register()
+fun UUSetupEventHandler(eventHandler: UUEventHandler)
 {
-    DisposableEffect(this)
+    DisposableEffect(eventHandler)
     {
-        install()
+        eventHandler.install()
         onDispose {
-            uninstall()
+            eventHandler.uninstall()
         }
     }
 }

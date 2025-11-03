@@ -22,6 +22,9 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
 
+    // Mark as API so @Consumable methods are exposed
+    api 'androidx.compose.runtime:runtime:1.9.4'
+
     implementation "com.silverpine.uu:uu-core-ktx:${uu_core_version}"
     implementation 'androidx.test:rules:1.7.0'
     implementation 'androidx.navigation3:navigation3-runtime-android:1.0.0-beta01'
