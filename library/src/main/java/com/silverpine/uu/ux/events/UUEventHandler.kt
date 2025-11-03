@@ -66,17 +66,15 @@ fun UUEventHandler.uninstall()
  * Composable that automatically installs and uninstalls an event handler.
  * The handler is installed when this composable enters composition and uninstalled
  * when it leaves composition.
- *
- * @param eventHandler The event handler to install/uninstall automatically
  */
 @Composable
-fun UUSetupEventHandler(eventHandler: UUEventHandler)
+fun UUEventHandler.register()
 {
-    DisposableEffect(eventHandler)
+    DisposableEffect(this)
     {
-        eventHandler.install()
+        install()
         onDispose {
-            eventHandler.uninstall()
+            uninstall()
         }
     }
 }
