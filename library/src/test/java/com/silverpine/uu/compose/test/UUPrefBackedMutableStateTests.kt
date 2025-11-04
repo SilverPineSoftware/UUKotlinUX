@@ -1,6 +1,7 @@
 package com.silverpine.uu.compose.test
 
 import com.silverpine.uu.compose.UUPrefBackedMutableBoolean
+import com.silverpine.uu.compose.UUPrefBackedMutableEnum
 import com.silverpine.uu.compose.UUPrefBackedMutableFloat
 import com.silverpine.uu.compose.UUPrefBackedMutableInt
 import com.silverpine.uu.compose.UUPrefBackedMutableLong
@@ -487,6 +488,118 @@ class UUPrefBackedMutableStateTests
         // Then: Should use empty set (not default)
         assertEquals(emptySet<String>(), state.value)
         assertTrue(state.value.isEmpty())
+    }
+
+    // ==================== UUPrefBackedMutableEnum Tests ====================
+
+    enum class TestTheme {
+        LIGHT,
+        DARK,
+        SYSTEM
+    }
+
+    @Test
+    fun `UUPrefBackedMutableEnum uses default value when no value exists`()
+    {
+        // Given: UUPrefs with no existing value
+        val prefs = createMockUUPrefs()
+        val key = "test_enum_key"
+        val enumClass = TestTheme::class.java
+        val defaultValue = TestTheme.SYSTEM
+
+        Mockito.`when`(prefs.getEnum(key, enumClass, defaultValue)).thenReturn(null)
+
+        // When: Creating UUPrefBackedMutableEnum
+        val state = UUPrefBackedMutableEnum(prefs, key, enumClass, defaultValue)
+
+        // Then: Should use default value
+        assertEquals(defaultValue, state.value)
+        Mockito.verify(prefs, Mockito.times(1)).getEnum(key, enumClass, defaultValue)
+    }
+
+    @Test
+    fun `UUPrefBackedMutableEnum uses default value when UUPrefs returns null`()
+    {
+        // Given: UUPrefs returns null
+        val prefs = createMockUUPrefs()
+        val key = "test_enum_key"
+        val enumClass = TestTheme::class.java
+        val defaultValue = TestTheme.LIGHT
+
+        Mockito.`when`(prefs.getEnum(key, enumClass, defaultValue)).thenReturn(null)
+
+        // When: Creating UUPrefBackedMutableEnum
+        val state = UUPrefBackedMutableEnum(prefs, key, enumClass, defaultValue)
+
+        // Then: Should use default value
+        assertEquals(defaultValue, state.value)
+    }
+
+    @Test
+    fun `UUPrefBackedMutableEnum loads existing value from UUPrefs`()
+    {
+        // Given: UUPrefs with existing value
+        val prefs = createMockUUPrefs()
+        val key = "test_enum_key"
+        val enumClass = TestTheme::class.java
+        val defaultValue = TestTheme.SYSTEM
+        val existingValue = TestTheme.DARK
+
+        Mockito.`when`(prefs.getEnum(key, enumClass, defaultValue)).thenReturn(existingValue)
+
+        // When: Creating UUPrefBackedMutableEnum
+        val state = UUPrefBackedMutableEnum(prefs, key, enumClass, defaultValue)
+
+        // Then: Should load existing value
+        assertEquals(existingValue, state.value)
+        Mockito.verify(prefs, Mockito.times(1)).getEnum(key, enumClass, defaultValue)
+    }
+
+    @Test
+    fun `UUPrefBackedMutableEnum persists value when set`()
+    {
+        // Given: UUPrefBackedMutableEnum
+        val prefs = createMockUUPrefs()
+        val key = "test_enum_key"
+        val enumClass = TestTheme::class.java
+        val defaultValue = TestTheme.SYSTEM
+        val newValue = TestTheme.LIGHT
+
+        Mockito.`when`(prefs.getEnum(key, enumClass, defaultValue)).thenReturn(null)
+
+        val state = UUPrefBackedMutableEnum(prefs, key, enumClass, defaultValue)
+
+        // When: Setting a new value
+        state.value = newValue
+
+        // Then: Should persist to UUPrefs
+        assertEquals(newValue, state.value)
+        Mockito.verify(prefs, Mockito.times(1)).putEnum(key, newValue)
+    }
+
+    @Test
+    fun `UUPrefBackedMutableEnum persists multiple updates`()
+    {
+        // Given: UUPrefBackedMutableEnum
+        val prefs = createMockUUPrefs()
+        val key = "test_enum_key"
+        val enumClass = TestTheme::class.java
+        val defaultValue = TestTheme.SYSTEM
+
+        Mockito.`when`(prefs.getEnum(key, enumClass, defaultValue)).thenReturn(null)
+
+        val state = UUPrefBackedMutableEnum(prefs, key, enumClass, defaultValue)
+
+        // When: Setting multiple values
+        state.value = TestTheme.LIGHT
+        state.value = TestTheme.DARK
+        state.value = TestTheme.SYSTEM
+
+        // Then: Should persist each update
+        assertEquals(TestTheme.SYSTEM, state.value)
+        Mockito.verify(prefs, Mockito.times(1)).putEnum(key, TestTheme.LIGHT)
+        Mockito.verify(prefs, Mockito.times(1)).putEnum(key, TestTheme.DARK)
+        Mockito.verify(prefs, Mockito.times(1)).putEnum(key, TestTheme.SYSTEM)
     }
 
     // ==================== Multiple Updates Tests ====================
