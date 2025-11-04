@@ -43,7 +43,7 @@ class UUPrefBackedMutableString(
     /**
      * The default value to use if no value exists in [UUPrefs] for the given [key].
      */
-    defaultValue: String
+    defaultValue: String = ""
 ): UUDelegatedMutableState<String>(
     defaultValue = defaultValue,
     getter =

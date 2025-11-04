@@ -42,7 +42,7 @@ class UUPrefBackedMutableInt(
     /**
      * The default value to use if no value exists in [UUPrefs] for the given [key].
      */
-    defaultValue: Int
+    defaultValue: Int = 0
 ): UUDelegatedMutableState<Int>(
     defaultValue = defaultValue,
     getter =

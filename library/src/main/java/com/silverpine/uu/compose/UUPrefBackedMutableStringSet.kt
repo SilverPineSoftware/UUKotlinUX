@@ -44,7 +44,7 @@ class UUPrefBackedMutableStringSet(
     /**
      * The default value to use if no value exists in [UUPrefs] for the given [key].
      */
-    defaultValue: Set<String>
+    defaultValue: Set<String> = setOf()
 ): UUDelegatedMutableState<Set<String>>(
     defaultValue = defaultValue,
     getter =

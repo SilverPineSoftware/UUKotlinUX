@@ -43,7 +43,7 @@ class UUPrefBackedMutableFloat(
     /**
      * The default value to use if no value exists in [UUPrefs] for the given [key].
      */
-    defaultValue: Float
+    defaultValue: Float = 0f
 ): UUDelegatedMutableState<Float>(
     defaultValue = defaultValue,
     getter =

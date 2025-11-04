@@ -42,7 +42,7 @@ class UUPrefBackedMutableBoolean(
     /**
      * The default value to use if no value exists in [UUPrefs] for the given [key].
      */
-    defaultValue: Boolean
+    defaultValue: Boolean = false
 ): UUDelegatedMutableState<Boolean>(
     defaultValue = defaultValue,
     getter =
