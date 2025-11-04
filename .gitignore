@@ -87,3 +87,4 @@ lint/tmp/
 /.idea/androidTestResultsUserPreferences.xml
 .vscode
 deploymentTargetSelector.xml
+.DS_Store
