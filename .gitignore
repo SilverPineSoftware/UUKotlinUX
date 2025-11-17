@@ -88,3 +88,4 @@ lint/tmp/
 .vscode
 deploymentTargetSelector.xml
 .DS_Store
+/.kotlin
