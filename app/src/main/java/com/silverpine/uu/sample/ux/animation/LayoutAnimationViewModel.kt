@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.silverpine.uu.logging.UULog
+import com.silverpine.uu.sample.ux.LOG_TAG
 import com.silverpine.uu.ux.UULayoutTransition
 
 class LayoutAnimationViewModel: ViewModel()
@@ -26,10 +27,10 @@ class LayoutAnimationViewModel: ViewModel()
 
     fun hideAll()
     {
-        UULog.d(javaClass, "hideAll", "Starting layout animation")
+        UULog.debug(LOG_TAG, "hideAll, Starting layout animation")
         _layoutTransition.value = UULayoutTransition(1000L, 0L, AccelerateInterpolator())
         { container, view, transitionType ->
-            UULog.d(javaClass, "hideAll", "Ending layout animation")
+            UULog.debug(LOG_TAG, "hideAll, Ending layout animation")
         }
 
         _oneVisibility.value = false
@@ -40,10 +41,10 @@ class LayoutAnimationViewModel: ViewModel()
 
     fun showOne()
     {
-        UULog.d(javaClass, "showOne", "Starting layout animation")
+        UULog.debug(LOG_TAG, "showOne, Starting layout animation")
         _layoutTransition.value = UULayoutTransition(1000L, 0L, AccelerateInterpolator())
         { container, view, transitionType ->
-            UULog.d(javaClass, "showOne", "Ending layout animation")
+            UULog.debug(LOG_TAG, "showOne, Ending layout animation")
         }
 
         _oneVisibility.value = true
@@ -54,10 +55,10 @@ class LayoutAnimationViewModel: ViewModel()
 
     fun showTwo()
     {
-        UULog.d(javaClass, "showTwo", "Starting layout animation")
+        UULog.debug(LOG_TAG, "showTwo, Starting layout animation")
         _layoutTransition.value = UULayoutTransition(1000L, 0L, AccelerateInterpolator())
         { container, view, transitionType ->
-            UULog.d(javaClass, "showTwo", "Ending layout animation")
+            UULog.debug(LOG_TAG, "showTwo, Ending layout animation")
         }
 
         _oneVisibility.value = true
@@ -68,10 +69,10 @@ class LayoutAnimationViewModel: ViewModel()
 
     fun showThree()
     {
-        UULog.d(javaClass, "showThree", "Starting layout animation")
+        UULog.debug(LOG_TAG, "showThree, Starting layout animation")
         _layoutTransition.value = UULayoutTransition(1000L, 0L, AccelerateInterpolator())
         { container, view, transitionType ->
-            UULog.d(javaClass, "showThree", "Ending layout animation")
+            UULog.debug(LOG_TAG, "showThree, Ending layout animation")
         }
 
         _oneVisibility.value = true
@@ -82,10 +83,10 @@ class LayoutAnimationViewModel: ViewModel()
 
     fun showFour()
     {
-        UULog.d(javaClass, "showFour", "Starting layout animation")
+        UULog.debug(LOG_TAG, "showFour, Starting layout animation")
         _layoutTransition.value = UULayoutTransition(1000L, 0L, AccelerateInterpolator())
         { container, view, transitionType ->
-            UULog.d(javaClass, "showFour", "Ending layout animation")
+            UULog.debug(LOG_TAG, "showFour, Ending layout animation")
         }
 
         _oneVisibility.value = true

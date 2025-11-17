@@ -4,6 +4,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.silverpine.uu.logging.UULog
+import com.silverpine.uu.sample.ux.LOG_TAG
 import com.silverpine.uu.sample.ux.viewmodels.BaseViewModel
 import com.silverpine.uu.ux.UUMenuHandler
 import com.silverpine.uu.ux.UUMenuItem
@@ -20,7 +21,7 @@ open class BaseActivity: AppCompatActivity()
 
         viewModel.menuItems.observe(this)
         {
-            UULog.d(javaClass, "setupViewModel", "Menu items have changed")
+            UULog.debug(LOG_TAG, "setupViewModel, Menu items have changed")
             menuViewModels.clear()
             menuViewModels.addAll(it)
             invalidateMenu()

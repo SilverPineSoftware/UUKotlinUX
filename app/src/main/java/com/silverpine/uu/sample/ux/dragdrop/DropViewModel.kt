@@ -8,6 +8,7 @@ import com.silverpine.uu.core.UURandom
 import com.silverpine.uu.core.UUTimer
 import com.silverpine.uu.core.uuDispatchMain
 import com.silverpine.uu.logging.UULog
+import com.silverpine.uu.sample.ux.LOG_TAG
 import com.silverpine.uu.sample.ux.R
 import com.silverpine.uu.ux.UUAlpha
 import com.silverpine.uu.ux.dragdrop.UUDragDropViewModel
@@ -63,7 +64,7 @@ class DropViewModel(private val slotAllowsDrop: Boolean): ViewModel(), UUDragDro
         }
         else
         {
-            UULog.d(javaClass, "handleDragStart", "Handle Drag Start, other is ${other.id}")
+            UULog.debug(LOG_TAG, "handleDragStart, Handle Drag Start, other is ${other.id}")
 
             _borderColor.value = R.color.drop_accept_border
             _borderWidth.value = R.dimen.drop_accept_border_width
@@ -106,7 +107,7 @@ class DropViewModel(private val slotAllowsDrop: Boolean): ViewModel(), UUDragDro
         }
         else
         {
-            UULog.d(javaClass, "handleDrop", "Dropped View Model ${other.id} onto $id")
+            UULog.debug(LOG_TAG, "handleDrop, Dropped View Model ${other.id} onto $id")
             _borderColor.value = R.color.green
             _borderWidth.value = R.dimen.medium_border
             clearDrag()
@@ -131,7 +132,7 @@ class DropViewModel(private val slotAllowsDrop: Boolean): ViewModel(), UUDragDro
 
     override fun onClick()
     {
-        UULog.d(javaClass, "onClick", "View Model tapped: ${text.value}")
+        UULog.debug(LOG_TAG, "onClick, View Model tapped: ${text.value}")
     }
 
     override val longPressTriggerTime: Long

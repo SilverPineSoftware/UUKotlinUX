@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.silverpine.uu.logging.UULog
+import com.silverpine.uu.sample.ux.LOG_TAG
 import com.silverpine.uu.ux.UUAlpha
 
 class FadeAnimationViewModel: ViewModel()
@@ -44,7 +45,7 @@ class FadeAnimationViewModel: ViewModel()
             .withStartDelay(startDelay.value?.toLong() ?: 0)
             .withCompletion()
             {
-                UULog.d(javaClass, "onAnimate", "Alpha Fade complete")
+                UULog.debug(LOG_TAG, "onAnimate, Alpha Fade complete")
             }
     }
 }
