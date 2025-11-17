@@ -8,6 +8,9 @@ import android.view.TextureView.SurfaceTextureListener
 import androidx.annotation.RawRes
 import androidx.databinding.BindingAdapter
 import com.silverpine.uu.logging.UULog
+import com.silverpine.uu.logging.logException
+
+private const val LOG_TAG = "UUTextureViewVideoPlayer"
 
 class UUTextureViewVideoPlayer(
     private val textureView: TextureView,
@@ -85,7 +88,7 @@ class UUTextureViewVideoPlayer(
         }
         catch (ex: Exception)
         {
-            UULog.d(javaClass, "onPrepared", "", ex)
+            UULog.logException(LOG_TAG, "onPrepared", ex)
         }
     }
 
@@ -96,7 +99,7 @@ class UUTextureViewVideoPlayer(
     {
         try
         {
-            UULog.d(javaClass, "close", "$this, Shutting object down and releasing resources")
+            UULog.debug(LOG_TAG, "close, ${this}, Shutting object down and releasing resources")
 
             mediaPlayer.stop()
             mediaPlayer.reset()
@@ -105,7 +108,7 @@ class UUTextureViewVideoPlayer(
         }
         catch (ex: Exception)
         {
-            UULog.d(javaClass, "close", "$this", ex)
+            UULog.logException(LOG_TAG, "close", ex)
         }
     }
 }

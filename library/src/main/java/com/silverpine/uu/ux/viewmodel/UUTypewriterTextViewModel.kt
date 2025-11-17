@@ -8,6 +8,8 @@ import com.silverpine.uu.core.UUTimer
 import com.silverpine.uu.core.uuDispatch
 import com.silverpine.uu.logging.UULog
 
+private const val LOG_TAG = "UUTypewriterTextViewModel"
+
 class UUTypewriterTextViewModel: ViewModel()
 {
     private val timerId: String = UURandom.uuid()
@@ -54,7 +56,7 @@ class UUTypewriterTextViewModel: ViewModel()
 
     fun forceComplete()
     {
-        UULog.d(javaClass, "forceComplete", "Text playback force quit")
+        UULog.debug(LOG_TAG, "forceComplete, Text playback force quit")
         notifyCompletion()
         _text.postValue(model)
     }

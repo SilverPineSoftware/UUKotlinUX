@@ -26,7 +26,9 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import com.silverpine.uu.core.uuDispatchMain
 import com.silverpine.uu.logging.UULog
-import com.silverpine.uu.ux.viewmodel.UUFragmentViewModel
+import com.silverpine.uu.logging.logException
+
+private const val LOG_TAG = "UUActivity"
 
 fun Activity.uuStartActivity(activityClass: Class<out Activity>, args: Bundle?)
 {
@@ -183,7 +185,7 @@ fun FragmentActivity.uuAddOrShowFragment(
 
             supportFragmentManager.findFragmentByTag(tag)?.let()
             { existingFragment ->
-                UULog.d(javaClass, "uuAddOrShowFragment", "Fragment $tag is already shown, just showing it.")
+                UULog.debug(LOG_TAG, "uuAddOrShowFragment, Fragment $tag is already shown, just showing it.")
                 show(existingFragment)
             } ?: run()
             {
@@ -227,7 +229,7 @@ fun FragmentActivity.uuReplaceMainFragment(
 
             overlayFragments.forEach()
             {
-                UULog.d(javaClass, "uuReplaceMainFragment", "Removing overlay fragment: $it, tag: ${it.tag}")
+                UULog.debug(LOG_TAG, "uuReplaceMainFragment, Removing overlay fragment: $it, tag: ${it.tag}")
                 this.remove(it)
             }
 
@@ -249,7 +251,7 @@ fun Activity.uuContentView(): View?
     }
     catch (ex: Exception)
     {
-        UULog.d(javaClass, "uuContentView", "", ex)
+        UULog.logException(LOG_TAG, "uuContentView", ex)
         null
     }
 }
@@ -306,7 +308,7 @@ fun Context.uuVibrate(effect: Int)
     }
     catch (ex: Exception)
     {
-        UULog.e(javaClass, "uuVibrate", "", ex)
+        UULog.logException(LOG_TAG, "uuVibrate", ex)
     }
 }
 
@@ -317,12 +319,12 @@ fun FragmentManager.uuMakeTopmostVisibleForAccessibility()
         if (f == fragments.lastOrNull())
         {
             f.view?.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
-            UULog.d(javaClass, "hideOverlayFragment", "Setting fragment ${f.tag} important for accessibility")
+            UULog.debug(LOG_TAG, "hideOverlayFragment, Setting fragment ${f.tag} important for accessibility")
         }
         else
         {
             f.view?.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
-            UULog.d(javaClass, "hideOverlayFragment", "Setting fragment ${f.tag} hidden for accessibility")
+            UULog.debug(LOG_TAG, "hideOverlayFragment, Setting fragment ${f.tag} hidden for accessibility")
         }
     }
 }

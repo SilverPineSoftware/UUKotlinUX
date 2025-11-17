@@ -9,6 +9,8 @@ import androidx.annotation.RequiresApi
 import androidx.databinding.BindingAdapter
 import com.silverpine.uu.logging.UULog
 
+private const val LOG_TAG = "UUKeyboard"
+
 interface UUKeyboardListener
 {
     fun onKeyboardVisibilityChanged(visible: Boolean, height: Int)
@@ -33,7 +35,7 @@ private class UUWindowInsetAnimationListener(dispatchMode: Int, private val list
 
         val visible = insets.isVisible(WindowInsets.Type.ime())
         val height = insets.getInsets(WindowInsets.Type.ime()).bottom
-        UULog.d(javaClass, "onEnd", "imeVisible: $visible, imeHeight: $height")
+        UULog.debug(LOG_TAG, "onEnd, imeVisible: $visible, imeHeight: $height")
 
         if (visible != imeVisible || height != imeHeight)
         {
