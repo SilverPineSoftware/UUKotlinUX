@@ -1,20 +1,77 @@
 package com.silverpine.uu.ux.permissions
 
-import android.app.Activity
 import android.content.pm.PackageManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.content.edit
+import com.silverpine.uu.logging.UULog
+import com.silverpine.uu.logging.logException
 import com.silverpine.uu.ux.UUActivityLauncher
+import java.io.File
+import java.util.Properties
 
-private const val PREFS_NAME = "com.silverpine.uu.ux.UUPermissions"
+private const val LOG_TAG = "UUPermissions"
+private const val PREFS_FILE_NAME = "uu_permissions_flags.properties"
 
 object UUPermissions:
     UUActivityLauncher<Array<String>, Map<String, @JvmSuppressWildcards Boolean>>(ActivityResultContracts.RequestMultiplePermissions()),
     UUPermissionProvider
 {
-    private val prefs by lazy {
-        requireActivity().getSharedPreferences(PREFS_NAME, Activity.MODE_PRIVATE)
+    private fun getPrefsFile(): File? = runCatching()
+    {
+        File(requireActivity().noBackupFilesDir, PREFS_FILE_NAME)
+    }.getOrElse()
+    { ex ->
+        UULog.logException(LOG_TAG, "getPrefsFile", ex)
+        null
+    }
+    
+    @Volatile
+    private var cachedPrefs: Properties? = null
+    private var cachedPrefsFile: File? = null
+    
+    private fun getPrefs(): Properties
+    {
+        val currentFile = getPrefsFile() ?: return Properties()
+
+        // Reload if file changed or not yet loaded
+        if (cachedPrefs == null || cachedPrefsFile != currentFile)
+        {
+            cachedPrefs = loadPrefs(currentFile)
+            cachedPrefsFile = currentFile
+        }
+
+        return cachedPrefs ?: Properties()
+    }
+    
+    private fun loadPrefs(prefsFile: File): Properties
+    {
+        val props = Properties()
+        if (prefsFile.exists())
+        {
+            try
+            {
+                prefsFile.inputStream().use { props.load(it) }
+            }
+            catch (ex: Exception)
+            {
+                UULog.logException(LOG_TAG, "loadPrefs", ex)
+            }
+        }
+        return props
+    }
+    
+    private fun savePrefs()
+    {
+        try
+        {
+            val prefsFile = getPrefsFile() ?: return
+            val currentPrefs = getPrefs()
+            prefsFile.outputStream().use { currentPrefs.store(it, null) }
+        }
+        catch (ex: Exception)
+        {
+            UULog.logException(LOG_TAG, "savePrefs", ex)
+        }
     }
 
     private var completionBlock: ((Map<String, UUPermissionStatus>) -> Unit)? = null
@@ -93,14 +150,22 @@ object UUPermissions:
 
     private fun hasEverRequestedPermission(permission: String): Result<Boolean> = runCatching()
     {
-        prefs.getBoolean(prefKey(permission), false)
+        val currentPrefs = getPrefs()
+        val value = currentPrefs.getProperty(prefKey(permission), "false")
+        value.toBoolean()
     }
 
     private fun setHasRequestedPermission(permission: String)
     {
-        prefs.edit(commit = true)
+        try
         {
-            putBoolean(prefKey(permission), true)
+            val currentPrefs = getPrefs()
+            currentPrefs.setProperty(prefKey(permission), "true")
+            savePrefs()
+        }
+        catch (ex: Exception)
+        {
+            UULog.logException(LOG_TAG, "setHasRequestedPermission", ex)
         }
     }
 
