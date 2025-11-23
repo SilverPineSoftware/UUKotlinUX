@@ -1,5 +1,6 @@
 package com.silverpine.uu.ux.files
 
+import android.content.Context
 import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultCallback
@@ -28,6 +29,9 @@ class UUFilesTests
     private fun buildActivityWithLauncher(): Pair<ComponentActivity, ActivityResultLauncher<String>>
     {
         val activity = Mockito.mock(ComponentActivity::class.java)
+        val context = Mockito.mock(Context::class.java)
+        
+        Mockito.lenient().`when`(activity.applicationContext).thenReturn(context)
         
         @Suppress("UNCHECKED_CAST")
         val launcher = Mockito.mock(ActivityResultLauncher::class.java) as ActivityResultLauncher<String>
@@ -51,9 +55,11 @@ class UUFilesTests
 
         // When: requestFile is called
         var completionCalled = false
+        var receivedContext: Context? = null
         var receivedUri: Uri? = null
-        UUFiles.requestFile(filter) { uri ->
+        UUFiles.requestFile(filter) { context, uri ->
             completionCalled = true
+            receivedContext = context
             receivedUri = uri
         }
 
@@ -74,18 +80,22 @@ class UUFilesTests
         UUFiles.init(activity)
 
         var completionCalled = false
+        var receivedContext: Context? = null
         var receivedUri: Uri? = null
-        UUFiles.requestFile("image/*") { uri ->
+        UUFiles.requestFile("image/*") { context, uri ->
             completionCalled = true
+            receivedContext = context
             receivedUri = uri
         }
 
         // When: handleLaunchResult is called with a non-null result
         UUFiles.handleLaunchResult(testUri)
 
-        // Then: Completion should be called with the result
+        // Then: Completion should be called with context and result
         assertTrue(completionCalled)
+        assertNotNull(receivedContext)
         assertNotNull(receivedUri)
+        assertEquals(activity.applicationContext, receivedContext)
         assertEquals(testUri, receivedUri)
     }
 
@@ -98,17 +108,21 @@ class UUFilesTests
         UUFiles.init(activity)
 
         var completionCalled = false
+        var receivedContext: Context? = null
         var receivedUri: Uri? = null
-        UUFiles.requestFile("image/*") { uri ->
+        UUFiles.requestFile("image/*") { context, uri ->
             completionCalled = true
+            receivedContext = context
             receivedUri = uri
         }
 
         // When: handleLaunchResult is called with a null result
         UUFiles.handleLaunchResult(null)
 
-        // Then: Completion should be called with null
+        // Then: Completion should be called with context and null URI
         assertTrue(completionCalled)
+        assertNotNull(receivedContext)
+        assertEquals(activity.applicationContext, receivedContext)
         assertNull(receivedUri)
     }
 
@@ -137,7 +151,7 @@ class UUFilesTests
         UUFiles.init(activity)
 
         var callCount = 0
-        UUFiles.requestFile("image/*") { _ ->
+        UUFiles.requestFile("image/*") { _, _ ->
             callCount++
         }
 
@@ -166,9 +180,11 @@ class UUFilesTests
 
         // When: First request is made
         var firstCallCount = 0
+        var firstReceivedContext: Context? = null
         var firstReceivedUri: Uri? = null
-        UUFiles.requestFile("image/*") { uri ->
+        UUFiles.requestFile("image/*") { context, uri ->
             firstCallCount++
+            firstReceivedContext = context
             firstReceivedUri = uri
         }
 
@@ -180,13 +196,17 @@ class UUFilesTests
 
         // Then: First completion should be called
         assertEquals(1, firstCallCount)
+        assertNotNull(firstReceivedContext)
+        assertEquals(activity.applicationContext, firstReceivedContext)
         assertEquals(firstUri, firstReceivedUri)
 
         // When: Second request is made
         var secondCallCount = 0
+        var secondReceivedContext: Context? = null
         var secondReceivedUri: Uri? = null
-        UUFiles.requestFile("application/*") { uri ->
+        UUFiles.requestFile("application/*") { context, uri ->
             secondCallCount++
+            secondReceivedContext = context
             secondReceivedUri = uri
         }
 
@@ -198,6 +218,8 @@ class UUFilesTests
 
         // Then: Second completion should be called
         assertEquals(1, secondCallCount)
+        assertNotNull(secondReceivedContext)
+        assertEquals(activity.applicationContext, secondReceivedContext)
         assertEquals(secondUri, secondReceivedUri)
 
         // First completion should still only be called once
@@ -232,7 +254,7 @@ class UUFilesTests
         val filters = arrayOf("image/*", "application/*", "video/*", "*/*")
         
         filters.forEach { filter ->
-            UUFiles.requestFile(filter) { }
+            UUFiles.requestFile(filter) { _, _ -> }
             
             // Then: launch should be called with the correct filter
             Mockito.verify(launcher).launch(filter)
@@ -248,29 +270,66 @@ class UUFilesTests
         UUFiles.init(activity)
 
         var callCount = 0
+        var receivedContext: Context? = null
         var receivedUri: Uri? = null
-        UUFiles.requestFile("image/*") { uri ->
+        UUFiles.requestFile("image/*") { context, uri ->
             callCount++
+            receivedContext = context
             receivedUri = uri
         }
 
         // When: handleLaunchResult is called with null
         UUFiles.handleLaunchResult(null)
 
-        // Then: Completion should be called with null
+        // Then: Completion should be called with context and null URI
         assertEquals(1, callCount)
+        assertNotNull(receivedContext)
+        assertEquals(activity.applicationContext, receivedContext)
         assertNull(receivedUri)
 
         // When: Another request is made and result is null again
-        UUFiles.requestFile("image/*") { uri ->
+        UUFiles.requestFile("image/*") { context, uri ->
             callCount++
+            receivedContext = context
             receivedUri = uri
         }
 
         UUFiles.handleLaunchResult(null)
 
-        // Then: Completion should be called again with null
+        // Then: Completion should be called again with context and null URI
         assertEquals(2, callCount)
+        assertNotNull(receivedContext)
+        assertEquals(activity.applicationContext, receivedContext)
         assertNull(receivedUri)
+    }
+
+    @Test
+    fun `handleLaunchResult passes application context when activity is initialized`()
+    {
+        // Given: Activity is initialized with application context
+        val (activity, _) = buildActivityWithLauncher()
+        val testUri = Mockito.mock(Uri::class.java)
+        
+        UUFiles.init(activity)
+
+        var completionCalled = false
+        var receivedContext: Context? = null
+        var receivedUri: Uri? = null
+        
+        UUFiles.requestFile("image/*") { context, uri ->
+            completionCalled = true
+            receivedContext = context
+            receivedUri = uri
+        }
+
+        // When: handleLaunchResult is called
+        UUFiles.handleLaunchResult(testUri)
+
+        // Then: Context should be the application context from the activity
+        assertTrue(completionCalled)
+        assertNotNull(receivedContext)
+        assertEquals(activity.applicationContext, receivedContext)
+        assertNotNull(receivedUri)
+        assertEquals(testUri, receivedUri)
     }
 }

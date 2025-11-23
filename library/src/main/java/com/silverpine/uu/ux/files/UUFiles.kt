@@ -1,9 +1,9 @@
 package com.silverpine.uu.ux.files
 
+import android.content.Context
 import android.net.Uri
 import androidx.activity.result.contract.ActivityResultContracts
 import com.silverpine.uu.ux.UUActivityLauncher
-import com.silverpine.uu.ux.files.UUFiles.requestFile
 
 /**
  * Default implementation of [UUFileProvider] for requesting files from the user.
@@ -26,10 +26,11 @@ import com.silverpine.uu.ux.files.UUFiles.requestFile
  * After initialization, use [requestFile] to launch the file picker:
  * ```kotlin
  * // Request an image file
- * UUFiles.requestFile("image" + "/" + "*") { uri ->
+ * UUFiles.requestFile("image" + "/" + "*") { context, uri ->
  *     uri?.let {
  *         // User selected a file - process the URI
- *         loadImageFromUri(it)
+ *         // context provides access to application context for file operations
+ *         loadImageFromUri(context, it)
  *     } ?: run {
  *         // User cancelled the file picker
  *         showMessage("File selection cancelled")
@@ -37,16 +38,16 @@ import com.silverpine.uu.ux.files.UUFiles.requestFile
  * }
  *
  * // Request a PDF file
- * UUFiles.requestFile("application/pdf") { uri ->
+ * UUFiles.requestFile("application/pdf") { context, uri ->
  *     uri?.let {
- *         openPdf(it)
+ *         openPdf(context, it)
  *     }
  * }
  *
  * // Request any file type
- * UUFiles.requestFile("*" + "/" + "*") { uri ->
+ * UUFiles.requestFile("*" + "/" + "*") { context, uri ->
  *     uri?.let {
- *         processFile(it)
+ *         processFile(context, it)
  *     }
  * }
  * ```
@@ -58,7 +59,7 @@ object UUFiles:
     UUActivityLauncher<String, Uri?>(ActivityResultContracts.GetContent()),
     UUFileProvider
 {
-    private var completionBlock: ((Uri?)->Unit)? = null
+    private var completionBlock: ((Context?, Uri?)->Unit)? = null
 
     /**
      * Requests a file from the user using the system file picker.
@@ -73,16 +74,18 @@ object UUFiles:
      *               "application/pdf" for PDF files, "video" + "/" + "*" for all videos).
      *               Use "*" + "/" + "*" to allow all file types.
      * @param completion Callback invoked when the file picker returns a result.
-     *                  - If a file was selected, the callback receives a non-null [Uri] pointing to the selected file.
-     *                  - If the user cancelled, the callback receives `null`.
+     *                  - The first parameter is a [Context] (typically the application context) for file operations,
+     *                    or `null` if the activity is not available.
+     *                  - The second parameter is the [Uri] of the selected file, or `null` if the user cancelled.
      *
      * Example usage:
      * ```kotlin
      * // Request an image file
-     * UUFiles.requestFile("image" + "/" + "*") { uri ->
+     * UUFiles.requestFile("image" + "/" + "*") { context, uri ->
      *     uri?.let {
      *         // Process the selected image
-     *         loadImageFromUri(it)
+     *         // context can be used for ContentResolver operations
+     *         loadImageFromUri(context, it)
      *     } ?: run {
      *         // User cancelled
      *         showMessage("File selection cancelled")
@@ -90,14 +93,14 @@ object UUFiles:
      * }
      *
      * // Request a PDF file
-     * UUFiles.requestFile("application/pdf") { uri ->
+     * UUFiles.requestFile("application/pdf") { context, uri ->
      *     uri?.let {
-     *         openPdf(it)
+     *         openPdf(context, it)
      *     }
      * }
      * ```
      */
-    override fun requestFile(filter: String, completion: (Uri?) -> Unit)
+    override fun requestFile(filter: String, completion: (Context?, Uri?) -> Unit)
     {
         completionBlock = completion
         launch(filter)
@@ -108,7 +111,8 @@ object UUFiles:
      *
      * This method is called automatically by the Activity Result API when the file picker
      * returns a result. It invokes the completion callback that was provided to [requestFile]
-     * with the selected file URI (or null if cancelled), then clears the stored completion block.
+     * with the application context and the selected file URI (or null if cancelled), then clears
+     * the stored completion block.
      *
      * @param result The [Uri] of the selected file, or `null` if the user cancelled
      */
@@ -116,6 +120,6 @@ object UUFiles:
     {
         val block = completionBlock ?: return
         completionBlock = null
-        block(result)
+        block(activity?.applicationContext, result)
     }
 }

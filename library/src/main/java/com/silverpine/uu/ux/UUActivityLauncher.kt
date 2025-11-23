@@ -46,7 +46,7 @@ abstract class UUActivityLauncher<Input, Output>(
     private val contract: ActivityResultContract<Input, Output>
 )
 {
-    private var activity: ComponentActivity? = null
+    protected var activity: ComponentActivity? = null
     private var launcher:  ActivityResultLauncher<Input>? = null
 
     /**

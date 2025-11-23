@@ -1,5 +1,6 @@
 package com.silverpine.uu.ux.files
 
+import android.content.Context
 import android.net.Uri
 
 /**
@@ -21,7 +22,7 @@ import android.net.Uri
  * }
  *
  * // Request a file
- * UUFiles.requestFile("image" + "/" + "*") { uri ->
+ * UUFiles.requestFile("image" + "/" + "*") { context, uri ->
  *     if (uri != null)
  *     {
  *         // User selected a file
@@ -50,13 +51,14 @@ interface UUFileProvider
      *               "application/pdf" for PDF files, "video" + "/" + "*" for all videos).
      *               Use "*" + "/" + "*" to allow all file types.
      * @param completion Callback invoked when the file picker returns a result.
-     *                  - If a file was selected, the callback receives a non-null [Uri] pointing to the selected file.
-     *                  - If the user cancelled, the callback receives `null`.
+     *                  - The first parameter is a [Context] (typically the application context) for file operations,
+     *                    or `null` if the activity is not available.
+     *                  - The second parameter is the [Uri] of the selected file, or `null` if the user cancelled.
      *
      * Example usage:
      * ```kotlin
      * // Request an image file
-     * fileProvider.requestFile("image" + "/" + "*") { uri ->
+     * fileProvider.requestFile("image" + "/" + "*") { context, uri ->
      *     uri?.let {
      *         // Process the selected image
      *         loadImageFromUri(it)
@@ -67,12 +69,12 @@ interface UUFileProvider
      * }
      *
      * // Request a PDF file
-     * fileProvider.requestFile("application/pdf") { uri ->
+     * fileProvider.requestFile("application/pdf") { context, uri ->
      *     uri?.let {
      *         openPdf(it)
      *     }
      * }
      * ```
      */
-    fun requestFile(filter: String, completion: (Uri?)->Unit)
+    fun requestFile(filter: String, completion: (Context?, Uri?)->Unit)
 }
