@@ -2,51 +2,41 @@ package com.silverpine.uu.ux.permissions
 
 import android.app.Activity
 import android.content.pm.PackageManager
-import androidx.activity.ComponentActivity
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
+import com.silverpine.uu.ux.UUActivityLauncher
 
 private const val PREFS_NAME = "com.silverpine.uu.ux.UUPermissions"
 
-object UUPermissions: UUPermissionProvider
+object UUPermissions:
+    UUActivityLauncher<Array<String>, Map<String, @JvmSuppressWildcards Boolean>>(ActivityResultContracts.RequestMultiplePermissions()),
+    UUPermissionProvider
 {
-    private var activity: ComponentActivity? = null
-    private var launcher:  ActivityResultLauncher<Array<String>>? = null
-
-    fun init(activity: ComponentActivity)
-    {
-        this.activity = activity
-        this.launcher = activity.registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions(),
-            this::handlePermissionResults
-        )
-    }
-
-    private fun requireActivity(): ComponentActivity
-    {
-        val activity = this.activity
-        if (activity == null)
-        {
-            throw RuntimeException("UUPermissions not initialized. Must call UUPermissions.init(context) on app startup.")
-        }
-
-        return activity
-    }
-
     private val prefs by lazy {
         requireActivity().getSharedPreferences(PREFS_NAME, Activity.MODE_PRIVATE)
     }
 
-    /*private val multiplePermissionsLauncher by lazy {
-        requireActivity().registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions(),
-            this::handlePermissionResults
-        )
-    }*/
-
     private var requestMultipleCompletion: ((Map<String, UUPermissionStatus>) -> Unit)? = null
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // UUActivityLauncher
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    override fun handleLaunchResult(result: Map<String, @JvmSuppressWildcards Boolean>)
+    {
+        val statusResults: MutableMap<String, UUPermissionStatus> = mutableMapOf()
+
+        result.forEach()
+        { permission, granted ->
+            setHasRequestedPermission(permission)
+            statusResults[permission] = if (granted) UUPermissionStatus.GRANTED else deniedStatus(permission)
+        }
+
+        val block = requestMultipleCompletion ?: return
+        requestMultipleCompletion = null
+        block(statusResults)
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // UUPermissionProvider
@@ -89,7 +79,7 @@ object UUPermissions: UUPermissionProvider
         }
 
         requestMultipleCompletion = completion
-        launcher?.launch(permissions)
+        launch(permissions)
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -130,21 +120,6 @@ object UUPermissions: UUPermissionProvider
     private fun shouldShowRationale(permission: String): Result<Boolean> = runCatching()
     {
         requireActivity().shouldShowRequestPermissionRationale(permission)
-    }
-
-    private fun handlePermissionResults(results: Map<String, Boolean>)
-    {
-        val statusResults: MutableMap<String, UUPermissionStatus> = mutableMapOf()
-
-        results.forEach()
-        { permission, granted ->
-            setHasRequestedPermission(permission)
-            statusResults[permission] = if (granted) UUPermissionStatus.GRANTED else deniedStatus(permission)
-        }
-
-        val block = requestMultipleCompletion ?: return
-        requestMultipleCompletion = null
-        block(statusResults)
     }
 
     private fun deniedStatus(permission: String): UUPermissionStatus
