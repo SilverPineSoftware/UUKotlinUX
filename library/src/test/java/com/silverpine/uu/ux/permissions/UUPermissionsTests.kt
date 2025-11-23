@@ -1,4 +1,4 @@
-package com.silverpine.uu.ux.test.permissions
+package com.silverpine.uu.ux.permissions
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -64,7 +64,7 @@ class UUPermissionsTests
         val field = UUPermissions::class.java.getDeclaredField("prefs\$delegate")
         field.isAccessible = true
         @Suppress("UNCHECKED_CAST")
-        val lazyDelegate = field.get(UUPermissions) as kotlin.Lazy<SharedPreferences>
+        val lazyDelegate = field.get(UUPermissions) as Lazy<SharedPreferences>
         return lazyDelegate.value
     }
 

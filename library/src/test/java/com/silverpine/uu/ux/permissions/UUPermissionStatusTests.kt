@@ -1,4 +1,4 @@
-package com.silverpine.uu.ux.test.permissions
+package com.silverpine.uu.ux.permissions
 
 import com.silverpine.uu.ux.permissions.UUPermissionProvider
 import com.silverpine.uu.ux.permissions.UUPermissionStatus

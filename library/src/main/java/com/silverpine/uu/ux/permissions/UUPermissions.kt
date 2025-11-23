@@ -17,7 +17,7 @@ object UUPermissions:
         requireActivity().getSharedPreferences(PREFS_NAME, Activity.MODE_PRIVATE)
     }
 
-    private var requestMultipleCompletion: ((Map<String, UUPermissionStatus>) -> Unit)? = null
+    private var completionBlock: ((Map<String, UUPermissionStatus>) -> Unit)? = null
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // UUActivityLauncher
@@ -33,8 +33,8 @@ object UUPermissions:
             statusResults[permission] = if (granted) UUPermissionStatus.GRANTED else deniedStatus(permission)
         }
 
-        val block = requestMultipleCompletion ?: return
-        requestMultipleCompletion = null
+        val block = completionBlock ?: return
+        completionBlock = null
         block(statusResults)
     }
 
@@ -78,7 +78,7 @@ object UUPermissions:
             return
         }
 
-        requestMultipleCompletion = completion
+        completionBlock = completion
         launch(permissions)
     }
 

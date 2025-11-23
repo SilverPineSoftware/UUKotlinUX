@@ -1,8 +1,5 @@
-package com.silverpine.uu.ux.test.permissions
+package com.silverpine.uu.ux.events
 
-import com.silverpine.uu.ux.events.UUEvent
-import com.silverpine.uu.ux.events.UUEventBus
-import com.silverpine.uu.ux.events.UUEventHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -11,15 +8,12 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -41,7 +35,7 @@ class UUEventBusTests
     class TestEvent3 : UUEvent()
     open class BaseTestEvent : UUEvent()
     class DerivedTestEvent : BaseTestEvent()
-    
+
     // Track handlers installed in each test for cleanup
     private val installedHandlers = mutableListOf<Pair<Class<out UUEvent>, UUEventHandler>>()
 
@@ -127,7 +121,7 @@ class UUEventBusTests
         // Given: An event
         val event = TestEvent1()
         var receivedEvent: TestEvent1? = null
-        
+
         // Subscribe first
         val job = launch {
             receivedEvent = UUEventBus.subscribe<TestEvent1>().first()
@@ -139,8 +133,8 @@ class UUEventBusTests
         testDispatcher.scheduler.advanceUntilIdle()
 
         // Then: Event should be available in events flow
-        assertNotNull(receivedEvent)
-        assertTrue(receivedEvent is TestEvent1)
+        Assertions.assertNotNull(receivedEvent)
+        Assertions.assertTrue(receivedEvent is TestEvent1)
         job.cancel()
     }
 
@@ -157,11 +151,11 @@ class UUEventBusTests
             testDispatcher.scheduler.advanceUntilIdle() // Ensure handler is registered
             UUEventBus.post(event)
             testDispatcher.scheduler.advanceUntilIdle() // Process the event
-            
+
             // Then: Handler should receive the event
-            assertEquals(1, handler.handleCount)
-            assertEquals(1, handler.handledEvents.size)
-            assertTrue(handler.handledEvents[0] is TestEvent1)
+            Assertions.assertEquals(1, handler.handleCount)
+            Assertions.assertEquals(1, handler.handledEvents.size)
+            Assertions.assertTrue(handler.handledEvents[0] is TestEvent1)
         }
     }
 
@@ -178,9 +172,9 @@ class UUEventBusTests
             testDispatcher.scheduler.advanceUntilIdle() // Ensure handler is registered
             UUEventBus.post(event)
             testDispatcher.scheduler.advanceUntilIdle() // Process the event
-            
+
             // Then: Handler should receive the event
-            assertEquals(1, handler.handleCount)
+            Assertions.assertEquals(1, handler.handleCount)
         }
     }
 
@@ -189,7 +183,7 @@ class UUEventBusTests
     {
         // Given: A handler installed for TestEvent1
         val handler = TestEventHandler(TestEvent1::class.java)
-        
+
         testScope().runTest {
             installAndTrack(TestEvent1::class.java, handler)
             testDispatcher.scheduler.advanceUntilIdle()
@@ -200,7 +194,7 @@ class UUEventBusTests
             testDispatcher.scheduler.advanceUntilIdle()
 
             // Then: Handler should not receive the event
-            assertEquals(0, handler.handleCount)
+            Assertions.assertEquals(0, handler.handleCount)
         }
     }
 
@@ -209,7 +203,7 @@ class UUEventBusTests
     {
         // Given: A handler installed for TestEvent1
         val handler = TestEventHandler(TestEvent1::class.java)
-        
+
         testScope().runTest {
             installAndTrack<TestEvent1>(handler)
             testDispatcher.scheduler.advanceUntilIdle()
@@ -220,7 +214,7 @@ class UUEventBusTests
             testDispatcher.scheduler.advanceUntilIdle()
 
             // Then: Handler should not receive the event
-            assertEquals(0, handler.handleCount)
+            Assertions.assertEquals(0, handler.handleCount)
         }
     }
 
@@ -230,7 +224,7 @@ class UUEventBusTests
         // Given: Two handlers, first one handles the event
         val handler1 = TestEventHandler(TestEvent1::class.java, shouldHandle = true)
         val handler2 = TestEventHandler(TestEvent1::class.java)
-        
+
         testScope().runTest {
             installAndTrack(TestEvent1::class.java, handler1)
             installAndTrack(TestEvent1::class.java, handler2)
@@ -241,8 +235,8 @@ class UUEventBusTests
             testDispatcher.scheduler.advanceUntilIdle() // Process the event
 
             // Then: Only first handler should receive the event
-            assertEquals(1, handler1.handleCount)
-            assertEquals(0, handler2.handleCount)
+            Assertions.assertEquals(1, handler1.handleCount)
+            Assertions.assertEquals(0, handler2.handleCount)
         }
     }
 
@@ -252,7 +246,7 @@ class UUEventBusTests
         // Given: Two handlers, both return false
         val handler1 = TestEventHandler(TestEvent1::class.java, shouldHandle = false)
         val handler2 = TestEventHandler(TestEvent1::class.java, shouldHandle = false)
-        
+
         testScope().runTest {
             installAndTrack(TestEvent1::class.java, handler1)
             installAndTrack(TestEvent1::class.java, handler2)
@@ -263,8 +257,8 @@ class UUEventBusTests
             testDispatcher.scheduler.advanceUntilIdle() // Process the event
 
             // Then: Both handlers should receive the event
-            assertEquals(1, handler1.handleCount)
-            assertEquals(1, handler2.handleCount)
+            Assertions.assertEquals(1, handler1.handleCount)
+            Assertions.assertEquals(1, handler2.handleCount)
         }
     }
 
@@ -287,9 +281,9 @@ class UUEventBusTests
             testDispatcher.scheduler.advanceUntilIdle() // Process the event
 
             // Then: Handlers should process in order
-            assertEquals(1, handler1.handleCount)
-            assertEquals(1, handler2.handleCount)
-            assertEquals(1, handler3.handleCount)
+            Assertions.assertEquals(1, handler1.handleCount)
+            Assertions.assertEquals(1, handler2.handleCount)
+            Assertions.assertEquals(1, handler3.handleCount)
         }
     }
 
@@ -299,7 +293,7 @@ class UUEventBusTests
         // Given: A handler registered for BaseTestEvent
         val baseHandler = TestEventHandler(BaseTestEvent::class.java)
         val derivedEvent = DerivedTestEvent()
-        
+
         testScope().runTest {
             installAndTrack(BaseTestEvent::class.java, baseHandler)
             testDispatcher.scheduler.advanceUntilIdle() // Ensure handler is registered
@@ -309,8 +303,8 @@ class UUEventBusTests
             testDispatcher.scheduler.advanceUntilIdle() // Process the event
 
             // Then: Base handler should receive the derived event
-            assertEquals(1, baseHandler.handleCount)
-            assertTrue(baseHandler.handledEvents[0] is DerivedTestEvent)
+            Assertions.assertEquals(1, baseHandler.handleCount)
+            Assertions.assertTrue(baseHandler.handledEvents[0] is DerivedTestEvent)
         }
     }
 
@@ -320,7 +314,7 @@ class UUEventBusTests
         // Given: A handler registered for DerivedTestEvent
         val derivedHandler = TestEventHandler(DerivedTestEvent::class.java)
         val baseEvent = BaseTestEvent()
-        
+
         testScope().runTest {
             installAndTrack(DerivedTestEvent::class.java, derivedHandler)
             testDispatcher.scheduler.advanceUntilIdle() // Ensure handler is registered
@@ -330,7 +324,7 @@ class UUEventBusTests
             testDispatcher.scheduler.advanceUntilIdle() // Process the event
 
             // Then: Derived handler should not receive the base event
-            assertEquals(0, derivedHandler.handleCount)
+            Assertions.assertEquals(0, derivedHandler.handleCount)
         }
     }
 
@@ -340,7 +334,7 @@ class UUEventBusTests
         // Given: Handlers for different event types
         val handler1 = TestEventHandler(TestEvent1::class.java)
         val handler2 = TestEventHandler(TestEvent2::class.java)
-        
+
         testScope().runTest {
             installAndTrack(TestEvent1::class.java, handler1)
             installAndTrack(TestEvent2::class.java, handler2)
@@ -351,8 +345,8 @@ class UUEventBusTests
             testDispatcher.scheduler.advanceUntilIdle() // Process the event
 
             // Then: Only handler1 should receive the event
-            assertEquals(1, handler1.handleCount)
-            assertEquals(0, handler2.handleCount)
+            Assertions.assertEquals(1, handler1.handleCount)
+            Assertions.assertEquals(0, handler2.handleCount)
         }
     }
 
@@ -376,8 +370,8 @@ class UUEventBusTests
         testDispatcher.scheduler.advanceUntilIdle()
 
         // Then: Should receive only TestEvent1
-        assertNotNull(receivedEvent)
-        assertTrue(receivedEvent is TestEvent1)
+        Assertions.assertNotNull(receivedEvent)
+        Assertions.assertTrue(receivedEvent is TestEvent1)
         job.cancel()
     }
 
@@ -396,8 +390,8 @@ class UUEventBusTests
 
         // Then: Should receive only TestEvent1 instances
         val receivedEvents = UUEventBus.subscribe<TestEvent1>().take(3).toList()
-        assertEquals(3, receivedEvents.size)
-        receivedEvents.forEach { assertTrue(it is TestEvent1) }
+        Assertions.assertEquals(3, receivedEvents.size)
+        receivedEvents.forEach { Assertions.assertTrue(it is TestEvent1) }
     }
 
     @Test
@@ -418,9 +412,9 @@ class UUEventBusTests
             testDispatcher.scheduler.advanceUntilIdle()
 
             // Then: All handlers should receive the event
-            assertEquals(1, handler1.handleCount)
-            assertEquals(1, handler2.handleCount)
-            assertEquals(1, handler3.handleCount)
+            Assertions.assertEquals(1, handler1.handleCount)
+            Assertions.assertEquals(1, handler2.handleCount)
+            Assertions.assertEquals(1, handler3.handleCount)
         }
     }
 
@@ -445,9 +439,9 @@ class UUEventBusTests
             testDispatcher.scheduler.advanceUntilIdle() // Process the event
 
             // Then: handler1 and handler3 should receive event, handler2 should not
-            assertEquals(1, handler1.handleCount)
-            assertEquals(0, handler2.handleCount)
-            assertEquals(1, handler3.handleCount)
+            Assertions.assertEquals(1, handler1.handleCount)
+            Assertions.assertEquals(0, handler2.handleCount)
+            Assertions.assertEquals(1, handler3.handleCount)
         }
     }
 
@@ -471,12 +465,12 @@ class UUEventBusTests
         testDispatcher.scheduler.advanceUntilIdle()
 
         // Then: All events should be in the list
-        assertEquals(5, eventsList.size)
-        assertTrue(eventsList[0] is TestEvent1)
-        assertTrue(eventsList[1] is TestEvent2)
-        assertTrue(eventsList[2] is TestEvent3)
-        assertTrue(eventsList[3] is TestEvent1)
-        assertTrue(eventsList[4] is TestEvent2)
+        Assertions.assertEquals(5, eventsList.size)
+        Assertions.assertTrue(eventsList[0] is TestEvent1)
+        Assertions.assertTrue(eventsList[1] is TestEvent2)
+        Assertions.assertTrue(eventsList[2] is TestEvent3)
+        Assertions.assertTrue(eventsList[3] is TestEvent1)
+        Assertions.assertTrue(eventsList[4] is TestEvent2)
         job.cancel()
     }
 
@@ -485,7 +479,7 @@ class UUEventBusTests
     {
         // Given: A handler installed
         val handler = TestEventHandler(TestEvent1::class.java)
-        
+
         testScope().runTest {
             installAndTrack(TestEvent1::class.java, handler)
             testDispatcher.scheduler.advanceUntilIdle() // Ensure handler is registered
@@ -497,8 +491,8 @@ class UUEventBusTests
             testDispatcher.scheduler.advanceUntilIdle() // Process all events
 
             // Then: Handler should receive all events
-            assertEquals(3, handler.handleCount)
-            assertEquals(3, handler.handledEvents.size)
+            Assertions.assertEquals(3, handler.handleCount)
+            Assertions.assertEquals(3, handler.handledEvents.size)
         }
     }
 
@@ -520,7 +514,7 @@ class UUEventBusTests
         }
 
         // Then: Should complete without exceptions
-        assertTrue(latch.await(5, TimeUnit.SECONDS))
+        Assertions.assertTrue(latch.await(5, TimeUnit.SECONDS))
     }
 
     @Test
@@ -528,7 +522,7 @@ class UUEventBusTests
     {
         // Given: Handler installed and then uninstalled
         val handler = TestEventHandler(TestEvent1::class.java)
-        
+
         testScope().runTest {
             installAndTrack(TestEvent1::class.java, handler)
             testDispatcher.scheduler.advanceUntilIdle()
@@ -541,7 +535,7 @@ class UUEventBusTests
             testDispatcher.scheduler.advanceUntilIdle()
 
             // Then: Handler should not receive events
-            assertEquals(0, handler.handleCount)
+            Assertions.assertEquals(0, handler.handleCount)
         }
     }
 
@@ -562,7 +556,7 @@ class UUEventBusTests
 
             // Then: Handler should only receive events posted after installation
             // Handler should receive the event posted after installation
-            assertTrue(handler.handleCount >= 1)
+            Assertions.assertTrue(handler.handleCount >= 1)
         }
     }
 }
