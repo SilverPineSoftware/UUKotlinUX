@@ -4,6 +4,7 @@ import com.silverpine.uu.compose.UUPrefBackedMutableBoolean
 import com.silverpine.uu.compose.UUPrefBackedMutableData
 import com.silverpine.uu.compose.UUPrefBackedMutableDouble
 import com.silverpine.uu.compose.UUPrefBackedMutableEnum
+import com.silverpine.uu.compose.UUPrefBackedMutableEnumSet
 import com.silverpine.uu.compose.UUPrefBackedMutableFloat
 import com.silverpine.uu.compose.UUPrefBackedMutableInt
 import com.silverpine.uu.compose.UUPrefBackedMutableLong
@@ -13,6 +14,7 @@ import com.silverpine.uu.compose.uuPrefBackedMutableBoolean
 import com.silverpine.uu.compose.uuPrefBackedMutableData
 import com.silverpine.uu.compose.uuPrefBackedMutableDouble
 import com.silverpine.uu.compose.uuPrefBackedMutableEnum
+import com.silverpine.uu.compose.uuPrefBackedMutableEnumSet
 import com.silverpine.uu.compose.uuPrefBackedMutableFloat
 import com.silverpine.uu.compose.uuPrefBackedMutableInt
 import com.silverpine.uu.compose.uuPrefBackedMutableLong
@@ -20,8 +22,6 @@ import com.silverpine.uu.compose.uuPrefBackedMutableString
 import com.silverpine.uu.compose.uuPrefBackedMutableStringSet
 import com.silverpine.uu.core.UUPrefs
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -613,6 +613,95 @@ class UUPrefBackedMutableStateTests
         Mockito.verify(prefs, Mockito.times(1)).putEnum(key, TestTheme.SYSTEM)
     }
 
+    // ==================== UUPrefBackedMutableEnumSet Tests ====================
+
+    @Test
+    fun `UUPrefBackedMutableEnumSet uses default value when no value exists`()
+    {
+        // Given: UUPrefs with no existing value
+        val prefs = createMockUUPrefs()
+        val key = "test_enum_set_key"
+        val enumClass = TestTheme::class.java
+        val defaultValue = emptySet<TestTheme>()
+
+        Mockito.`when`(prefs.getEnumSet(key, enumClass, defaultValue)).thenReturn(null)
+
+        // When: Creating UUPrefBackedMutableEnumSet
+        val state = UUPrefBackedMutableEnumSet(prefs, key, enumClass, defaultValue)
+
+        // Then: Should use default value
+        assertEquals(defaultValue, state.value)
+        assertTrue(state.value.isEmpty())
+        Mockito.verify(prefs, Mockito.times(1)).getEnumSet(key, enumClass, defaultValue)
+    }
+
+    @Test
+    fun `UUPrefBackedMutableEnumSet uses default value when UUPrefs returns null`()
+    {
+        val prefs = createMockUUPrefs()
+        val key = "test_enum_set_key"
+        val enumClass = TestTheme::class.java
+        val defaultValue = setOf(TestTheme.SYSTEM)
+
+        Mockito.`when`(prefs.getEnumSet(key, enumClass, defaultValue)).thenReturn(null)
+
+        val state = UUPrefBackedMutableEnumSet(prefs, key, enumClass, defaultValue)
+
+        assertEquals(defaultValue, state.value)
+    }
+
+    @Test
+    fun `UUPrefBackedMutableEnumSet loads existing value from UUPrefs`()
+    {
+        val prefs = createMockUUPrefs()
+        val key = "test_enum_set_key"
+        val enumClass = TestTheme::class.java
+        val defaultValue = emptySet<TestTheme>()
+        val existingValue = setOf(TestTheme.LIGHT, TestTheme.DARK)
+
+        Mockito.`when`(prefs.getEnumSet(key, enumClass, defaultValue)).thenReturn(existingValue)
+
+        val state = UUPrefBackedMutableEnumSet(prefs, key, enumClass, defaultValue)
+
+        assertEquals(setOf(TestTheme.LIGHT, TestTheme.DARK), state.value)
+        Mockito.verify(prefs, Mockito.times(1)).getEnumSet(key, enumClass, defaultValue)
+    }
+
+    @Test
+    fun `UUPrefBackedMutableEnumSet persists value when set`()
+    {
+        val prefs = createMockUUPrefs()
+        val key = "test_enum_set_key"
+        val enumClass = TestTheme::class.java
+        val defaultValue = emptySet<TestTheme>()
+        val newValue = setOf(TestTheme.LIGHT, TestTheme.SYSTEM)
+
+        Mockito.`when`(prefs.getEnumSet(key, enumClass, defaultValue)).thenReturn(null)
+
+        val state = UUPrefBackedMutableEnumSet(prefs, key, enumClass, defaultValue)
+
+        state.value = newValue
+
+        assertEquals(newValue, state.value)
+        Mockito.verify(prefs, Mockito.times(1)).putEnumSet(key, newValue)
+    }
+
+    @Test
+    fun `UUPrefBackedMutableEnumSet handles empty set`()
+    {
+        val prefs = createMockUUPrefs()
+        val key = "test_enum_set_key"
+        val enumClass = TestTheme::class.java
+        val defaultValue = emptySet<TestTheme>()
+
+        Mockito.`when`(prefs.getEnumSet(key, enumClass, defaultValue)).thenReturn(emptySet())
+
+        val state = UUPrefBackedMutableEnumSet(prefs, key, enumClass, defaultValue)
+
+        assertEquals(emptySet<TestTheme>(), state.value)
+        assertTrue(state.value.isEmpty())
+    }
+
     // ==================== UUPrefBackedMutableDouble Tests ====================
 
     @Test
@@ -1015,6 +1104,22 @@ class UUPrefBackedMutableStateTests
         // Then: Should create UUPrefBackedMutableEnum instance
         assertTrue(state is UUPrefBackedMutableEnum<*>)
         assertEquals(defaultValue, state.value)
+    }
+
+    @Test
+    fun `uuPrefBackedMutableEnumSet creates UUPrefBackedMutableEnumSet`()
+    {
+        val prefs = createMockUUPrefs()
+        val key = "test_enum_set_key"
+        val enumClass = TestTheme::class.java
+        val defaultValue = setOf(TestTheme.LIGHT)
+
+        Mockito.`when`(prefs.getEnumSet(key, enumClass, defaultValue)).thenReturn(setOf(TestTheme.LIGHT))
+
+        val state = uuPrefBackedMutableEnumSet(prefs, key, enumClass, defaultValue)
+
+        assertTrue(state is UUPrefBackedMutableEnumSet<*>)
+        assertEquals(setOf(TestTheme.LIGHT), state.value)
     }
 
     @Test

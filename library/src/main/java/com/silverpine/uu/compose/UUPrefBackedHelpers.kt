@@ -231,6 +231,41 @@ fun <T : Enum<T>> uuPrefBackedMutableEnum(prefs: UUPrefs, key: String, enumClass
     UUPrefBackedMutableEnum(prefs, key, enumClass, defaultValue)
 
 /**
+ * Helper function to create a [MutableState] backed by [UUPrefs] for Set of Enum values.
+ *
+ * This is a convenience function that creates a [UUPrefBackedMutableEnumSet] instance.
+ * The state value is automatically persisted to [UUPrefs] when changed (via [UUPrefs.putEnumSet]),
+ * and loaded from [UUPrefs] when initialized (via [UUPrefs.getEnumSet]).
+ *
+ * @param T The enum type whose set is being managed.
+ * @param prefs The [UUPrefs] instance to use for persistence.
+ * @param key The key to use for storing and retrieving the value in [UUPrefs].
+ * @param enumClass The enum class for type [T].
+ * @param defaultValue The default value to use if no value exists in [UUPrefs] for the given [key].
+ * @return A [MutableState] that persists Set of Enum values to [UUPrefs].
+ *
+ * @sample
+ * ```
+ * enum class Category { SPORTS, NEWS, ENTERTAINMENT }
+ *
+ * val prefs = UUPrefs.getDefault()
+ * val selected = uuPrefBackedMutableEnumSet(prefs, "selected_categories", Category::class.java, emptySet())
+ *
+ * FilterChip(
+ *     selected = Category.SPORTS in selected.value,
+ *     onClick = { selected.value = selected.value + Category.SPORTS }
+ * )
+ * ```
+ */
+fun <T : Enum<T>> uuPrefBackedMutableEnumSet(
+    prefs: UUPrefs,
+    key: String,
+    enumClass: Class<T>,
+    defaultValue: Set<T> = emptySet()
+): MutableState<Set<T>> =
+    UUPrefBackedMutableEnumSet(prefs, key, enumClass, defaultValue)
+
+/**
  * Helper function to create a [MutableState] backed by [UUPrefs] for ByteArray values.
  *
  * This is a convenience function that creates a [UUPrefBackedMutableData] instance.
