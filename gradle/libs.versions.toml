@@ -1,0 +1,36 @@
+[versions]
+
+# library
+androidx_test_rules = "1.7.0"
+compose_material3 = "1.4.0"
+constraintlayout = "2.2.1"
+kotlinx_coroutines = "1.10.2"
+navigation3 = "1.0.0-rc01"
+recyclerview = "1.4.0"
+
+# app
+lifecycle = "2.9.4"
+material = "1.13.0"
+
+# uu
+uu_core = "0.0.25"
+uu_test = "0.0.20"
+
+[libraries]
+
+# library
+androidx-compose-material3-android = { module = "androidx.compose.material3:material3-android", version.ref = "compose_material3" }
+androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
+androidx-navigation3-runtime-android = { module = "androidx.navigation3:navigation3-runtime-android", version.ref = "navigation3" }
+androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
+androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx_test_rules" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx_coroutines" }
+
+# app
+androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
+androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+google-material = { module = "com.google.android.material:material", version.ref = "material" }
+
+# uu
+uu-core-ktx = { module = "com.silverpine.uu:uu-core-ktx", version.ref = "uu_core" }
+uu-test-ktx = { module = "com.silverpine.uu:uu-test-ktx", version.ref = "uu_test" }
