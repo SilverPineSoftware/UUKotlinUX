@@ -4,17 +4,17 @@
 androidx_test_rules = "1.7.0"
 compose_material3 = "1.4.0"
 constraintlayout = "2.2.1"
-kotlinx_coroutines = "1.10.2"
-navigation3 = "1.0.0-rc01"
+kotlinx_coroutines = "1.11.0"
+navigation3 = "1.1.1"
 recyclerview = "1.4.0"
 
 # app
-lifecycle = "2.9.4"
-material = "1.13.0"
+lifecycle = "2.10.0"
+material = "1.14.0"
 
 # uu
-uu_core = "0.0.25"
-uu_test = "0.0.20"
+uu_core = "0.0.29"
+uu_test = "0.0.23"
 
 [libraries]
 
